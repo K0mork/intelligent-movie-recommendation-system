@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:movie_recommend_app/core/config/env_config.dart';
-import 'package:movie_recommend_app/shared/models/movie.dart';
+import 'package:movie_recommend_app/core/constants/app_constants.dart';
+import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
 
 abstract class MovieRemoteDataSource {
   Future<List<Movie>> getPopularMovies({int page = 1});
@@ -24,8 +25,8 @@ class TMDBRemoteDataSource implements MovieRemoteDataSource {
   })  : _dio = dio ?? Dio(),
         _apiKey = apiKey ?? EnvConfig.tmdbApiKey,
         _baseUrl = baseUrl ?? EnvConfig.tmdbBaseUrl {
-    _dio.options.connectTimeout = const Duration(seconds: 10);
-    _dio.options.receiveTimeout = const Duration(seconds: 10);
+    _dio.options.connectTimeout = AppConstants.connectTimeout;
+    _dio.options.receiveTimeout = AppConstants.receiveTimeout;
     
     if (_apiKey.isEmpty) {
       throw Exception('TMDb API key is not configured. Please set TMDB_API_KEY in your environment.');
@@ -34,7 +35,7 @@ class TMDBRemoteDataSource implements MovieRemoteDataSource {
 
   Map<String, dynamic> get _defaultParams => {
         'api_key': _apiKey,
-        'language': 'ja-JP',
+        'language': AppConstants.defaultLanguage,
       };
 
   @override
@@ -48,7 +49,8 @@ class TMDBRemoteDataSource implements MovieRemoteDataSource {
         },
       );
 
-      final results = response.data['results'] as List;
+      final results = (response.data['results'] as List<dynamic>)
+          .cast<Map<String, dynamic>>();
       return results.map((json) => Movie.fromTMDBJson(json)).toList();
     } catch (e) {
       throw Exception('Failed to fetch popular movies: $e');
@@ -67,7 +69,8 @@ class TMDBRemoteDataSource implements MovieRemoteDataSource {
         },
       );
 
-      final results = response.data['results'] as List;
+      final results = (response.data['results'] as List<dynamic>)
+          .cast<Map<String, dynamic>>();
       return results.map((json) => Movie.fromTMDBJson(json)).toList();
     } catch (e) {
       throw Exception('Failed to search movies: $e');
@@ -102,7 +105,8 @@ class TMDBRemoteDataSource implements MovieRemoteDataSource {
         },
       );
 
-      final results = response.data['results'] as List;
+      final results = (response.data['results'] as List<dynamic>)
+          .cast<Map<String, dynamic>>();
       return results.map((json) => Movie.fromTMDBJson(json)).toList();
     } catch (e) {
       throw Exception('Failed to fetch top rated movies: $e');
@@ -120,7 +124,8 @@ class TMDBRemoteDataSource implements MovieRemoteDataSource {
         },
       );
 
-      final results = response.data['results'] as List;
+      final results = (response.data['results'] as List<dynamic>)
+          .cast<Map<String, dynamic>>();
       return results.map((json) => Movie.fromTMDBJson(json)).toList();
     } catch (e) {
       throw Exception('Failed to fetch now playing movies: $e');
@@ -138,7 +143,8 @@ class TMDBRemoteDataSource implements MovieRemoteDataSource {
         },
       );
 
-      final results = response.data['results'] as List;
+      final results = (response.data['results'] as List<dynamic>)
+          .cast<Map<String, dynamic>>();
       return results.map((json) => Movie.fromTMDBJson(json)).toList();
     } catch (e) {
       throw Exception('Failed to fetch upcoming movies: $e');
@@ -158,8 +164,8 @@ class OMDBRemoteDataSource implements MovieRemoteDataSource {
   })  : _dio = dio ?? Dio(),
         _apiKey = apiKey ?? EnvConfig.omdbApiKey,
         _baseUrl = baseUrl ?? EnvConfig.omdbBaseUrl {
-    _dio.options.connectTimeout = const Duration(seconds: 10);
-    _dio.options.receiveTimeout = const Duration(seconds: 10);
+    _dio.options.connectTimeout = AppConstants.connectTimeout;
+    _dio.options.receiveTimeout = AppConstants.receiveTimeout;
     
     if (_apiKey.isEmpty) {
       throw Exception('OMDb API key is not configured. Please set OMDB_API_KEY in your environment.');
@@ -191,7 +197,8 @@ class OMDBRemoteDataSource implements MovieRemoteDataSource {
         throw Exception(response.data['Error']);
       }
 
-      final results = response.data['Search'] as List;
+      final results = (response.data['Search'] as List<dynamic>)
+          .cast<Map<String, dynamic>>();
       return results.map((json) => Movie.fromOMDBJson(json)).toList();
     } catch (e) {
       throw Exception('Failed to search movies: $e');

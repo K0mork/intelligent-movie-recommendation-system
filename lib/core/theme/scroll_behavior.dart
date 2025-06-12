@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class CustomScrollBehavior extends MaterialScrollBehavior {
+/// アプリ全体のスクロール動作を統一するためのカスタムScrollBehavior
+/// Web環境（Mac含む）での最適なスクロール体験を提供
+class AppScrollBehavior extends MaterialScrollBehavior {
   @override
   Set<PointerDeviceKind> get dragDevices => {
         PointerDeviceKind.touch,
@@ -13,7 +15,7 @@ class CustomScrollBehavior extends MaterialScrollBehavior {
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) {
     if (kIsWeb) {
-      // Web環境（Mac含む）でのスクロール物理特性
+      // Web環境（Mac Safari含む）でのスクロール物理特性
       return const ClampingScrollPhysics();
     }
     return super.getScrollPhysics(context);
@@ -26,13 +28,13 @@ class CustomScrollBehavior extends MaterialScrollBehavior {
     ScrollableDetails details,
   ) {
     if (kIsWeb) {
-      // Web環境でのスクロールバー設定
-      return RawScrollbar(
+      return Scrollbar(
         controller: details.controller,
         thumbVisibility: false,
         trackVisibility: false,
         thickness: 8.0,
         radius: const Radius.circular(4.0),
+        interactive: true,
         child: child,
       );
     }

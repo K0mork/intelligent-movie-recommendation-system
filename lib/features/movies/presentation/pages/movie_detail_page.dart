@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:movie_recommend_app/features/movies/presentation/providers/movie_providers.dart';
-import 'package:movie_recommend_app/shared/models/movie.dart';
+import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
 
 class MovieDetailPage extends ConsumerWidget {
   final int movieId;

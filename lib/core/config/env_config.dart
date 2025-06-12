@@ -1,5 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../constants/app_constants.dart';
 
+/// 環境変数の管理を行うクラス
 class EnvConfig {
   static String get firebaseApiKey => dotenv.env['FIREBASE_API_KEY'] ?? '';
   static String get firebaseAuthDomain => dotenv.env['FIREBASE_AUTH_DOMAIN'] ?? '';
@@ -9,13 +11,13 @@ class EnvConfig {
   static String get firebaseAppId => dotenv.env['FIREBASE_APP_ID'] ?? '';
 
   static String get tmdbApiKey => dotenv.env['TMDB_API_KEY'] ?? '';
-  static String get tmdbBaseUrl => dotenv.env['TMDB_BASE_URL'] ?? 'https://api.themoviedb.org/3';
+  static String get tmdbBaseUrl => dotenv.env['TMDB_BASE_URL'] ?? AppConstants.tmdbBaseUrl;
 
   static String get omdbApiKey => dotenv.env['OMDB_API_KEY'] ?? '';
-  static String get omdbBaseUrl => dotenv.env['OMDB_BASE_URL'] ?? 'https://www.omdbapi.com';
+  static String get omdbBaseUrl => dotenv.env['OMDB_BASE_URL'] ?? AppConstants.omdbBaseUrl;
 
   static String get googleCloudProjectId => dotenv.env['GOOGLE_CLOUD_PROJECT_ID'] ?? '';
-  static String get vertexAiRegion => dotenv.env['VERTEX_AI_REGION'] ?? 'asia-northeast1';
+  static String get vertexAiRegion => dotenv.env['VERTEX_AI_REGION'] ?? AppConstants.defaultRegion;
 
   static bool get isFirebaseConfigured =>
       firebaseApiKey.isNotEmpty &&

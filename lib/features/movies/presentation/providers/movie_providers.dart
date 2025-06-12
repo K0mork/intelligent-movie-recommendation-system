@@ -8,7 +8,7 @@ import 'package:movie_recommend_app/features/movies/domain/usecases/get_popular_
 import 'package:movie_recommend_app/features/movies/domain/usecases/search_movies_usecase.dart';
 import 'package:movie_recommend_app/features/movies/domain/usecases/get_movie_details_usecase.dart';
 import 'package:movie_recommend_app/features/movies/presentation/controllers/movie_controller.dart';
-import 'package:movie_recommend_app/shared/models/movie.dart';
+import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio();

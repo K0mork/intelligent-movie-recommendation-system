@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_recommend_app/core/constants/app_constants.dart';
+import 'package:movie_recommend_app/core/theme/scroll_behavior.dart';
 import 'package:movie_recommend_app/features/movies/presentation/widgets/movie_card.dart';
-import 'package:movie_recommend_app/shared/models/movie.dart';
+import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
 
 class MovieGrid extends StatelessWidget {
   final List<Movie> movies;
@@ -45,7 +46,7 @@ class MovieGrid extends StatelessWidget {
     return NotificationListener<ScrollNotification>(
       onNotification: (scrollInfo) {
         // より精密な無限スクロールトリガー
-        if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 200 &&
+        if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - AppConstants.loadMoreTriggerDistance &&
             onLoadMore != null &&
             !isLoading) {
           onLoadMore!();
@@ -53,10 +54,10 @@ class MovieGrid extends StatelessWidget {
         return false;
       },
       child: ScrollConfiguration(
-        behavior: _CustomGridScrollBehavior(),
+        behavior: AppScrollBehavior(),
         child: GridView.builder(
           controller: scrollController,
-          padding: EdgeInsets.all(kIsWeb ? 24 : 16),
+          padding: EdgeInsets.all(kIsWeb ? AppConstants.webPadding : AppConstants.defaultPadding),
           // Macでのスムーズスクロールのためのphysics
           physics: kIsWeb 
               ? const ClampingScrollPhysics()
@@ -64,8 +65,8 @@ class MovieGrid extends StatelessWidget {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
             childAspectRatio: childAspectRatio,
-            crossAxisSpacing: kIsWeb ? 20 : 16,
-            mainAxisSpacing: kIsWeb ? 20 : 16,
+            crossAxisSpacing: kIsWeb ? AppConstants.webPadding : AppConstants.defaultPadding,
+            mainAxisSpacing: kIsWeb ? AppConstants.webPadding : AppConstants.defaultPadding,
           ),
           itemCount: movies.length + (isLoading ? crossAxisCount : 0),
           itemBuilder: (context, index) {
@@ -86,41 +87,5 @@ class MovieGrid extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class _CustomGridScrollBehavior extends ScrollBehavior {
-  @override
-  Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-        PointerDeviceKind.trackpad,
-      };
-
-  @override
-  ScrollPhysics getScrollPhysics(BuildContext context) {
-    if (kIsWeb) {
-      return const ClampingScrollPhysics();
-    }
-    return const BouncingScrollPhysics();
-  }
-
-  @override
-  Widget buildScrollbar(
-    BuildContext context,
-    Widget child,
-    ScrollableDetails details,
-  ) {
-    if (kIsWeb) {
-      return Scrollbar(
-        controller: details.controller,
-        thumbVisibility: false,
-        trackVisibility: false,
-        thickness: 6.0,
-        radius: const Radius.circular(3.0),
-        child: child,
-      );
-    }
-    return super.buildScrollbar(context, child, details);
   }
 }
