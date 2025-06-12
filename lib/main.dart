@@ -32,13 +32,16 @@ void main() async {
   // Firebase初期化を試行（設定ファイルがなくても続行）
   bool firebaseAvailable = false;
   try {
+    // Firebase初期化をより安全に行う
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
     firebaseAvailable = true;
+    debugPrint('Firebase initialized successfully');
   } catch (e) {
     debugPrint('Firebase initialization failed: $e');
     debugPrint('Running in demo mode without Firebase');
+    firebaseAvailable = false;
   }
   
   runApp(ProviderScope(
