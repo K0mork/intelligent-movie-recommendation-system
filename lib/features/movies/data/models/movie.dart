@@ -55,13 +55,13 @@ class Movie {
       posterPath: json['poster_path'],
       backdropPath: json['backdrop_path'],
       releaseDate: json['release_date'],
-      voteAverage: (json['vote_average'] ?? 0.0).toDouble(),
+      voteAverage: double.tryParse(json['vote_average']?.toString() ?? '0.0') ?? 0.0,
       voteCount: json['vote_count'] ?? 0,
-      genreIds: List<int>.from(json['genre_ids'] ?? []),
+      genreIds: (json['genre_ids'] as List<dynamic>?)?.cast<int>() ?? <int>[],
       adult: json['adult'] ?? false,
       originalLanguage: json['original_language'] ?? '',
       originalTitle: json['original_title'] ?? '',
-      popularity: (json['popularity'] ?? 0.0).toDouble(),
+      popularity: double.tryParse(json['popularity']?.toString() ?? '0.0') ?? 0.0,
       video: json['video'] ?? false,
     );
   }
