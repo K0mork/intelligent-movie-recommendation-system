@@ -1,6 +1,7 @@
+import 'package:movie_recommend_app/core/errors/app_exceptions.dart';
 import 'package:movie_recommend_app/features/movies/data/datasources/movie_remote_datasource.dart';
 import 'package:movie_recommend_app/features/movies/domain/repositories/movie_repository.dart';
-import 'package:movie_recommend_app/shared/models/movie.dart';
+import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
 
 class MovieRepositoryImpl implements MovieRepository {
   final MovieRemoteDataSource _remoteDataSource;
@@ -13,8 +14,12 @@ class MovieRepositoryImpl implements MovieRepository {
   Future<List<Movie>> getPopularMovies({int page = 1}) async {
     try {
       return await _remoteDataSource.getPopularMovies(page: page);
+    } on NetworkException {
+      rethrow;
+    } on APIException {
+      rethrow;
     } catch (e) {
-      throw Exception('Failed to get popular movies: $e');
+      throw APIException('Failed to get popular movies: $e');
     }
   }
 

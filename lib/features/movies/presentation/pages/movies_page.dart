@@ -5,7 +5,7 @@ import 'package:movie_recommend_app/features/movies/presentation/providers/movie
 import 'package:movie_recommend_app/features/movies/presentation/widgets/movie_grid.dart';
 import 'package:movie_recommend_app/features/movies/presentation/pages/movie_detail_page.dart';
 import 'package:movie_recommend_app/features/movies/presentation/pages/api_setup_page.dart';
-import 'package:movie_recommend_app/shared/models/movie.dart';
+import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
 
 class MoviesPage extends ConsumerStatefulWidget {
   const MoviesPage({super.key});

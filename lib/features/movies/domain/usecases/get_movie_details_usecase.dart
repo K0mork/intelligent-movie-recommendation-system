@@ -1,5 +1,5 @@
 import 'package:movie_recommend_app/features/movies/domain/repositories/movie_repository.dart';
-import 'package:movie_recommend_app/shared/models/movie.dart';
+import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
 
 class GetMovieDetailsUseCase {
   final MovieRepository _repository;
