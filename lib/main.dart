@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/services.dart';
 import 'core/constants/app_constants.dart';
 import 'features/auth/presentation/widgets/auth_wrapper.dart';
 import 'features/auth/presentation/widgets/demo_auth_wrapper.dart';
@@ -11,28 +12,29 @@ import 'features/auth/presentation/pages/sign_in_page.dart';
 import 'features/auth/presentation/widgets/user_avatar.dart';
 import 'features/auth/presentation/providers/auth_controller.dart';
 import 'features/movies/presentation/pages/movies_page.dart';
-// import 'firebase_options.dart'; // 実際のFirebase設定ファイル
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // 環境変数を読み込み
+  // Web環境でセマンティクスを有効化
+  if (kIsWeb) {
+    SemanticsBinding.instance.ensureSemantics();
+  }
+  
+  // .envファイルを読み込み
   try {
     await dotenv.load(fileName: ".env");
   } catch (e) {
-    debugPrint('Environment file not found: $e');
-    debugPrint('Running without environment variables');
-  }
-  
-  // Web環境でセマンティクス自動有効化
-  if (kIsWeb) {
-    SemanticsBinding.instance.ensureSemantics();
+    debugPrint('Warning: .env file not found or failed to load: $e');
   }
   
   // Firebase初期化を試行（設定ファイルがなくても続行）
   bool firebaseAvailable = false;
   try {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     firebaseAvailable = true;
   } catch (e) {
     debugPrint('Firebase initialization failed: $e');
@@ -52,7 +54,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // HTMLレンダラーでのアクセシビリティ向上
       debugShowCheckedModeBanner: false,
       title: AppConstants.appName,
       theme: ThemeData(
