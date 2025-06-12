@@ -46,3 +46,27 @@ app.*.map.json
 
 # MCP configuration with secrets
 .mcp.json
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# Firebase
+.firebase/
+firebase-debug.log
+ui-debug.log
+
+# Generated files
+*.g.dart
+*.freezed.dart
+
+# Web
+/web/build/
+
+# Test reports
+test-results/
+
+# Coverage
+coverage/

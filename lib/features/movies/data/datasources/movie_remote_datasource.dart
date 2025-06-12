@@ -1,0 +1,237 @@
+import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'package:movie_recommend_app/core/config/env_config.dart';
+import 'package:movie_recommend_app/shared/models/movie.dart';
+
+abstract class MovieRemoteDataSource {
+  Future<List<Movie>> getPopularMovies({int page = 1});
+  Future<List<Movie>> searchMovies(String query, {int page = 1});
+  Future<Movie> getMovieDetails(int movieId);
+  Future<List<Movie>> getTopRatedMovies({int page = 1});
+  Future<List<Movie>> getNowPlayingMovies({int page = 1});
+  Future<List<Movie>> getUpcomingMovies({int page = 1});
+}
+
+class TMDBRemoteDataSource implements MovieRemoteDataSource {
+  final Dio _dio;
+  final String _apiKey;
+  final String _baseUrl;
+
+  TMDBRemoteDataSource({
+    Dio? dio,
+    String? apiKey,
+    String? baseUrl,
+  })  : _dio = dio ?? Dio(),
+        _apiKey = apiKey ?? EnvConfig.tmdbApiKey,
+        _baseUrl = baseUrl ?? EnvConfig.tmdbBaseUrl {
+    _dio.options.connectTimeout = const Duration(seconds: 10);
+    _dio.options.receiveTimeout = const Duration(seconds: 10);
+    
+    if (_apiKey.isEmpty) {
+      throw Exception('TMDb API key is not configured. Please set TMDB_API_KEY in your environment.');
+    }
+  }
+
+  Map<String, dynamic> get _defaultParams => {
+        'api_key': _apiKey,
+        'language': 'ja-JP',
+      };
+
+  @override
+  Future<List<Movie>> getPopularMovies({int page = 1}) async {
+    try {
+      final response = await _dio.get(
+        '$_baseUrl/movie/popular',
+        queryParameters: {
+          ..._defaultParams,
+          'page': page,
+        },
+      );
+
+      final results = response.data['results'] as List;
+      return results.map((json) => Movie.fromTMDBJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to fetch popular movies: $e');
+    }
+  }
+
+  @override
+  Future<List<Movie>> searchMovies(String query, {int page = 1}) async {
+    try {
+      final response = await _dio.get(
+        '$_baseUrl/search/movie',
+        queryParameters: {
+          ..._defaultParams,
+          'query': query,
+          'page': page,
+        },
+      );
+
+      final results = response.data['results'] as List;
+      return results.map((json) => Movie.fromTMDBJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to search movies: $e');
+    }
+  }
+
+  @override
+  Future<Movie> getMovieDetails(int movieId) async {
+    try {
+      final response = await _dio.get(
+        '$_baseUrl/movie/$movieId',
+        queryParameters: {
+          ..._defaultParams,
+          'append_to_response': 'credits,videos,similar',
+        },
+      );
+
+      return Movie.fromTMDBJson(response.data);
+    } catch (e) {
+      throw Exception('Failed to fetch movie details: $e');
+    }
+  }
+
+  @override
+  Future<List<Movie>> getTopRatedMovies({int page = 1}) async {
+    try {
+      final response = await _dio.get(
+        '$_baseUrl/movie/top_rated',
+        queryParameters: {
+          ..._defaultParams,
+          'page': page,
+        },
+      );
+
+      final results = response.data['results'] as List;
+      return results.map((json) => Movie.fromTMDBJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to fetch top rated movies: $e');
+    }
+  }
+
+  @override
+  Future<List<Movie>> getNowPlayingMovies({int page = 1}) async {
+    try {
+      final response = await _dio.get(
+        '$_baseUrl/movie/now_playing',
+        queryParameters: {
+          ..._defaultParams,
+          'page': page,
+        },
+      );
+
+      final results = response.data['results'] as List;
+      return results.map((json) => Movie.fromTMDBJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to fetch now playing movies: $e');
+    }
+  }
+
+  @override
+  Future<List<Movie>> getUpcomingMovies({int page = 1}) async {
+    try {
+      final response = await _dio.get(
+        '$_baseUrl/movie/upcoming',
+        queryParameters: {
+          ..._defaultParams,
+          'page': page,
+        },
+      );
+
+      final results = response.data['results'] as List;
+      return results.map((json) => Movie.fromTMDBJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to fetch upcoming movies: $e');
+    }
+  }
+}
+
+class OMDBRemoteDataSource implements MovieRemoteDataSource {
+  final Dio _dio;
+  final String _apiKey;
+  final String _baseUrl;
+
+  OMDBRemoteDataSource({
+    Dio? dio,
+    String? apiKey,
+    String? baseUrl,
+  })  : _dio = dio ?? Dio(),
+        _apiKey = apiKey ?? EnvConfig.omdbApiKey,
+        _baseUrl = baseUrl ?? EnvConfig.omdbBaseUrl {
+    _dio.options.connectTimeout = const Duration(seconds: 10);
+    _dio.options.receiveTimeout = const Duration(seconds: 10);
+    
+    if (_apiKey.isEmpty) {
+      throw Exception('OMDb API key is not configured. Please set OMDB_API_KEY in your environment.');
+    }
+  }
+
+  Map<String, dynamic> get _defaultParams => {
+        'apikey': _apiKey,
+      };
+
+  @override
+  Future<List<Movie>> getPopularMovies({int page = 1}) async {
+    throw UnimplementedError('OMDb API does not support popular movies endpoint. Use TMDb instead.');
+  }
+
+  @override
+  Future<List<Movie>> searchMovies(String query, {int page = 1}) async {
+    try {
+      final response = await _dio.get(
+        _baseUrl,
+        queryParameters: {
+          ..._defaultParams,
+          's': query,
+          'page': page,
+        },
+      );
+
+      if (response.data['Response'] == 'False') {
+        throw Exception(response.data['Error']);
+      }
+
+      final results = response.data['Search'] as List;
+      return results.map((json) => Movie.fromOMDBJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to search movies: $e');
+    }
+  }
+
+  @override
+  Future<Movie> getMovieDetails(int movieId) async {
+    try {
+      final response = await _dio.get(
+        _baseUrl,
+        queryParameters: {
+          ..._defaultParams,
+          'i': 'tt$movieId',
+          'plot': 'full',
+        },
+      );
+
+      if (response.data['Response'] == 'False') {
+        throw Exception(response.data['Error']);
+      }
+
+      return Movie.fromOMDBJson(response.data);
+    } catch (e) {
+      throw Exception('Failed to fetch movie details: $e');
+    }
+  }
+
+  @override
+  Future<List<Movie>> getTopRatedMovies({int page = 1}) async {
+    throw UnimplementedError('OMDb API does not support top rated movies endpoint. Use TMDb instead.');
+  }
+
+  @override
+  Future<List<Movie>> getNowPlayingMovies({int page = 1}) async {
+    throw UnimplementedError('OMDb API does not support now playing movies endpoint. Use TMDb instead.');
+  }
+
+  @override
+  Future<List<Movie>> getUpcomingMovies({int page = 1}) async {
+    throw UnimplementedError('OMDb API does not support upcoming movies endpoint. Use TMDb instead.');
+  }
+}

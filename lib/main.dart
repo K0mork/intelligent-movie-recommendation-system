@@ -1,16 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'core/constants/app_constants.dart';
 import 'features/auth/presentation/widgets/auth_wrapper.dart';
 import 'features/auth/presentation/widgets/demo_auth_wrapper.dart';
 import 'features/auth/presentation/pages/sign_in_page.dart';
 import 'features/auth/presentation/widgets/user_avatar.dart';
 import 'features/auth/presentation/providers/auth_controller.dart';
+import 'features/movies/presentation/pages/movies_page.dart';
 // import 'firebase_options.dart'; // 実際のFirebase設定ファイル
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // 環境変数を読み込み
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    debugPrint('Environment file not found: $e');
+    debugPrint('Running without environment variables');
+  }
+  
+  // Web環境でセマンティクス自動有効化
+  if (kIsWeb) {
+    SemanticsBinding.instance.ensureSemantics();
+  }
   
   // Firebase初期化を試行（設定ファイルがなくても続行）
   bool firebaseAvailable = false;
@@ -35,6 +52,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // HTMLレンダラーでのアクセシビリティ向上
+      debugShowCheckedModeBanner: false,
       title: AppConstants.appName,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -59,6 +78,7 @@ class MyApp extends StatelessWidget {
               ),
         '/sign-in': (context) => const SignInPage(),
         '/home': (context) => const MyHomePage(title: AppConstants.appName),
+        '/movies': (context) => const MoviesPage(),
       },
     );
   }
@@ -174,10 +194,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             const SizedBox(height: 32),
             ElevatedButton.icon(
               onPressed: () {
-                // TODO: 映画一覧画面に遷移
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('映画機能は実装中です')),
-                );
+                Navigator.of(context).pushNamed('/movies');
               },
               icon: const Icon(Icons.explore),
               label: const Text('映画を探す'),
