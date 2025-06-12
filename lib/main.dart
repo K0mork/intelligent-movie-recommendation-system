@@ -2,20 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'core/constants/app_constants.dart';
+import 'features/auth/presentation/widgets/auth_wrapper.dart';
+import 'features/auth/presentation/widgets/demo_auth_wrapper.dart';
+import 'features/auth/presentation/pages/sign_in_page.dart';
+import 'features/auth/presentation/widgets/user_avatar.dart';
+import 'features/auth/presentation/providers/auth_controller.dart';
+// import 'firebase_options.dart'; // 実際のFirebase設定ファイル
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize Firebase
-  await Firebase.initializeApp();
+  // Firebase初期化を試行（設定ファイルがなくても続行）
+  bool firebaseAvailable = false;
+  try {
+    await Firebase.initializeApp();
+    firebaseAvailable = true;
+  } catch (e) {
+    debugPrint('Firebase initialization failed: $e');
+    debugPrint('Running in demo mode without Firebase');
+  }
   
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(ProviderScope(
+    child: MyApp(firebaseAvailable: firebaseAvailable),
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool firebaseAvailable;
 
-  // This widget is the root of your application.
+  const MyApp({super.key, required this.firebaseAvailable});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,84 +48,139 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       themeMode: ThemeMode.system,
-      home: const MyHomePage(title: AppConstants.appName),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => firebaseAvailable
+            ? const AuthWrapper(
+                child: MyHomePage(title: AppConstants.appName),
+              )
+            : const DemoAuthWrapper(
+                child: MyHomePage(title: AppConstants.appName),
+              ),
+        '/sign-in': (context) => const SignInPage(),
+        '/home': (context) => const MyHomePage(title: AppConstants.appName),
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  ConsumerState<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends ConsumerState<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
     });
   }
 
+  void _showUserMenu() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.person_outline),
+              title: const Text('プロフィール'),
+              onTap: () {
+                Navigator.pop(context);
+                // TODO: プロフィール画面に遷移
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings_outlined),
+              title: const Text('設定'),
+              onTap: () {
+                Navigator.pop(context);
+                // TODO: 設定画面に遷移
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.logout,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              title: Text(
+                'サインアウト',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
+              onTap: () async {
+                Navigator.pop(context);
+                await ref.read(authControllerProvider.notifier).signOut();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        actions: [
+          UserAvatar(
+            onTap: _showUserMenu,
+          ),
+          const SizedBox(width: 16),
+        ],
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text('You have pushed the button this many times:'),
+            Icon(
+              Icons.movie_outlined,
+              size: 100,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Welcome to Movie Recommendation System!',
+              style: Theme.of(context).textTheme.headlineSmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'AIが分析するパーソナライズ映画推薦システム',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            const Text('カウンターデモ:'),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              onPressed: () {
+                // TODO: 映画一覧画面に遷移
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('映画機能は実装中です')),
+                );
+              },
+              icon: const Icon(Icons.explore),
+              label: const Text('映画を探す'),
             ),
           ],
         ),
@@ -118,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
