@@ -1,21 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/services.dart';
 import 'core/constants/app_constants.dart';
 import 'features/auth/presentation/widgets/auth_wrapper.dart';
 import 'features/auth/presentation/widgets/demo_auth_wrapper.dart';
 import 'features/auth/presentation/pages/sign_in_page.dart';
 import 'features/auth/presentation/widgets/user_avatar.dart';
 import 'features/auth/presentation/providers/auth_controller.dart';
-// import 'firebase_options.dart'; // 実際のFirebase設定ファイル
+import 'features/movies/presentation/pages/movie_list_page.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  // Web環境でセマンティクスを有効化
+  if (kIsWeb) {
+    SemanticsBinding.instance.ensureSemantics();
+  }
+  
+  // .envファイルを読み込み
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    debugPrint('Warning: .env file not found or failed to load: $e');
+  }
+  
   // Firebase初期化を試行（設定ファイルがなくても続行）
   bool firebaseAvailable = false;
   try {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     firebaseAvailable = true;
   } catch (e) {
     debugPrint('Firebase initialization failed: $e');
@@ -36,6 +55,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: AppConstants.appName,
+      // Webアクセシビリティ改善
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -174,9 +195,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             const SizedBox(height: 32),
             ElevatedButton.icon(
               onPressed: () {
-                // TODO: 映画一覧画面に遷移
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('映画機能は実装中です')),
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const MovieListPage(),
+                  ),
                 );
               },
               icon: const Icon(Icons.explore),
