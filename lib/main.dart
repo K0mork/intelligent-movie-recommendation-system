@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,6 +13,7 @@ import 'features/auth/presentation/pages/sign_in_page.dart';
 import 'features/auth/presentation/widgets/user_avatar.dart';
 import 'features/auth/presentation/providers/auth_controller.dart';
 import 'features/movies/presentation/pages/movies_page.dart';
+import 'core/theme/scroll_theme.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -59,9 +61,24 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: AppConstants.appName,
+      // スクロール動作の改善
+      scrollBehavior: _AppScrollBehavior(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        scrollbarTheme: ScrollbarThemeData(
+          thickness: WidgetStateProperty.all(8.0),
+          thumbVisibility: WidgetStateProperty.all(false),
+          trackVisibility: WidgetStateProperty.all(false),
+          interactive: true,
+          radius: const Radius.circular(4.0),
+          thumbColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered)) {
+              return Colors.black45;
+            }
+            return Colors.black26;
+          }),
+        ),
       ),
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -69,6 +86,19 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         useMaterial3: true,
+        scrollbarTheme: ScrollbarThemeData(
+          thickness: WidgetStateProperty.all(8.0),
+          thumbVisibility: WidgetStateProperty.all(false),
+          trackVisibility: WidgetStateProperty.all(false),
+          interactive: true,
+          radius: const Radius.circular(4.0),
+          thumbColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered)) {
+              return Colors.white54;
+            }
+            return Colors.white38;
+          }),
+        ),
       ),
       themeMode: ThemeMode.system,
       initialRoute: '/',
@@ -212,5 +242,43 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+}
+
+class _AppScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+      };
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    if (kIsWeb) {
+      // Webプラットフォーム（Mac Safari含む）でのスクロール物理特性
+      return const ClampingScrollPhysics();
+    }
+    return super.getScrollPhysics(context);
+  }
+
+  @override
+  Widget buildScrollbar(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
+    if (kIsWeb) {
+      return Scrollbar(
+        controller: details.controller,
+        thumbVisibility: false,
+        trackVisibility: false,
+        thickness: 8.0,
+        radius: const Radius.circular(4.0),
+        interactive: true,
+        child: child,
+      );
+    }
+    return super.buildScrollbar(context, child, details);
   }
 }
