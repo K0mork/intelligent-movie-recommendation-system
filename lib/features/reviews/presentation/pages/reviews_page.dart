@@ -4,6 +4,7 @@ import '../../../auth/presentation/providers/auth_providers.dart';
 import '../providers/review_providers.dart';
 import '../providers/review_controller.dart';
 import '../widgets/review_card.dart';
+import '../../../movies/presentation/pages/movie_detail_page.dart';
 
 class ReviewsPage extends ConsumerStatefulWidget {
   const ReviewsPage({super.key});
@@ -169,6 +170,13 @@ class _MyReviewsTab extends ConsumerWidget {
             child: ReviewList(
               reviews: reviews,
               showMovieInfo: true,
+              onReviewTap: (review) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => MovieDetailPage(movieId: int.parse(review.movieId)),
+                  ),
+                );
+              },
               onEditReview: (review) {
                 // TODO: Navigate to edit review page
                 ScaffoldMessenger.of(context).showSnackBar(
