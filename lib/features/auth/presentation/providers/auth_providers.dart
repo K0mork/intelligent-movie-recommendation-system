@@ -22,6 +22,7 @@ final firebaseAuthProvider = Provider<FirebaseAuth?>((ref) {
 final googleSignInProvider = Provider<GoogleSignIn>((ref) {
   return GoogleSignIn(
     scopes: ['email', 'profile'],
+    clientId: '519346109803-b527n0aduaa262qv0sv57uml4f3q7ad6.apps.googleusercontent.com',
   );
 });
 

@@ -77,10 +77,10 @@ class SignInPage extends ConsumerWidget {
               const SizedBox(height: 48),
 
               // サインインボタン
-              GoogleSignInButton(isLoading: isLoading),
+              AnonymousSignInButton(isLoading: isLoading),
               const SizedBox(height: 16),
 
-              AnonymousSignInButton(isLoading: isLoading),
+              GoogleSignInButton(isLoading: isLoading),
               const SizedBox(height: 32),
 
               // 区切り線
