@@ -26,12 +26,12 @@ class GoogleSignInButton extends ConsumerWidget {
             ? null
             : onPressed ?? () => authController.signInWithGoogle(),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black87,
+          backgroundColor: theme.colorScheme.surface,
+          foregroundColor: theme.colorScheme.onSurface,
           elevation: 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
-            side: BorderSide(color: Colors.grey.shade300),
+            side: BorderSide(color: theme.colorScheme.outline),
           ),
         ),
         icon: isLoading
@@ -48,7 +48,7 @@ class GoogleSignInButton extends ConsumerWidget {
             : Icon(
                 Icons.login,
                 size: 20,
-                color: Colors.blue.shade600,
+                color: theme.colorScheme.primary,
               ),
         label: Text(
           'Googleでサインイン',
