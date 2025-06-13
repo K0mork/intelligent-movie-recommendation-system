@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/foundation.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../models/app_user_model.dart';
 import '../../domain/entities/app_user.dart';
@@ -47,8 +48,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<AppUser?> signInWithGoogle() async {
     try {
-      // Google サインインフローを開始
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      GoogleSignInAccount? googleUser;
+      
+      if (kIsWeb) {
+        // Web用の処理: まず silent sign-in を試す
+        googleUser = await _googleSignIn.signInSilently();
+        if (googleUser == null) {
+          // Silent sign-in が失敗した場合は通常のサインイン
+          googleUser = await _googleSignIn.signIn();
+        }
+      } else {
+        // モバイル用の処理
+        googleUser = await _googleSignIn.signIn();
+      }
       
       if (googleUser == null) {
         // ユーザーがサインインをキャンセル
