@@ -11,6 +11,7 @@ import 'features/auth/presentation/pages/sign_in_page.dart';
 import 'features/auth/presentation/widgets/user_avatar.dart';
 import 'features/auth/presentation/providers/auth_controller.dart';
 import 'features/movies/presentation/pages/movies_page.dart';
+import 'features/reviews/presentation/pages/reviews_page.dart';
 import 'core/theme/scroll_theme.dart';
 import 'core/theme/scroll_behavior.dart';
 import 'firebase_options.dart';
@@ -94,6 +95,7 @@ class MyApp extends StatelessWidget {
         '/sign-in': (context) => const SignInPage(),
         '/home': (context) => const MyHomePage(title: AppConstants.appName),
         '/movies': (context) => const MoviesPage(),
+        '/reviews': (context) => const ReviewsPage(),
       },
     );
   }
@@ -207,12 +209,29 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 32),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.of(context).pushNamed('/movies');
-              },
-              icon: const Icon(Icons.explore),
-              label: const Text('映画を探す'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/movies');
+                  },
+                  icon: const Icon(Icons.explore),
+                  label: const Text('映画を探す'),
+                ),
+                const SizedBox(width: 16),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/reviews');
+                  },
+                  icon: const Icon(Icons.rate_review),
+                  label: const Text('レビュー'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

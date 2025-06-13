@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:movie_recommend_app/features/movies/presentation/providers/movie_providers.dart';
 import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
+import '../../../reviews/presentation/pages/add_review_page.dart';
+import '../../../movies/domain/entities/movie_entity.dart';
+import '../../../auth/presentation/providers/auth_providers.dart';
 
 class MovieDetailPage extends ConsumerWidget {
   final int movieId;
@@ -53,13 +56,13 @@ class MovieDetailPage extends ConsumerWidget {
   }
 }
 
-class _MovieDetailView extends StatelessWidget {
+class _MovieDetailView extends ConsumerWidget {
   final Movie movie;
 
   const _MovieDetailView({required this.movie});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -200,33 +203,117 @@ class _MovieDetailView extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                 ],
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primaryContainer,
+                // Review Section
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'レビュー',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
-                  ),
-                  child: Column(
-                    children: [
-                      const Icon(
-                        Icons.rate_review,
-                        size: 48,
-                        color: Colors.grey,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'レビュー機能は次のフェーズで実装予定です',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
+                    const SizedBox(height: 16),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final authState = ref.watch(authStateProvider);
+                        
+                        return authState.when(
+                          data: (user) {
+                            if (user != null) {
+                              return SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => AddReviewPage(
+                                          movie: MovieEntity(
+                                            id: movie.id,
+                                            title: movie.title,
+                                            overview: movie.overview,
+                                            posterPath: movie.posterPath,
+                                            backdropPath: movie.backdropPath,
+                                            releaseDate: movie.releaseDate,
+                                            voteAverage: movie.voteAverage,
+                                            voteCount: movie.voteCount,
+                                            popularity: movie.popularity,
+                                            adult: movie.adult,
+                                            originalLanguage: movie.originalLanguage,
+                                            originalTitle: movie.originalTitle,
+                                            genreIds: movie.genreIds,
+                                            video: false,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.rate_review),
+                                  label: const Text('レビューを書く'),
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                                  ),
+                                ),
+                                child: Column(
+                                  children: [
+                                    const Icon(
+                                      Icons.login,
+                                      size: 48,
+                                      color: Colors.grey,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'レビューを書くにはログインが必要です',
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                            color: Colors.grey[600],
+                                          ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+                          loading: () => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          error: (error, stackTrace) => Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.error.withOpacity(0.3),
+                              ),
                             ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
+                            child: Text(
+                              'エラーが発生しました',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
