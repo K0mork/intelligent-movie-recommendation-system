@@ -5,6 +5,7 @@ import '../providers/review_providers.dart';
 import '../providers/review_controller.dart';
 import '../widgets/review_card.dart';
 import '../../../movies/presentation/pages/movie_detail_page.dart';
+import 'edit_review_page.dart';
 
 class ReviewsPage extends ConsumerStatefulWidget {
   const ReviewsPage({super.key});
@@ -177,13 +178,16 @@ class _MyReviewsTab extends ConsumerWidget {
                   ),
                 );
               },
-              onEditReview: (review) {
-                // TODO: Navigate to edit review page
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('レビュー編集機能は次の段階で実装します'),
+              onEditReview: (review) async {
+                final result = await Navigator.of(context).push<bool>(
+                  MaterialPageRoute(
+                    builder: (context) => EditReviewPage(review: review),
                   ),
                 );
+                
+                if (result == true) {
+                  ref.refresh(userReviewsProvider(userId));
+                }
               },
               onDeleteReview: (review) {
                 _showDeleteConfirmation(context, ref, review);

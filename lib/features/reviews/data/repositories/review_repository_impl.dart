@@ -12,11 +12,11 @@ class ReviewRepositoryImpl implements ReviewRepository {
   @override
   Future<List<Review>> getReviews({String? userId, String? movieId}) async {
     try {
-      final reviews = await remoteDataSource.getReviews(
+      final reviewModels = await remoteDataSource.getReviews(
         userId: userId,
         movieId: movieId,
       );
-      return reviews;
+      return reviewModels.map((model) => model.toEntity()).toList();
     } catch (e) {
       throw APIException('Failed to get reviews: ${e.toString()}');
     }
@@ -25,8 +25,8 @@ class ReviewRepositoryImpl implements ReviewRepository {
   @override
   Future<Review> getReview(String reviewId) async {
     try {
-      final review = await remoteDataSource.getReview(reviewId);
-      return review;
+      final reviewModel = await remoteDataSource.getReview(reviewId);
+      return reviewModel.toEntity();
     } catch (e) {
       throw APIException('Failed to get review: ${e.toString()}');
     }
@@ -95,8 +95,8 @@ class ReviewRepositoryImpl implements ReviewRepository {
   @override
   Future<List<Review>> getUserReviews(String userId) async {
     try {
-      final reviews = await remoteDataSource.getUserReviews(userId);
-      return reviews;
+      final reviewModels = await remoteDataSource.getUserReviews(userId);
+      return reviewModels.map((model) => model.toEntity()).toList();
     } catch (e) {
       throw APIException('Failed to get user reviews: ${e.toString()}');
     }

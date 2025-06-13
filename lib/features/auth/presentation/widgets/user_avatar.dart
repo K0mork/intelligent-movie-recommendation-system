@@ -7,18 +7,22 @@ import '../providers/auth_providers.dart';
 class UserAvatar extends ConsumerWidget {
   final double size;
   final VoidCallback? onTap;
+  final dynamic user; // 外部からユーザーを渡すことも可能
+  final bool showBorder;
 
   const UserAvatar({
     super.key,
     this.size = 40,
     this.onTap,
+    this.user,
+    this.showBorder = false,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(currentUserProvider);
+    final currentUser = user ?? ref.watch(currentUserProvider);
 
-    if (user == null) {
+    if (currentUser == null) {
       return IconButton(
         onPressed: onTap,
         icon: Icon(
@@ -35,22 +39,26 @@ class UserAvatar extends ConsumerWidget {
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+          border: showBorder ? Border.all(
+            color: Theme.of(context).colorScheme.primary,
+            width: 2,
+          ) : Border.all(
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
         child: ClipOval(
-          child: _buildAvatarContent(context, user),
+          child: _buildAvatarContent(context, currentUser),
         ),
       ),
     );
   }
 
-  Widget _buildAvatarContent(BuildContext context, AppUser user) {
-    if (user.photoURL != null && user.photoURL!.isNotEmpty) {
+  Widget _buildAvatarContent(BuildContext context, dynamic user) {
+    final photoURL = user is AppUser ? user.photoURL : user.photoURL;
+    if (photoURL != null && photoURL.isNotEmpty) {
       return Image.network(
-        user.photoURL!,
+        photoURL,
         width: size,
         height: size,
         fit: BoxFit.cover,
@@ -79,7 +87,7 @@ class UserAvatar extends ConsumerWidget {
     return _buildFallbackAvatar(context, user);
   }
 
-  Widget _buildFallbackAvatar(BuildContext context, AppUser user) {
+  Widget _buildFallbackAvatar(BuildContext context, dynamic user) {
     final theme = Theme.of(context);
     final initials = _getInitials(user);
 
@@ -100,9 +108,12 @@ class UserAvatar extends ConsumerWidget {
     );
   }
 
-  String _getInitials(AppUser user) {
-    if (user.displayName != null && user.displayName!.isNotEmpty) {
-      final nameParts = user.displayName!.trim().split(' ');
+  String _getInitials(dynamic user) {
+    final displayName = user is AppUser ? user.displayName : user.displayName;
+    final email = user is AppUser ? user.email : user.email;
+    
+    if (displayName != null && displayName.isNotEmpty) {
+      final nameParts = displayName.trim().split(' ');
       if (nameParts.length >= 2) {
         return '${nameParts[0][0]}${nameParts[1][0]}'.toUpperCase();
       } else if (nameParts.isNotEmpty) {
@@ -110,8 +121,8 @@ class UserAvatar extends ConsumerWidget {
       }
     }
     
-    if (user.email.isNotEmpty) {
-      return user.email[0].toUpperCase();
+    if (email != null && email.isNotEmpty) {
+      return email[0].toUpperCase();
     }
     
     return '?';

@@ -8,10 +8,12 @@ import 'core/constants/app_constants.dart';
 import 'features/auth/presentation/widgets/auth_wrapper.dart';
 import 'features/auth/presentation/widgets/demo_auth_wrapper.dart';
 import 'features/auth/presentation/pages/sign_in_page.dart';
+import 'features/auth/presentation/pages/profile_page.dart';
 import 'features/auth/presentation/widgets/user_avatar.dart';
 import 'features/auth/presentation/providers/auth_controller.dart';
 import 'features/movies/presentation/pages/movies_page.dart';
 import 'features/reviews/presentation/pages/reviews_page.dart';
+import 'features/reviews/presentation/pages/user_review_history_page.dart';
 import 'core/theme/scroll_theme.dart';
 import 'core/theme/scroll_behavior.dart';
 import 'firebase_options.dart';
@@ -97,6 +99,8 @@ class MyApp extends StatelessWidget {
         '/guest': (context) => const MyHomePage(title: AppConstants.appName),
         '/movies': (context) => const MoviesPage(),
         '/reviews': (context) => const ReviewsPage(),
+        '/my-reviews': (context) => const UserReviewHistoryPage(),
+        '/profile': (context) => const ProfilePage(),
       },
     );
   }
@@ -126,7 +130,15 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               title: const Text('プロフィール'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: プロフィール画面に遷移
+                Navigator.of(context).pushNamed('/profile');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.history),
+              title: const Text('レビュー履歴'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.of(context).pushNamed('/my-reviews');
               },
             ),
             ListTile(
@@ -192,7 +204,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             Text(
               'AIが分析するパーソナライズ映画推薦システム',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -220,6 +232,18 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/my-reviews');
+              },
+              icon: const Icon(Icons.history),
+              label: const Text('マイレビュー履歴'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
             ),
           ],
         ),
