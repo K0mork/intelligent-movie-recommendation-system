@@ -20,13 +20,15 @@ class AnonymousSignInButton extends ConsumerWidget {
 
     return SizedBox(
       width: double.infinity,
-      height: 48,
-      child: TextButton.icon(
+      height: 56,
+      child: ElevatedButton.icon(
         onPressed: isLoading
             ? null
             : onPressed ?? () => authController.signInAnonymously(),
-        style: TextButton.styleFrom(
-          foregroundColor: theme.colorScheme.onSurface,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: theme.colorScheme.primary,
+          foregroundColor: theme.colorScheme.onPrimary,
+          elevation: 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
@@ -43,14 +45,15 @@ class AnonymousSignInButton extends ConsumerWidget {
                 ),
               )
             : Icon(
-                Icons.person_outline,
-                size: 18,
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                Icons.explore,
+                size: 20,
+                color: theme.colorScheme.onPrimary,
               ),
         label: Text(
-          'ゲストとして続行',
-          style: theme.textTheme.titleSmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.7),
+          'ゲストとして映画を探す',
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: theme.colorScheme.onPrimary,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
