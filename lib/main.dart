@@ -94,6 +94,7 @@ class MyApp extends StatelessWidget {
               ),
         '/sign-in': (context) => const SignInPage(),
         '/home': (context) => const MyHomePage(title: AppConstants.appName),
+        '/guest': (context) => const MyHomePage(title: AppConstants.appName),
         '/movies': (context) => const MoviesPage(),
         '/reviews': (context) => const ReviewsPage(),
       },
@@ -111,13 +112,6 @@ class MyHomePage extends ConsumerStatefulWidget {
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   void _showUserMenu() {
     showModalBottomSheet(
@@ -203,12 +197,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
-            const Text('カウンターデモ:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -235,11 +223,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

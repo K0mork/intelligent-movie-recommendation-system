@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../providers/auth_controller.dart';
 import '../providers/auth_providers.dart';
-import '../widgets/anonymous_sign_in_button.dart';
 import '../widgets/google_sign_in_button.dart';
 
 class SignInPage extends ConsumerWidget {
@@ -77,9 +76,6 @@ class SignInPage extends ConsumerWidget {
               const SizedBox(height: 48),
 
               // サインインボタン
-              AnonymousSignInButton(isLoading: isLoading),
-              const SizedBox(height: 16),
-
               GoogleSignInButton(isLoading: isLoading),
               const SizedBox(height: 32),
 
