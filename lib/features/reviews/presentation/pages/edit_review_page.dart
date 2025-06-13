@@ -1,28 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../movies/domain/entities/movie_entity.dart';
+import '../../domain/entities/review.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 import '../widgets/star_rating.dart';
 import '../providers/review_providers.dart';
 import '../providers/review_controller.dart';
 
-class AddReviewPage extends ConsumerStatefulWidget {
-  final MovieEntity movie;
+class EditReviewPage extends ConsumerStatefulWidget {
+  final Review review;
 
-  const AddReviewPage({
+  const EditReviewPage({
     super.key,
-    required this.movie,
+    required this.review,
   });
 
   @override
-  ConsumerState<AddReviewPage> createState() => _AddReviewPageState();
+  ConsumerState<EditReviewPage> createState() => _EditReviewPageState();
 }
 
-class _AddReviewPageState extends ConsumerState<AddReviewPage> {
+class _EditReviewPageState extends ConsumerState<EditReviewPage> {
   final _formKey = GlobalKey<FormState>();
-  final _commentController = TextEditingController();
-  double _rating = 3.0;
+  late final TextEditingController _commentController;
+  late double _rating;
   bool _isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _commentController = TextEditingController(text: widget.review.comment ?? '');
+    _rating = widget.review.rating;
+  }
 
   @override
   void dispose() {
@@ -36,7 +43,7 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('レビューを書く'),
+        title: const Text('レビューを編集'),
         backgroundColor: theme.colorScheme.surface,
       ),
       body: SafeArea(
@@ -55,9 +62,9 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: widget.movie.posterPath != null
+                          child: widget.review.moviePosterUrl != null
                               ? Image.network(
-                                  'https://image.tmdb.org/t/p/w200${widget.movie.posterPath}',
+                                  widget.review.moviePosterUrl!,
                                   width: 80,
                                   height: 120,
                                   fit: BoxFit.cover,
@@ -91,34 +98,28 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.movie.title,
+                                widget.review.movieTitle,
                                 style: theme.textTheme.titleLarge,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 8),
-                              if (widget.movie.releaseYear != null)
+                              Text(
+                                '作成日: ${_formatDate(widget.review.createdAt)}',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              if (widget.review.updatedAt != widget.review.createdAt) ...[
+                                const SizedBox(height: 4),
                                 Text(
-                                  '公開日: ${widget.movie.releaseYear}年',
+                                  '最終更新: ${_formatDate(widget.review.updatedAt)}',
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: theme.colorScheme.onSurfaceVariant,
+                                    fontStyle: FontStyle.italic,
                                   ),
                                 ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    size: 16,
-                                    color: theme.colorScheme.primary,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    widget.movie.voteAverage.toStringAsFixed(1),
-                                    style: theme.textTheme.bodyMedium,
-                                  ),
-                                ],
-                              ),
+                              ],
                             ],
                           ),
                         ),
@@ -189,7 +190,7 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _isSubmitting ? null : _submitReview,
+                    onPressed: _isSubmitting ? null : _updateReview,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
@@ -202,7 +203,24 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('レビューを投稿'),
+                        : const Text('レビューを更新'),
+                  ),
+                ),
+                
+                const SizedBox(height: 16),
+                
+                // Cancel Button
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: const Text('キャンセル'),
                   ),
                 ),
               ],
@@ -213,7 +231,11 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
     );
   }
 
-  Future<void> _submitReview() async {
+  String _formatDate(DateTime date) {
+    return '${date.year}年${date.month}月${date.day}日';
+  }
+
+  Future<void> _updateReview() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -226,29 +248,35 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
         throw Exception('ユーザーが認証されていません');
       }
 
-      final reviewId = await ref.read(reviewControllerProvider.notifier).submitReview(
-        userId: user.uid,
-        movieId: widget.movie.id.toString(),
-        movieTitle: widget.movie.title,
-        moviePosterUrl: widget.movie.posterPath != null
-            ? 'https://image.tmdb.org/t/p/w200${widget.movie.posterPath}'
-            : null,
+      // Check if user owns this review
+      if (widget.review.userId != user.uid) {
+        throw Exception('このレビューを編集する権限がありません');
+      }
+
+      final updatedReview = Review(
+        id: widget.review.id,
+        userId: widget.review.userId,
+        movieId: widget.review.movieId,
+        movieTitle: widget.review.movieTitle,
+        moviePosterUrl: widget.review.moviePosterUrl,
         rating: _rating,
         comment: _commentController.text.trim().isEmpty
             ? null
             : _commentController.text.trim(),
+        createdAt: widget.review.createdAt,
+        updatedAt: DateTime.now(),
       );
 
-      if (mounted && reviewId != null) {
+      await ref.read(reviewControllerProvider.notifier).updateReview(updatedReview);
+
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('レビューを投稿しました'),
+            content: Text('レビューを更新しました'),
             backgroundColor: Colors.green,
           ),
         );
         Navigator.of(context).pop(true); // Return true to indicate success
-      } else if (mounted) {
-        throw Exception('レビューの投稿に失敗しました');
       }
     } catch (e) {
       if (mounted) {

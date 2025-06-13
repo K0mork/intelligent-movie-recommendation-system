@@ -83,4 +83,19 @@ class ReviewModel extends Review {
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
+
+  /// Convert ReviewModel to Review entity
+  Review toEntity() {
+    return Review(
+      id: id,
+      userId: userId,
+      movieId: movieId,
+      movieTitle: movieTitle,
+      moviePosterUrl: moviePosterUrl,
+      rating: rating,
+      comment: comment,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
 }
