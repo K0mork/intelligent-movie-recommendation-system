@@ -45,18 +45,10 @@ class GoogleSignInButton extends ConsumerWidget {
                   ),
                 ),
               )
-            : Image.asset(
-                'assets/icons/google_logo.png',
-                width: 20,
-                height: 20,
-                errorBuilder: (context, error, stackTrace) {
-                  // Googleロゴが見つからない場合のフォールバック
-                  return Icon(
-                    Icons.account_circle,
-                    size: 20,
-                    color: Colors.blue.shade600,
-                  );
-                },
+            : Icon(
+                Icons.login,
+                size: 20,
+                color: Colors.blue.shade600,
               ),
         label: Text(
           'Googleでサインイン',
