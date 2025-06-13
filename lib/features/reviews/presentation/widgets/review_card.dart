@@ -50,7 +50,7 @@ class ReviewCard extends StatelessWidget {
                           return Container(
                             width: 40,
                             height: 60,
-                            color: theme.colorScheme.surfaceVariant,
+                            color: theme.colorScheme.surfaceContainerHighest,
                             child: Icon(
                               Icons.movie,
                               size: 20,
