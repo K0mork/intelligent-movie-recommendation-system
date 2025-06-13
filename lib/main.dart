@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -19,7 +20,11 @@ void main() async {
   
   // Web環境でセマンティクスを有効化
   if (kIsWeb) {
-    SemanticsBinding.instance.ensureSemantics();
+    try {
+      SemanticsBinding.instance.ensureSemantics();
+    } catch (e) {
+      debugPrint('Semantics initialization failed: $e');
+    }
   }
   
   // .envファイルを読み込み
@@ -32,17 +37,19 @@ void main() async {
   // Firebase初期化を試行（設定ファイルがなくても続行）
   bool firebaseAvailable = false;
   try {
-    // Firebase初期化をより安全に行う
+    debugPrint('Attempting Firebase initialization...');
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
     firebaseAvailable = true;
-    debugPrint('Firebase initialized successfully');
+    debugPrint('✅ Firebase initialized successfully');
   } catch (e) {
-    debugPrint('Firebase initialization failed: $e');
-    debugPrint('Running in demo mode without Firebase');
+    debugPrint('❌ Firebase initialization failed: $e');
+    debugPrint('🔄 Running in demo mode without Firebase');
     firebaseAvailable = false;
   }
+  
+  debugPrint('Starting app with firebaseAvailable: $firebaseAvailable');
   
   runApp(ProviderScope(
     child: MyApp(firebaseAvailable: firebaseAvailable),
