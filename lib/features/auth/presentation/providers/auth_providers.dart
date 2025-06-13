@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../data/datasources/auth_remote_datasource.dart';
@@ -21,8 +22,15 @@ final firebaseAuthProvider = Provider<FirebaseAuth?>((ref) {
 // Google Sign In インスタンス
 final googleSignInProvider = Provider<GoogleSignIn>((ref) {
   return GoogleSignIn(
-    scopes: ['email', 'profile'],
-    clientId: '519346109803-b527n0aduaa262qv0sv57uml4f3q7ad6.apps.googleusercontent.com',
+    scopes: [
+      'email',
+      'profile',
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+    ],
+    clientId: kIsWeb 
+      ? '519346109803-b527n0aduaa262qv0sv57uml4f3q7ad6.apps.googleusercontent.com'
+      : null, // モバイルではnullを指定（firebase_optionsから取得）
   );
 });
 
