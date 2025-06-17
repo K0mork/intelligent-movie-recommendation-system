@@ -4,6 +4,7 @@ import '../../domain/entities/review.dart';
 import 'star_rating.dart';
 import '../../../../core/widgets/error_widgets.dart';
 import '../../../../core/widgets/animated_widgets.dart';
+import '../../../../core/widgets/accessibility_widgets.dart';
 
 class ReviewCard extends StatelessWidget {
   final Review review;
@@ -34,13 +35,9 @@ class ReviewCard extends StatelessWidget {
       onTap: onTap,
       semanticLabel: semanticLabel,
       semanticHint: onTap != null ? 'タップして詳細を表示' : null,
-      child: Card(
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
               // Header Row
               Row(
                 children: [
@@ -199,8 +196,6 @@ class ReviewCard extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
     );
   }
 

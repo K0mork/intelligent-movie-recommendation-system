@@ -8,6 +8,7 @@ import '../helpers/test_helpers.dart';
 import '../../lib/features/reviews/presentation/pages/add_review_page.dart';
 import '../../lib/features/reviews/presentation/pages/edit_review_page.dart';
 import '../../lib/features/reviews/presentation/pages/reviews_page.dart';
+import '../../lib/features/reviews/presentation/widgets/star_rating.dart';
 import '../../lib/features/reviews/domain/entities/review.dart';
 import '../../lib/features/movies/domain/entities/movie_entity.dart';
 import '../../lib/features/auth/domain/entities/app_user.dart';
