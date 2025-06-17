@@ -55,7 +55,7 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
   Future<List<RecommendationModel>> generateRecommendations(String userId) async {
     // 開発中のため、一時的にサンプル推薦を生成
     // （Cloud Functionsのデプロイには有料プランが必要）
-    print('サンプル推薦を生成中...');
+    // サンプル推薦を生成中
     
     // サンプル推薦を生成
     final sampleRecommendations = _generateSampleRecommendations(userId);
@@ -69,7 +69,7 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
       }
       await batch.commit();
     } catch (e) {
-      print('Firestore保存エラー（一時的な推薦は正常に生成されました）: $e');
+      // Firestore保存エラー（一時的な推薦は正常に生成されました）
     }
     
     return sampleRecommendations;
