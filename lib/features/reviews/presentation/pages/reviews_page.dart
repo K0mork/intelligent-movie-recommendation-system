@@ -5,6 +5,9 @@ import '../providers/review_providers.dart';
 import '../widgets/review_card.dart';
 import '../../../movies/presentation/pages/movie_detail_page.dart';
 import 'edit_review_page.dart';
+import '../../../../core/widgets/loading_animations.dart';
+import '../../../../core/widgets/error_widgets.dart';
+import '../../../../core/widgets/animated_widgets.dart';
 
 class ReviewsPage extends ConsumerStatefulWidget {
   const ReviewsPage({super.key});
@@ -86,29 +89,32 @@ class _ReviewsPageState extends ConsumerState<ReviewsPage> with SingleTickerProv
             ],
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => Center(
+        loading: () => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.red,
+              CircularWaveLoading(
+                color: theme.colorScheme.primary,
+                size: 60,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               Text(
-                'エラーが発生しました',
-                style: theme.textTheme.titleLarge,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                error.toString(),
-                style: theme.textTheme.bodyMedium,
-                textAlign: TextAlign.center,
+                '読み込み中...',
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
             ],
           ),
+        ),
+        error: (error, stackTrace) => ErrorDisplay(
+          title: 'ログインエラー',
+          message: 'ユーザー情報の取得に失敗しました',
+          icon: Icons.account_circle_outlined,
+          onRetry: () {
+            ref.invalidate(authStateProvider);
+          },
+          retryText: '再試行',
         ),
       ),
     );
@@ -195,83 +201,57 @@ class _MyReviewsTab extends ConsumerWidget {
           ),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stackTrace) => Center(
+      loading: () => const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
+            CircularWaveLoading(
+              color: Colors.blue,
+              size: 50,
             ),
-            const SizedBox(height: 16),
-            Text(
-              'レビューの読み込みに失敗しました',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error.toString(),
-              style: Theme.of(context).textTheme.bodySmall,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                ref.refresh(userReviewsProvider(userId));
-              },
-              child: const Text('再試行'),
-            ),
+            SizedBox(height: 16),
+            Text('レビューを読み込み中...'),
           ],
         ),
+      ),
+      error: (error, stackTrace) => ErrorDisplay(
+        title: 'レビューの読み込みエラー',
+        message: 'レビューデータの取得に失敗しました',
+        icon: Icons.rate_review_outlined,
+        onRetry: () {
+          ref.refresh(userReviewsProvider(userId));
+        },
       ),
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context, WidgetRef ref, review) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('レビューを削除'),
-        content: Text('「${review.movieTitle}」のレビューを削除しますか？\nこの操作は取り消せません。'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('キャンセル'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
-              try {
-                await ref.read(reviewControllerProvider.notifier).deleteReview(review.id);
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('レビューを削除しました'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                  ref.refresh(userReviewsProvider(userId));
-                }
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('削除に失敗しました: ${e.toString()}'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              }
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.red,
-            ),
-            child: const Text('削除'),
-          ),
-        ],
-      ),
+  void _showDeleteConfirmation(BuildContext context, WidgetRef ref, review) async {
+    final confirmed = await DialogHelper.showConfirmDialog(
+      context,
+      title: 'レビューを削除',
+      message: '「${review.movieTitle}」のレビューを削除しますか？\nこの操作は取り消せません。',
+      confirmText: '削除',
+      confirmColor: Colors.red,
     );
+
+    if (confirmed == true && context.mounted) {
+      try {
+        await ref.read(reviewControllerProvider.notifier).deleteReview(review.id);
+        if (context.mounted) {
+          SnackBarHelper.showSuccess(
+            context,
+            'レビューを削除しました',
+          );
+          ref.refresh(userReviewsProvider(userId));
+        }
+      } catch (e) {
+        if (context.mounted) {
+          SnackBarHelper.showError(
+            context,
+            '削除に失敗しました',
+          );
+        }
+      }
+    }
   }
 }

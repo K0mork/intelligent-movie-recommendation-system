@@ -40,6 +40,7 @@ class ReviewRepositoryImpl implements ReviewRepository {
     String? moviePosterUrl,
     required double rating,
     String? comment,
+    DateTime? watchedDate,
   }) async {
     try {
       final now = DateTime.now();
@@ -51,6 +52,7 @@ class ReviewRepositoryImpl implements ReviewRepository {
         moviePosterUrl: moviePosterUrl,
         rating: rating,
         comment: comment,
+        watchedDate: watchedDate,
         createdAt: now,
         updatedAt: now,
       );
@@ -73,6 +75,7 @@ class ReviewRepositoryImpl implements ReviewRepository {
         moviePosterUrl: review.moviePosterUrl,
         rating: review.rating,
         comment: review.comment,
+        watchedDate: review.watchedDate,
         createdAt: review.createdAt,
         updatedAt: DateTime.now(),
       );

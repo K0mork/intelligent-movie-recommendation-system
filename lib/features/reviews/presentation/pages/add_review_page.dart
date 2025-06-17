@@ -4,6 +4,7 @@ import '../../../movies/domain/entities/movie_entity.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 import '../widgets/star_rating.dart';
 import '../providers/review_providers.dart';
+import '../../../../core/widgets/error_widgets.dart';
 
 class AddReviewPage extends ConsumerStatefulWidget {
   final MovieEntity movie;
@@ -22,6 +23,7 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
   final _commentController = TextEditingController();
   double _rating = 3.0;
   bool _isSubmitting = false;
+  DateTime? _watchedDate;
 
   @override
   void dispose() {
@@ -157,6 +159,74 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                 
                 const SizedBox(height: 24),
                 
+                // Watched Date Section
+                Text(
+                  '鑑賞日',
+                  style: theme.textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                InkWell(
+                  onTap: () async {
+                    final selectedDate = await showDatePicker(
+                      context: context,
+                      initialDate: _watchedDate ?? DateTime.now(),
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                      locale: const Locale('ja', 'JP'),
+                    );
+                    if (selectedDate != null) {
+                      setState(() {
+                        _watchedDate = selectedDate;
+                      });
+                    }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: theme.colorScheme.outline),
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: theme.colorScheme.surface,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today,
+                          color: theme.colorScheme.onSurfaceVariant,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          _watchedDate != null
+                              ? '${_watchedDate!.year}年${_watchedDate!.month}月${_watchedDate!.day}日'
+                              : '鑑賞日を選択（任意）',
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: _watchedDate != null
+                                ? theme.colorScheme.onSurface
+                                : theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const Spacer(),
+                        if (_watchedDate != null)
+                          IconButton(
+                            icon: Icon(
+                              Icons.clear,
+                              color: theme.colorScheme.onSurfaceVariant,
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _watchedDate = null;
+                              });
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                
+                const SizedBox(height: 24),
+                
                 // Comment Section
                 Text(
                   'レビューコメント',
@@ -236,14 +306,13 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
         comment: _commentController.text.trim().isEmpty
             ? null
             : _commentController.text.trim(),
+        watchedDate: _watchedDate,
       );
 
       if (mounted && reviewId != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('レビューを投稿しました'),
-            backgroundColor: Colors.green,
-          ),
+        SnackBarHelper.showSuccess(
+          context,
+          'レビューを投稿しました',
         );
         Navigator.of(context).pop(true); // Return true to indicate success
       } else if (mounted) {
@@ -251,11 +320,21 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('エラーが発生しました: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
+        String errorMessage = 'レビューの投稿に失敗しました';
+        
+        if (e.toString().contains('network') || e.toString().contains('internet')) {
+          errorMessage = 'ネットワークエラーが発生しました。インターネット接続を確認してください。';
+        } else if (e.toString().contains('permission') || e.toString().contains('auth')) {
+          errorMessage = 'アクセス権限がありません。ログインし直してください。';
+        } else if (e.toString().contains('validation')) {
+          errorMessage = '入力内容に問題があります。再度確認してください。';
+        }
+        
+        SnackBarHelper.showError(
+          context,
+          errorMessage,
+          actionLabel: '再試行',
+          onAction: () => _submitReview(),
         );
       }
     } finally {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/widgets/accessibility_widgets.dart';
 
 class StarRating extends StatelessWidget {
   final double rating;
@@ -26,20 +27,27 @@ class StarRating extends StatelessWidget {
     final activeColor = color ?? theme.colorScheme.primary;
     final inactiveColor = unratedColor ?? theme.colorScheme.outline;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(maxRating, (index) {
+    return AccessibleRating(
+      rating: rating,
+      maxRating: maxRating.toDouble(),
+      semanticLabel: AccessibilityHelper.formatRatingForScreenReader(rating, maxRating.toDouble()),
+      itemCount: maxRating,
+      itemBuilder: (context, index, isActive) {
         return GestureDetector(
           onTap: onRatingChanged != null
               ? () => onRatingChanged!(index + 1.0)
               : null,
-          child: Icon(
-            _getStarIcon(index + 1, rating),
-            color: _getStarColor(index + 1, rating, activeColor, inactiveColor),
-            size: size,
+          child: Semantics(
+            label: '${index + 1}星',
+            button: onRatingChanged != null,
+            child: Icon(
+              _getStarIcon(index + 1, rating),
+              color: _getStarColor(index + 1, rating, activeColor, inactiveColor),
+              size: size,
+            ),
           ),
         );
-      }),
+      },
     );
   }
 
@@ -106,26 +114,38 @@ class _InteractiveStarRatingState extends State<InteractiveStarRating> {
     final activeColor = widget.color ?? theme.colorScheme.primary;
     final inactiveColor = widget.unratedColor ?? theme.colorScheme.outline;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(widget.maxRating, (index) {
-        return GestureDetector(
-          onTap: () {
-            setState(() {
-              _currentRating = index + 1.0;
-            });
-            widget.onRatingChanged(_currentRating);
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2.0),
-            child: Icon(
-              _currentRating > index ? Icons.star : Icons.star_border,
-              color: _currentRating > index ? activeColor : inactiveColor,
-              size: widget.size,
+    return Semantics(
+      label: '評価を選択してください。現在の評価: ${AccessibilityHelper.formatRatingForScreenReader(_currentRating, widget.maxRating.toDouble())}',
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(widget.maxRating, (index) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _currentRating = index + 1.0;
+              });
+              widget.onRatingChanged(_currentRating);
+              AccessibilityHelper.announceToScreenReader(
+                context,
+                '${index + 1}星に設定しました',
+              );
+            },
+            child: Semantics(
+              label: '${index + 1}星',
+              button: true,
+              selected: _currentRating > index,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                child: Icon(
+                  _currentRating > index ? Icons.star : Icons.star_border,
+                  color: _currentRating > index ? activeColor : inactiveColor,
+                  size: widget.size,
+                ),
+              ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 }

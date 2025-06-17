@@ -10,6 +10,7 @@ class ReviewModel extends Review {
     super.moviePosterUrl,
     required super.rating,
     super.comment,
+    super.watchedDate,
     required super.createdAt,
     required super.updatedAt,
   });
@@ -24,6 +25,7 @@ class ReviewModel extends Review {
       moviePosterUrl: data['moviePosterUrl'],
       rating: (data['rating'] ?? 0.0).toDouble(),
       comment: data['comment'],
+      watchedDate: (data['watchedDate'] as Timestamp?)?.toDate(),
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
@@ -38,6 +40,9 @@ class ReviewModel extends Review {
       moviePosterUrl: map['moviePosterUrl'],
       rating: (map['rating'] ?? 0.0).toDouble(),
       comment: map['comment'],
+      watchedDate: map['watchedDate'] is Timestamp
+          ? (map['watchedDate'] as Timestamp).toDate()
+          : (map['watchedDate'] != null ? DateTime.parse(map['watchedDate']) : null),
       createdAt: map['createdAt'] is Timestamp
           ? (map['createdAt'] as Timestamp).toDate()
           : DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
@@ -55,6 +60,7 @@ class ReviewModel extends Review {
       'moviePosterUrl': moviePosterUrl,
       'rating': rating,
       'comment': comment,
+      'watchedDate': watchedDate != null ? Timestamp.fromDate(watchedDate!) : null,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
     };
@@ -69,6 +75,7 @@ class ReviewModel extends Review {
     String? moviePosterUrl,
     double? rating,
     String? comment,
+    DateTime? watchedDate,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -80,6 +87,7 @@ class ReviewModel extends Review {
       moviePosterUrl: moviePosterUrl ?? this.moviePosterUrl,
       rating: rating ?? this.rating,
       comment: comment ?? this.comment,
+      watchedDate: watchedDate ?? this.watchedDate,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -95,6 +103,7 @@ class ReviewModel extends Review {
       moviePosterUrl: moviePosterUrl,
       rating: rating,
       comment: comment,
+      watchedDate: watchedDate,
       createdAt: createdAt,
       updatedAt: updatedAt,
     );

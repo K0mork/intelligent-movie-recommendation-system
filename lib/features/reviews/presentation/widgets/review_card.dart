@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/review.dart';
 import 'star_rating.dart';
+import '../../../../core/widgets/error_widgets.dart';
+import '../../../../core/widgets/animated_widgets.dart';
 
 class ReviewCard extends StatelessWidget {
   final Review review;
@@ -24,12 +26,16 @@ class ReviewCard extends StatelessWidget {
     final theme = Theme.of(context);
     final dateFormat = DateFormat('yyyy年MM月dd日');
 
-    return Card(
+    final semanticLabel = _buildSemanticLabel(dateFormat);
+
+    return AccessibleCard(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
-      elevation: 2,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12.0),
+      padding: const EdgeInsets.all(16.0),
+      onTap: onTap,
+      semanticLabel: semanticLabel,
+      semanticHint: onTap != null ? 'タップして詳細を表示' : null,
+      child: Card(
+        elevation: 2,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -149,23 +155,46 @@ class ReviewCard extends StatelessWidget {
               
               // Footer
               const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    dateFormat.format(review.createdAt),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                  if (review.watchedDate != null)
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today,
+                          size: 14,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '鑑賞日: ${dateFormat.format(review.watchedDate!)}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  if (review.updatedAt != review.createdAt)
-                    Text(
-                      '編集済み',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                        fontStyle: FontStyle.italic,
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '投稿日: ${dateFormat.format(review.createdAt)}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
-                    ),
+                      if (review.updatedAt != review.createdAt)
+                        Text(
+                          '編集済み',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                    ],
+                  ),
                 ],
               ),
             ],
@@ -173,6 +202,23 @@ class ReviewCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _buildSemanticLabel(DateFormat dateFormat) {
+    String label = '映画: ${review.movieTitle}';
+    label += ', 評価: ${AccessibilityHelper.formatRatingForScreenReader(review.rating, 5.0)}';
+    
+    if (review.comment != null && review.comment!.isNotEmpty) {
+      label += ', コメント: ${review.comment}';
+    }
+    
+    if (review.watchedDate != null) {
+      label += ', 鑑賞日: ${AccessibilityHelper.formatDateForScreenReader(review.watchedDate!)}';
+    }
+    
+    label += ', 投稿日: ${AccessibilityHelper.formatDateForScreenReader(review.createdAt)}';
+    
+    return label;
   }
 }
 
@@ -195,32 +241,10 @@ class ReviewList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (reviews.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.rate_review_outlined,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'レビューがありません',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '映画を観た感想を共有してみましょう',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[500],
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+      return EmptyStateWidget(
+        title: 'レビューがありません',
+        message: '映画を見たらレビューを書いてみましょう',
+        icon: Icons.rate_review_outlined,
       );
     }
 
@@ -228,12 +252,19 @@ class ReviewList extends StatelessWidget {
       itemCount: reviews.length,
       itemBuilder: (context, index) {
         final review = reviews[index];
-        return ReviewCard(
-          review: review,
-          showMovieInfo: showMovieInfo,
-          onTap: onReviewTap != null ? () => onReviewTap!(review) : null,
-          onEdit: onEditReview != null ? () => onEditReview!(review) : null,
-          onDelete: onDeleteReview != null ? () => onDeleteReview!(review) : null,
+        return FadeInWidget(
+          delay: Duration(milliseconds: index * 100),
+          child: SlideInWidget(
+            delay: Duration(milliseconds: index * 100),
+            begin: const Offset(0.0, 0.2),
+            child: ReviewCard(
+              review: review,
+              showMovieInfo: showMovieInfo,
+              onTap: onReviewTap != null ? () => onReviewTap!(review) : null,
+              onEdit: onEditReview != null ? () => onEditReview!(review) : null,
+              onDelete: onDeleteReview != null ? () => onDeleteReview!(review) : null,
+            ),
+          ),
         );
       },
     );
