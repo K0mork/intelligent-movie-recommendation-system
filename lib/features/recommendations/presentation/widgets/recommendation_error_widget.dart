@@ -12,6 +12,10 @@ class RecommendationErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // インデックス関連のエラーを判定
+    final isIndexError = error.contains('index') && 
+                         (error.contains('building') || error.contains('create'));
+    
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -23,22 +27,24 @@ class RecommendationErrorWidget extends StatelessWidget {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: Colors.red.withValues(alpha: 0.1),
+                color: isIndexError 
+                    ? Colors.orange.withValues(alpha: 0.1)
+                    : Colors.red.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.error_outline,
+              child: Icon(
+                isIndexError ? Icons.hourglass_empty : Icons.error_outline,
                 size: 40,
-                color: Colors.red,
+                color: isIndexError ? Colors.orange : Colors.red,
               ),
             ),
             const SizedBox(height: 24),
             
             // エラータイトル
             Text(
-              'エラーが発生しました',
+              isIndexError ? 'データベース準備中...' : 'エラーが発生しました',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: Colors.red,
+                color: isIndexError ? Colors.orange : Colors.red,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
@@ -47,7 +53,9 @@ class RecommendationErrorWidget extends StatelessWidget {
             
             // エラーメッセージ
             Text(
-              error,
+              isIndexError 
+                  ? 'データベースインデックスを構築中です。数分お待ちください。\nまたは「新しい推薦を生成」ボタンをお試しください。'
+                  : error,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: Colors.grey[600],
               ),

@@ -18,6 +18,17 @@ class RecommendationController {
 
     final notifier = ref.read(recommendationsProvider.notifier);
     await notifier.loadRecommendations(user.uid);
+    
+    // 推薦結果が空の場合、自動的に生成を試行
+    final currentRecommendations = ref.read(recommendationsProvider);
+    if (currentRecommendations.isEmpty) {
+      try {
+        await generateRecommendations();
+      } catch (e) {
+        // 自動生成に失敗しても継続（ユーザーが手動で生成可能）
+        print('自動推薦生成に失敗: $e');
+      }
+    }
   }
 
   // 新しい推薦を生成
