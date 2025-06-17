@@ -6,6 +6,7 @@ class Review {
   final String? moviePosterUrl;
   final double rating;
   final String? comment;
+  final DateTime? watchedDate;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -17,6 +18,7 @@ class Review {
     this.moviePosterUrl,
     required this.rating,
     this.comment,
+    this.watchedDate,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -29,6 +31,7 @@ class Review {
     String? moviePosterUrl,
     double? rating,
     String? comment,
+    DateTime? watchedDate,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -40,6 +43,7 @@ class Review {
       moviePosterUrl: moviePosterUrl ?? this.moviePosterUrl,
       rating: rating ?? this.rating,
       comment: comment ?? this.comment,
+      watchedDate: watchedDate ?? this.watchedDate,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -56,6 +60,7 @@ class Review {
         other.moviePosterUrl == moviePosterUrl &&
         other.rating == rating &&
         other.comment == comment &&
+        other.watchedDate == watchedDate &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }
@@ -70,6 +75,7 @@ class Review {
       moviePosterUrl,
       rating,
       comment,
+      watchedDate,
       createdAt,
       updatedAt,
     );
@@ -77,6 +83,6 @@ class Review {
 
   @override
   String toString() {
-    return 'Review(id: $id, userId: $userId, movieId: $movieId, movieTitle: $movieTitle, rating: $rating, comment: $comment, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Review(id: $id, userId: $userId, movieId: $movieId, movieTitle: $movieTitle, rating: $rating, comment: $comment, watchedDate: $watchedDate, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }

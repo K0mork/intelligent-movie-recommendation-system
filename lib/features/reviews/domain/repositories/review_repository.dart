@@ -10,6 +10,7 @@ abstract class ReviewRepository {
     String? moviePosterUrl,
     required double rating,
     String? comment,
+    DateTime? watchedDate,
   });
   Future<void> updateReview(Review review);
   Future<void> deleteReview(String reviewId);

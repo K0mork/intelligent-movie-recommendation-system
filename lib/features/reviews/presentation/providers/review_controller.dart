@@ -62,6 +62,7 @@ class ReviewController extends StateNotifier<ReviewState> {
     String? moviePosterUrl,
     required double rating,
     String? comment,
+    DateTime? watchedDate,
   }) async {
     state = state.copyWith(isSubmitting: true, error: null);
     
@@ -73,6 +74,7 @@ class ReviewController extends StateNotifier<ReviewState> {
         moviePosterUrl: moviePosterUrl,
         rating: rating,
         comment: comment,
+        watchedDate: watchedDate,
       );
       
       state = state.copyWith(isSubmitting: false);
