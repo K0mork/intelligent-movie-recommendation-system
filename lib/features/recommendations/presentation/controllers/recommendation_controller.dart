@@ -21,12 +21,18 @@ class RecommendationController {
     
     // 推薦結果が空の場合、自動的に生成を試行
     final currentRecommendations = ref.read(recommendationsProvider);
-    if (currentRecommendations.isEmpty) {
+    final shouldGenerateRecommendations = currentRecommendations.when(
+      data: (recommendations) => recommendations.isEmpty,
+      loading: () => false,
+      error: (_, __) => false,
+    );
+    
+    if (shouldGenerateRecommendations) {
       try {
         await generateRecommendations();
       } catch (e) {
         // 自動生成に失敗しても継続（ユーザーが手動で生成可能）
-        print('自動推薦生成に失敗: $e');
+        // 自動推薦生成に失敗（ログに記録）
       }
     }
   }
