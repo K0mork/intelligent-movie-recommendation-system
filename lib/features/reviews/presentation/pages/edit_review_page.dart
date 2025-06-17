@@ -4,7 +4,6 @@ import '../../domain/entities/review.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 import '../widgets/star_rating.dart';
 import '../providers/review_providers.dart';
-import '../providers/review_controller.dart';
 
 class EditReviewPage extends ConsumerStatefulWidget {
   final Review review;
@@ -72,7 +71,7 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                                     return Container(
                                       width: 80,
                                       height: 120,
-                                      color: theme.colorScheme.surfaceVariant,
+                                      color: theme.colorScheme.surfaceContainerHighest,
                                       child: Icon(
                                         Icons.movie,
                                         size: 40,
@@ -84,7 +83,7 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                               : Container(
                                   width: 80,
                                   height: 120,
-                                  color: theme.colorScheme.surfaceVariant,
+                                  color: theme.colorScheme.surfaceContainerHighest,
                                   child: Icon(
                                     Icons.movie,
                                     size: 40,

@@ -7,7 +7,6 @@ import '../../../reviews/presentation/pages/add_review_page.dart';
 import '../../../reviews/presentation/pages/edit_review_page.dart';
 import '../../../reviews/presentation/widgets/review_card.dart';
 import '../../../reviews/presentation/providers/review_providers.dart';
-import '../../../reviews/presentation/providers/review_controller.dart';
 import '../../../movies/domain/entities/movie_entity.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 
@@ -290,10 +289,10 @@ class _ReviewSection extends ConsumerWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceVariant.withOpacity(0.5),
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: theme.colorScheme.outline.withOpacity(0.3),
+                    color: theme.colorScheme.outline.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(
@@ -321,10 +320,10 @@ class _ReviewSection extends ConsumerWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: theme.colorScheme.errorContainer.withOpacity(0.1),
+              color: theme.colorScheme.errorContainer.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: theme.colorScheme.error.withOpacity(0.3),
+                color: theme.colorScheme.error.withValues(alpha: 0.3),
               ),
             ),
             child: Text(
@@ -396,7 +395,7 @@ class _ReviewSection extends ConsumerWidget {
                       onDelete: isOwnReview ? () => _showDeleteConfirmation(context, ref, review) : null,
                     ),
                   );
-                }).toList(),
+                }),
               ],
             );
           },

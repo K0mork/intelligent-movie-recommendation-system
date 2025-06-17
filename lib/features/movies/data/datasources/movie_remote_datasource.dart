@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:movie_recommend_app/core/config/env_config.dart';
 import 'package:movie_recommend_app/core/constants/app_constants.dart';
