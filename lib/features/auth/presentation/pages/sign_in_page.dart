@@ -14,7 +14,6 @@ class SignInPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final authState = ref.watch(authControllerProvider);
     final isLoading = ref.watch(authLoadingProvider);
 
     // エラーハンドリング
@@ -69,7 +68,7 @@ class SignInPage extends ConsumerWidget {
               Text(
                 '映画の世界をAIと一緒に探検しよう',
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -90,7 +89,7 @@ class SignInPage extends ConsumerWidget {
                     child: Text(
                       'または',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                   ),
@@ -105,7 +104,7 @@ class SignInPage extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -113,7 +112,7 @@ class SignInPage extends ConsumerWidget {
                     Text(
                       '映画を見る前に、まずは人気作品を\nチェックしてみませんか？',
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.8),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -144,7 +143,7 @@ class SignInPage extends ConsumerWidget {
               Text(
                 'サインインすることで、利用規約およびプライバシーポリシーに同意したものとみなされます。',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
                 textAlign: TextAlign.center,
               ),

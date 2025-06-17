@@ -3,16 +3,6 @@ import 'package:movie_recommend_app/features/auth/domain/entities/app_user.dart'
 
 void main() {
   group('AppUser', () {
-    final testDateTime = DateTime(2023, 1, 1);
-    final testUser = AppUser(
-      uid: 'test-uid-123',
-      email: 'test@example.com',
-      displayName: 'Test User',
-      photoURL: 'https://example.com/photo.jpg',
-      createdAt: testDateTime,
-      lastSignInAt: testDateTime,
-      isEmailVerified: true,
-    );
 
     test('creates instance with required properties', () {
       final createdAt = DateTime.now();

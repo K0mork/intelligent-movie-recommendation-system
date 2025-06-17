@@ -14,6 +14,7 @@ import 'features/auth/presentation/providers/auth_controller.dart';
 import 'features/movies/presentation/pages/movies_page.dart';
 import 'features/reviews/presentation/pages/reviews_page.dart';
 import 'features/reviews/presentation/pages/user_review_history_page.dart';
+import 'features/recommendations/presentation/pages/recommendations_page.dart';
 import 'core/theme/scroll_theme.dart';
 import 'core/theme/scroll_behavior.dart';
 import 'firebase_options.dart';
@@ -100,6 +101,7 @@ class MyApp extends StatelessWidget {
         '/movies': (context) => const MoviesPage(),
         '/reviews': (context) => const ReviewsPage(),
         '/my-reviews': (context) => const UserReviewHistoryPage(),
+        '/recommendations': (context) => const RecommendationsPage(),
         '/profile': (context) => const ProfilePage(),
       },
     );
@@ -234,16 +236,33 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               ],
             ),
             const SizedBox(height: 12),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.of(context).pushNamed('/my-reviews');
-              },
-              icon: const Icon(Icons.history),
-              label: const Text('マイレビュー履歴'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/recommendations');
+                  },
+                  icon: const Icon(Icons.recommend),
+                  label: const Text('AI映画推薦'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    foregroundColor: Theme.of(context).colorScheme.onTertiary,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/my-reviews');
+                  },
+                  icon: const Icon(Icons.history),
+                  label: const Text('マイレビュー履歴'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

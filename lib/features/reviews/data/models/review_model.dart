@@ -60,6 +60,7 @@ class ReviewModel extends Review {
     };
   }
 
+  @override
   ReviewModel copyWith({
     String? id,
     String? userId,

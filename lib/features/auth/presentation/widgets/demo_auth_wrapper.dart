@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../pages/sign_in_page.dart';
 
 /// Firebase設定がない場合のデモ用認証ラッパー
 class DemoAuthWrapper extends ConsumerStatefulWidget {
@@ -116,7 +115,7 @@ class DemoSignInPage extends StatelessWidget {
               Text(
                 '映画の世界をAIと一緒に探検しよう',
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -168,12 +167,12 @@ class DemoSignInPage extends StatelessWidget {
                   icon: Icon(
                     Icons.person_outline,
                     size: 18,
-                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                   label: Text(
                     'ゲストとして続行',
                     style: theme.textTheme.titleSmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.7),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                 ),
@@ -185,7 +184,7 @@ class DemoSignInPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -206,7 +205,7 @@ class DemoSignInPage extends StatelessWidget {
                     Text(
                       'Firebase設定が完了していないため、認証機能は動作しません。UIとナビゲーションのデモをお楽しみください。',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                       textAlign: TextAlign.center,
                     ),

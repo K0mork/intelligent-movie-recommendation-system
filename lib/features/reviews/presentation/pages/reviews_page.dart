@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 import '../providers/review_providers.dart';
-import '../providers/review_controller.dart';
 import '../widgets/review_card.dart';
 import '../../../movies/presentation/pages/movie_detail_page.dart';
 import 'edit_review_page.dart';
