@@ -12,7 +12,7 @@ class AppConstants {
   static const String recommendationsCollection = 'recommendations';
   
   // App Info
-  static const String appName = 'Movie Recommendation System';
+  static const String appName = 'FilmFlow';
   static const String appVersion = '1.0.0';
   
   // Error Messages

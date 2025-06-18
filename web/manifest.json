@@ -1,11 +1,11 @@
 {
-    "name": "movie_recommend_app",
-    "short_name": "movie_recommend_app",
+    "name": "FilmFlow",
+    "short_name": "FilmFlow",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "FilmFlow - AI-powered intelligent movie recommendation system",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

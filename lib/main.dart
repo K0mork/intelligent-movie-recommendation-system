@@ -229,7 +229,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Welcome to Movie Recommendation System!',
+              'Welcome to FilmFlow!',
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
