@@ -121,7 +121,6 @@ class SignInPage extends ConsumerWidget {
                       width: double.infinity,
                       child: OutlinedButton.icon(
                         onPressed: () {
-                          // TODO: 人気映画一覧画面に遷移
                           Navigator.of(context).pushReplacementNamed('/home');
                         },
                         style: OutlinedButton.styleFrom(
