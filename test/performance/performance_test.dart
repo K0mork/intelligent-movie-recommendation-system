@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movie_recommend_app/main.dart';
-import 'package:movie_recommend_app/features/movies/presentation/pages/movies_page.dart';
-import 'package:movie_recommend_app/features/reviews/presentation/pages/reviews_page.dart';
-import 'package:movie_recommend_app/features/reviews/presentation/widgets/star_rating.dart';
+import 'package:filmflow/main.dart';
+import 'package:filmflow/features/movies/presentation/pages/movies_page.dart';
+import 'package:filmflow/features/reviews/presentation/pages/reviews_page.dart';
+import 'package:filmflow/features/reviews/presentation/widgets/star_rating.dart';
 import '../helpers/test_helpers.dart';
 
 void main() {

@@ -1,4 +1,4 @@
-import 'package:movie_recommend_app/core/constants/app_constants.dart';
+import 'package:filmflow/core/constants/app_constants.dart';
 
 /// API関連のユーティリティクラス
 class ApiHelper {

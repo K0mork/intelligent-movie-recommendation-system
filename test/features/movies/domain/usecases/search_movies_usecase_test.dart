@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:movie_recommend_app/features/movies/domain/repositories/movie_repository.dart';
-import 'package:movie_recommend_app/features/movies/domain/usecases/search_movies_usecase.dart';
-import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
+import 'package:filmflow/features/movies/domain/repositories/movie_repository.dart';
+import 'package:filmflow/features/movies/domain/usecases/search_movies_usecase.dart';
+import 'package:filmflow/features/movies/data/models/movie.dart';
 
 @GenerateMocks([MovieRepository])
 import 'search_movies_usecase_test.mocks.dart';

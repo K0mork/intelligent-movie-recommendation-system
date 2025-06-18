@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:movie_recommend_app/features/movies/presentation/providers/movie_providers.dart';
-import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
+import 'package:filmflow/features/movies/presentation/providers/movie_providers.dart';
+import 'package:filmflow/features/movies/data/models/movie.dart';
 import '../../../reviews/presentation/pages/add_review_page.dart';
 import '../../../reviews/presentation/pages/edit_review_page.dart';
 import '../../../reviews/presentation/widgets/review_card.dart';

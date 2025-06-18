@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_recommend_app/core/constants/app_constants.dart';
-import 'package:movie_recommend_app/core/theme/scroll_behavior.dart';
-import 'package:movie_recommend_app/features/movies/presentation/widgets/movie_card.dart';
-import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
+import 'package:filmflow/core/constants/app_constants.dart';
+import 'package:filmflow/core/theme/scroll_behavior.dart';
+import 'package:filmflow/features/movies/presentation/widgets/movie_card.dart';
+import 'package:filmflow/features/movies/data/models/movie.dart';
 
 class MovieGrid extends StatelessWidget {
   final List<Movie> movies;

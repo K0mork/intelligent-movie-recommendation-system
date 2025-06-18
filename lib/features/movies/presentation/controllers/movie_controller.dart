@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movie_recommend_app/features/movies/domain/usecases/get_popular_movies_usecase.dart';
-import 'package:movie_recommend_app/features/movies/domain/usecases/search_movies_usecase.dart';
-import 'package:movie_recommend_app/features/movies/domain/usecases/get_movie_details_usecase.dart';
-import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
+import 'package:filmflow/features/movies/domain/usecases/get_popular_movies_usecase.dart';
+import 'package:filmflow/features/movies/domain/usecases/search_movies_usecase.dart';
+import 'package:filmflow/features/movies/domain/usecases/get_movie_details_usecase.dart';
+import 'package:filmflow/features/movies/data/models/movie.dart';
 
 class MovieState {
   final List<Movie> popularMovies;

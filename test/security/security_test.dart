@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:movie_recommend_app/core/config/env_config.dart';
-import 'package:movie_recommend_app/core/utils/validation_helper.dart';
+import 'package:filmflow/core/config/env_config.dart';
+import 'package:filmflow/core/utils/validation_helper.dart';
 
 void main() {
   group('Security Tests', () {

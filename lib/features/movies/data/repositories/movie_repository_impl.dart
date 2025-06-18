@@ -1,7 +1,7 @@
-import 'package:movie_recommend_app/core/errors/app_exceptions.dart';
-import 'package:movie_recommend_app/features/movies/data/datasources/movie_remote_datasource.dart';
-import 'package:movie_recommend_app/features/movies/domain/repositories/movie_repository.dart';
-import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
+import 'package:filmflow/core/errors/app_exceptions.dart';
+import 'package:filmflow/features/movies/data/datasources/movie_remote_datasource.dart';
+import 'package:filmflow/features/movies/domain/repositories/movie_repository.dart';
+import 'package:filmflow/features/movies/data/models/movie.dart';
 
 class MovieRepositoryImpl implements MovieRepository {
   final MovieRemoteDataSource _remoteDataSource;

@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:movie_recommend_app/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:movie_recommend_app/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:movie_recommend_app/features/auth/domain/entities/app_user.dart';
+import 'package:filmflow/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:filmflow/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:filmflow/features/auth/domain/entities/app_user.dart';
 
 @GenerateMocks([AuthRemoteDataSource])
 import 'auth_repository_impl_test.mocks.dart';

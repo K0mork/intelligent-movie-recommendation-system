@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:movie_recommend_app/features/reviews/domain/entities/review.dart';
+import 'package:filmflow/features/reviews/domain/entities/review.dart';
 
 void main() {
   group('Review', () {

@@ -17,7 +17,7 @@ import 'features/movies/presentation/pages/movies_page.dart';
 import 'features/reviews/presentation/pages/reviews_page.dart';
 import 'features/reviews/presentation/pages/user_review_history_page.dart';
 import 'features/recommendations/presentation/pages/recommendations_page.dart';
-import 'core/theme/scroll_theme.dart';
+import 'core/theme/app_theme.dart';
 import 'core/theme/scroll_behavior.dart';
 import 'firebase_options.dart';
 
@@ -102,19 +102,8 @@ class MyApp extends StatelessWidget {
       title: AppConstants.appName,
       // スクロール動作の改善
       scrollBehavior: AppScrollBehavior(),
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-        scrollbarTheme: AppScrollTheme.lightTheme,
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-        scrollbarTheme: AppScrollTheme.darkTheme,
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
       initialRoute: '/',
       routes: {

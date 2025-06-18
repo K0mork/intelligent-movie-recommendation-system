@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:movie_recommend_app/features/auth/domain/entities/app_user.dart';
+import 'package:filmflow/features/auth/domain/entities/app_user.dart';
 
 void main() {
   group('AppUser', () {

@@ -7,9 +7,9 @@ import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i5;
-import 'package:movie_recommend_app/features/reviews/data/datasources/review_remote_datasource.dart'
+import 'package:filmflow/features/reviews/data/datasources/review_remote_datasource.dart'
     as _i3;
-import 'package:movie_recommend_app/features/reviews/data/models/review_model.dart'
+import 'package:filmflow/features/reviews/data/models/review_model.dart'
     as _i2;
 
 // ignore_for_file: type=lint
