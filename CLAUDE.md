@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an Intelligent Movie Recommendation System (インテリジェント映画レコメンドシステム) - a production-ready Flutter web application that uses AI to analyze user movie reviews and provide personalized movie recommendations. The project has completed development phases 1-6 and is ready for deployment.
+This is FilmFlow (フィルムフロー) - an Intelligent Movie Recommendation System - a production-ready Flutter web application that uses AI to analyze user movie reviews and provide personalized movie recommendations. The project has completed development phases 1-6 and is ready for deployment.
 
 ## Current Status (開発フェーズ6完了 + PRE_LAUNCH修正完了)
 
