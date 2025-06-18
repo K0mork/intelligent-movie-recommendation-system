@@ -155,7 +155,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               title: const Text('設定'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: 設定画面に遷移
+                Navigator.of(context).pushNamed('/settings');
               },
             ),
             const Divider(),

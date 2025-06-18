@@ -23,12 +23,7 @@ class ProfilePage extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              // TODO: 設定画面に遷移
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('設定機能は準備中です'),
-                ),
-              );
+              Navigator.of(context).pushNamed('/settings');
             },
           ),
         ],
@@ -290,12 +285,7 @@ class _ProfileContent extends ConsumerWidget {
               subtitle: const Text('アプリの設定を変更'),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
-                // TODO: 設定画面に遷移
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('設定機能は準備中です'),
-                  ),
-                );
+                Navigator.of(context).pushNamed('/settings');
               },
             ),
           ),
