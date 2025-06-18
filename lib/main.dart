@@ -9,6 +9,7 @@ import 'features/auth/presentation/widgets/auth_wrapper.dart';
 import 'features/auth/presentation/widgets/demo_auth_wrapper.dart';
 import 'features/auth/presentation/pages/sign_in_page.dart';
 import 'features/auth/presentation/pages/profile_page.dart';
+import 'features/auth/presentation/pages/settings_page.dart';
 import 'features/auth/presentation/widgets/user_avatar.dart';
 import 'features/auth/presentation/providers/auth_controller.dart';
 import 'features/movies/presentation/pages/movies_page.dart';
@@ -108,6 +109,7 @@ class MyApp extends StatelessWidget {
         '/my-reviews': (context) => const UserReviewHistoryPage(),
         '/recommendations': (context) => const RecommendationsPage(),
         '/profile': (context) => const ProfilePage(),
+        '/settings': (context) => const SettingsPage(),
       },
     );
   }
