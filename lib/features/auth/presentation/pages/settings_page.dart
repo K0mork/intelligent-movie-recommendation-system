@@ -55,7 +55,7 @@ class SettingsPage extends ConsumerWidget {
                       children: [
                         UserAvatar(
                           user: user,
-                          radius: 30,
+                          size: 60,
                         ),
                         const SizedBox(width: 16),
                         Expanded(
