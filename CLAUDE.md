@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is an Intelligent Movie Recommendation System (インテリジェント映画レコメンドシステム) - a production-ready Flutter web application that uses AI to analyze user movie reviews and provide personalized movie recommendations. The project has completed development phases 1-6 and is ready for deployment.
 
-## Current Status (開発フェーズ6完了済み)
+## Current Status (開発フェーズ6完了 + PRE_LAUNCH修正完了)
 
 ### ✅ Completed Features
 - **Phase 1-2**: 基盤構築・Firebase認証・映画API統合完了
@@ -15,11 +15,15 @@ This is an Intelligent Movie Recommendation System (インテリジェント映�
 - **Phase 4**: AI分析・推薦システム完全実装（Cloud Functions + Gemini API）
 - **Phase 5**: UI/UX最適化完全実装（レスポンシブ・ダークモード・アニメーション）
 - **Phase 6**: 包括的テストスイート完成（ユニット・統合・ウィジェットテスト）
+- **PRE_LAUNCH**: 本番リリース前修正完了（設定画面・環境変数チェック・管理者設定）
 
-### 🎯 Ready for Deployment
+### 🎯 Ready for Production
 - Firebase Hosting設定とデプロイ準備完了
 - Flutter Web ビルド最適化済み
 - パフォーマンス監視設定可能
+- 設定画面完全実装済み
+- 環境変数バリデーション機能実装済み
+- 管理者アカウント設定ガイド完備
 
 ## Architecture (実装済み)
 
@@ -117,6 +121,7 @@ test/                     # テストスイート
 - 匿名認証
 - 認証状態管理（Riverpod）
 - プロフィール画面
+- 設定画面（プロフィール編集・表示設定・通知設定・データ管理）
 
 ### 映画機能
 - TMDb API統合
@@ -160,6 +165,12 @@ FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 FIREBASE_APP_ID=your_app_id
 ```
 
+### 環境変数バリデーション機能
+- 起動時の必須環境変数自動チェック（Firebase、TMDb API）
+- オプション環境変数の警告機能（Google Cloud、OMDb API）
+- デバッグモードでの詳細設定状況表示
+- 本番環境での致命的エラーハンドリング
+
 ## Testing Coverage
 
 - **ユニットテスト**: 9ファイル（認証・映画・レビュー）
@@ -175,6 +186,7 @@ FIREBASE_APP_ID=your_app_id
 - HTTPS通信強制
 - API key環境変数管理
 - XSS/CSRF対策実装
+- 管理者権限システム実装済み（詳細は `docs/ADMIN_SETUP.md` を参照）
 
 ## Deployment Ready
 
