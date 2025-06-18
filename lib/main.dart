@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'core/constants/app_constants.dart';
+import 'core/config/env_config.dart';
 import 'features/auth/presentation/widgets/auth_wrapper.dart';
 import 'features/auth/presentation/widgets/demo_auth_wrapper.dart';
 import 'features/auth/presentation/pages/sign_in_page.dart';
@@ -37,6 +38,29 @@ void main() async {
     await dotenv.load(fileName: ".env");
   } catch (e) {
     debugPrint('Warning: .env file not found or failed to load: $e');
+  }
+  
+  // 環境変数チェック
+  try {
+    EnvConfig.validateRequiredVariables();
+    debugPrint('✅ 必須環境変数チェック完了');
+    
+    // オプション環境変数の確認
+    final missingOptionals = EnvConfig.checkOptionalVariables();
+    if (missingOptionals.isNotEmpty) {
+      debugPrint('⚠️ オプション環境変数が未設定: ${missingOptionals.join(', ')}');
+    }
+    
+    // デバッグ時は環境変数の状態を表示
+    if (kDebugMode) {
+      debugPrint(EnvConfig.getConfigurationStatus());
+    }
+  } catch (e) {
+    debugPrint('❌ 環境変数チェックエラー: $e');
+    // 本番環境では致命的エラーとして扱う
+    if (kReleaseMode) {
+      rethrow;
+    }
   }
   
   // Firebase初期化を試行（設定ファイルがなくても続行）
