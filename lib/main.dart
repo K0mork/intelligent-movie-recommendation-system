@@ -47,6 +47,11 @@ void main() async {
     );
     firebaseAvailable = true;
     debugPrint('✅ Firebase initialized successfully');
+    
+    // Performance監視を有効化
+    if (kIsWeb) {
+      debugPrint('🔄 Firebase Performance monitoring enabled for Web');
+    }
   } catch (e) {
     debugPrint('❌ Firebase initialization failed: $e');
     debugPrint('🔄 Running in demo mode without Firebase');

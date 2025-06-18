@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "movie-recommendation-sys-21b5d"
+  },
+  "settings": {
+    "analytics": true,
+    "performance": true
+  }
+}
