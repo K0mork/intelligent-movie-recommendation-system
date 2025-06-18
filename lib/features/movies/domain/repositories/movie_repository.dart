@@ -1,4 +1,4 @@
-import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
+import 'package:filmflow/features/movies/data/models/movie.dart';
 
 abstract class MovieRepository {
   Future<List<Movie>> getPopularMovies({int page = 1});

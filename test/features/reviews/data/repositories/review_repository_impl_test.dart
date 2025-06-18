@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:movie_recommend_app/features/reviews/data/repositories/review_repository_impl.dart';
-import 'package:movie_recommend_app/features/reviews/data/datasources/review_remote_datasource.dart';
-import 'package:movie_recommend_app/features/reviews/data/models/review_model.dart';
-import 'package:movie_recommend_app/features/reviews/domain/entities/review.dart';
-import 'package:movie_recommend_app/core/errors/app_exceptions.dart';
+import 'package:filmflow/features/reviews/data/repositories/review_repository_impl.dart';
+import 'package:filmflow/features/reviews/data/datasources/review_remote_datasource.dart';
+import 'package:filmflow/features/reviews/data/models/review_model.dart';
+import 'package:filmflow/features/reviews/domain/entities/review.dart';
+import 'package:filmflow/core/errors/app_exceptions.dart';
 
 // Mock classes will be generated
 @GenerateMocks([ReviewRemoteDataSource])

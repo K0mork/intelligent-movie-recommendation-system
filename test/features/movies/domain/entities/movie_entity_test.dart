@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:movie_recommend_app/features/movies/domain/entities/movie_entity.dart';
+import 'package:filmflow/features/movies/domain/entities/movie_entity.dart';
 
 void main() {
   group('MovieEntity', () {

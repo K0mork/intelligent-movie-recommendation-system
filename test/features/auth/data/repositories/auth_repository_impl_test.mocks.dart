@@ -6,9 +6,9 @@
 import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:movie_recommend_app/features/auth/data/datasources/auth_remote_datasource.dart'
+import 'package:filmflow/features/auth/data/datasources/auth_remote_datasource.dart'
     as _i2;
-import 'package:movie_recommend_app/features/auth/domain/entities/app_user.dart'
+import 'package:filmflow/features/auth/domain/entities/app_user.dart'
     as _i4;
 
 // ignore_for_file: type=lint

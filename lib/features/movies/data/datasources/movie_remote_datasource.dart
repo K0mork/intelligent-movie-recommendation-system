@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:movie_recommend_app/core/config/env_config.dart';
-import 'package:movie_recommend_app/core/constants/app_constants.dart';
-import 'package:movie_recommend_app/features/movies/data/models/movie.dart';
+import 'package:filmflow/core/config/env_config.dart';
+import 'package:filmflow/core/constants/app_constants.dart';
+import 'package:filmflow/features/movies/data/models/movie.dart';
 
 abstract class MovieRemoteDataSource {
   Future<List<Movie>> getPopularMovies({int page = 1});

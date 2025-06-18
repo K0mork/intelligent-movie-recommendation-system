@@ -6,7 +6,7 @@
 import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:movie_recommend_app/features/auth/presentation/providers/auth_controller.dart'
+import 'package:filmflow/features/auth/presentation/providers/auth_controller.dart'
     as _i2;
 
 // ignore_for_file: type=lint
