@@ -391,8 +391,8 @@ class _ReviewSection extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                );
-              
+                ),
+              );
             } else {
               return Container(
                 width: double.infinity,

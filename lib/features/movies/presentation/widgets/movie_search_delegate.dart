@@ -193,9 +193,9 @@ class _SearchResults extends ConsumerWidget {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (movie.releaseDate.isNotEmpty)
+              if (movie.releaseDate?.isNotEmpty == true)
                 Text(
-                  movie.releaseDate.substring(0, 4),
+                  movie.releaseDate!.substring(0, 4),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               if (movie.voteAverage > 0)
