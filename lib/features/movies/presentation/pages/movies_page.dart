@@ -6,6 +6,7 @@ import 'package:filmflow/features/movies/presentation/widgets/movie_grid.dart';
 import 'package:filmflow/features/movies/presentation/pages/movie_detail_page.dart';
 import 'package:filmflow/features/movies/presentation/pages/api_setup_page.dart';
 import 'package:filmflow/features/movies/data/models/movie.dart';
+import '../../../../core/widgets/breadcrumb_widget.dart';
 
 class MoviesPage extends ConsumerStatefulWidget {
   const MoviesPage({super.key});
@@ -71,28 +72,40 @@ class _MoviesPageState extends ConsumerState<MoviesPage>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
+      body: Column(
         children: [
-          _PopularMoviesTab(
-            movies: movieState.popularMovies,
-            isLoading: movieState.isLoading,
-            errorMessage: movieState.errorMessage,
-            onMovieTap: _onMovieTap,
-            onLoadMore: () {
-              final currentPage = (movieState.popularMovies.length / 20).ceil();
-              ref.read(movieControllerProvider.notifier).loadPopularMovies(page: currentPage + 1);
-            },
-            scrollController: _popularScrollController,
+          // パンくずナビゲーション
+          BreadcrumbWidget(
+            items: BreadcrumbHelper.createMovieBreadcrumbs(
+              context: context,
+            ),
           ),
-          _SearchMoviesTab(
-            searchController: _searchController,
-            movies: movieState.searchResults,
-            isLoading: movieState.isSearching,
-            errorMessage: movieState.errorMessage,
-            onSearchChanged: _onSearchChanged,
-            onMovieTap: _onMovieTap,
-            scrollController: _searchScrollController,
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _PopularMoviesTab(
+                  movies: movieState.popularMovies,
+                  isLoading: movieState.isLoading,
+                  errorMessage: movieState.errorMessage,
+                  onMovieTap: _onMovieTap,
+                  onLoadMore: () {
+                    final currentPage = (movieState.popularMovies.length / 20).ceil();
+                    ref.read(movieControllerProvider.notifier).loadPopularMovies(page: currentPage + 1);
+                  },
+                  scrollController: _popularScrollController,
+                ),
+                _SearchMoviesTab(
+                  searchController: _searchController,
+                  movies: movieState.searchResults,
+                  isLoading: movieState.isSearching,
+                  errorMessage: movieState.errorMessage,
+                  onSearchChanged: _onSearchChanged,
+                  onMovieTap: _onMovieTap,
+                  scrollController: _searchScrollController,
+                ),
+              ],
+            ),
           ),
         ],
       ),

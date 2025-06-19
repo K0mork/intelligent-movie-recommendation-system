@@ -67,4 +67,22 @@ class MovieRepositoryImpl implements MovieRepository {
       throw Exception('Failed to get upcoming movies: $e');
     }
   }
+
+  @override
+  Future<List<Movie>> getSimilarMovies(int movieId, {int page = 1}) async {
+    try {
+      return await _remoteDataSource.getSimilarMovies(movieId, page: page);
+    } catch (e) {
+      throw Exception('Failed to get similar movies: $e');
+    }
+  }
+
+  @override
+  Future<List<Movie>> getRecommendedMovies(int movieId, {int page = 1}) async {
+    try {
+      return await _remoteDataSource.getRecommendedMovies(movieId, page: page);
+    } catch (e) {
+      throw Exception('Failed to get recommended movies: $e');
+    }
+  }
 }

@@ -7,6 +7,8 @@ import 'package:filmflow/features/movies/domain/repositories/movie_repository.da
 import 'package:filmflow/features/movies/domain/usecases/get_popular_movies_usecase.dart';
 import 'package:filmflow/features/movies/domain/usecases/search_movies_usecase.dart';
 import 'package:filmflow/features/movies/domain/usecases/get_movie_details_usecase.dart';
+import 'package:filmflow/features/movies/domain/usecases/get_similar_movies_usecase.dart';
+import 'package:filmflow/features/movies/domain/usecases/get_recommended_movies_usecase.dart';
 import 'package:filmflow/features/movies/presentation/controllers/movie_controller.dart';
 import 'package:filmflow/features/movies/data/models/movie.dart';
 
@@ -53,6 +55,18 @@ final getMovieDetailsUseCaseProvider = Provider<GetMovieDetailsUseCase?>((ref) {
   return GetMovieDetailsUseCase(repository);
 });
 
+final getSimilarMoviesUseCaseProvider = Provider<GetSimilarMoviesUseCase?>((ref) {
+  final repository = ref.read(movieRepositoryProvider);
+  if (repository == null) return null;
+  return GetSimilarMoviesUseCase(repository);
+});
+
+final getRecommendedMoviesUseCaseProvider = Provider<GetRecommendedMoviesUseCase?>((ref) {
+  final repository = ref.read(movieRepositoryProvider);
+  if (repository == null) return null;
+  return GetRecommendedMoviesUseCase(repository);
+});
+
 final movieControllerProvider = StateNotifierProvider<MovieController, MovieState>((ref) {
   final getPopularMoviesUseCase = ref.read(getPopularMoviesUseCaseProvider);
   final searchMoviesUseCase = ref.read(searchMoviesUseCaseProvider);
@@ -91,5 +105,17 @@ final searchResultsProvider = FutureProvider<List<Movie>>((ref) async {
 final movieDetailsProvider = FutureProvider.family<Movie, int>((ref, movieId) async {
   final useCase = ref.read(getMovieDetailsUseCaseProvider);
   if (useCase == null) throw Exception('Movie API is not configured');
+  return await useCase.call(movieId);
+});
+
+final similarMoviesProvider = FutureProvider.family<List<Movie>, int>((ref, movieId) async {
+  final useCase = ref.read(getSimilarMoviesUseCaseProvider);
+  if (useCase == null) return [];
+  return await useCase.call(movieId);
+});
+
+final recommendedMoviesProvider = FutureProvider.family<List<Movie>, int>((ref, movieId) async {
+  final useCase = ref.read(getRecommendedMoviesUseCaseProvider);
+  if (useCase == null) return [];
   return await useCase.call(movieId);
 });

@@ -10,6 +10,8 @@ abstract class MovieRemoteDataSource {
   Future<List<Movie>> getTopRatedMovies({int page = 1});
   Future<List<Movie>> getNowPlayingMovies({int page = 1});
   Future<List<Movie>> getUpcomingMovies({int page = 1});
+  Future<List<Movie>> getSimilarMovies(int movieId, {int page = 1});
+  Future<List<Movie>> getRecommendedMovies(int movieId, {int page = 1});
 }
 
 class TMDBRemoteDataSource implements MovieRemoteDataSource {
@@ -149,6 +151,44 @@ class TMDBRemoteDataSource implements MovieRemoteDataSource {
       throw Exception('Failed to fetch upcoming movies: $e');
     }
   }
+
+  @override
+  Future<List<Movie>> getSimilarMovies(int movieId, {int page = 1}) async {
+    try {
+      final response = await _dio.get(
+        '$_baseUrl/movie/$movieId/similar',
+        queryParameters: {
+          ..._defaultParams,
+          'page': page,
+        },
+      );
+
+      final results = (response.data['results'] as List<dynamic>)
+          .cast<Map<String, dynamic>>();
+      return results.map((json) => Movie.fromTMDBJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to fetch similar movies: $e');
+    }
+  }
+
+  @override
+  Future<List<Movie>> getRecommendedMovies(int movieId, {int page = 1}) async {
+    try {
+      final response = await _dio.get(
+        '$_baseUrl/movie/$movieId/recommendations',
+        queryParameters: {
+          ..._defaultParams,
+          'page': page,
+        },
+      );
+
+      final results = (response.data['results'] as List<dynamic>)
+          .cast<Map<String, dynamic>>();
+      return results.map((json) => Movie.fromTMDBJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to fetch recommended movies: $e');
+    }
+  }
 }
 
 class OMDBRemoteDataSource implements MovieRemoteDataSource {
@@ -239,5 +279,15 @@ class OMDBRemoteDataSource implements MovieRemoteDataSource {
   @override
   Future<List<Movie>> getUpcomingMovies({int page = 1}) async {
     throw UnimplementedError('OMDb API does not support upcoming movies endpoint. Use TMDb instead.');
+  }
+
+  @override
+  Future<List<Movie>> getSimilarMovies(int movieId, {int page = 1}) async {
+    throw UnimplementedError('OMDb API does not support similar movies endpoint. Use TMDb instead.');
+  }
+
+  @override
+  Future<List<Movie>> getRecommendedMovies(int movieId, {int page = 1}) async {
+    throw UnimplementedError('OMDb API does not support recommended movies endpoint. Use TMDb instead.');
   }
 }

@@ -9,6 +9,8 @@ import '../../../reviews/presentation/widgets/review_card.dart';
 import '../../../reviews/presentation/providers/review_providers.dart';
 import '../../../movies/domain/entities/movie_entity.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
+import '../widgets/related_movies_section.dart';
+import '../../../../core/widgets/breadcrumb_widget.dart';
 
 class MovieDetailPage extends ConsumerWidget {
   final int movieId;
@@ -69,39 +71,69 @@ class _MovieDetailView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    
     return CustomScrollView(
       slivers: [
         SliverAppBar(
           expandedHeight: 300,
           pinned: true,
           flexibleSpace: FlexibleSpaceBar(
-            background: movie.fullBackdropUrl.isNotEmpty
-                ? CachedNetworkImage(
-                    imageUrl: movie.fullBackdropUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: Colors.grey[300],
-                      child: const Center(
-                        child: CircularProgressIndicator(),
+            background: Stack(
+              fit: StackFit.expand,
+              children: [
+                movie.fullBackdropUrl.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: movie.fullBackdropUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          color: Colors.grey[300],
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          color: Colors.grey[300],
+                          child: const Icon(
+                            Icons.movie,
+                            size: 100,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        color: Colors.grey[300],
+                        child: const Icon(
+                          Icons.movie,
+                          size: 100,
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      color: Colors.grey[300],
-                      child: const Icon(
-                        Icons.movie,
-                        size: 100,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  )
-                : Container(
-                    color: Colors.grey[300],
-                    child: const Icon(
-                      Icons.movie,
-                      size: 100,
-                      color: Colors.grey,
+                // グラデーションオーバーレイ
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.7),
+                      ],
                     ),
                   ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        
+        // パンくずナビゲーション
+        SliverToBoxAdapter(
+          child: BreadcrumbWidget(
+            items: BreadcrumbHelper.createMovieBreadcrumbs(
+              context: context,
+              movieTitle: movie.title,
+            ),
           ),
         ),
         SliverToBoxAdapter(
@@ -210,10 +242,25 @@ class _MovieDetailView extends ConsumerWidget {
                   const SizedBox(height: 24),
                 ],
                 // Review Section
-                _ReviewSection(movie: movie),
+                _ReviewSection(movie: movie, showReviewButton: showReviewButton),
+                
+                const SizedBox(height: 32),
               ],
             ),
           ),
+        ),
+        
+        // Related Movies Section
+        SliverToBoxAdapter(
+          child: RelatedMoviesSection(
+            movieId: movie.id,
+            title: 'この映画に関連する作品',
+          ),
+        ),
+        
+        // Bottom spacing
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 32),
         ),
       ],
     );
@@ -222,8 +269,9 @@ class _MovieDetailView extends ConsumerWidget {
 
 class _ReviewSection extends ConsumerWidget {
   final Movie movie;
+  final bool showReviewButton;
 
-  const _ReviewSection({required this.movie});
+  const _ReviewSection({required this.movie, this.showReviewButton = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -241,6 +289,53 @@ class _ReviewSection extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
+        
+        // Special CTA for showReviewButton
+        if (showReviewButton) ...[
+          Container(
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: theme.colorScheme.primary,
+                width: 2,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.lightbulb_outline,
+                  color: theme.colorScheme.primary,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'レビューを投稿しよう！',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'あなたの感想を共有して、他のユーザーに役立つ情報を提供しましょう',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
         
         // Add Review Button
         authState.when(
@@ -277,16 +372,27 @@ class _ReviewSection extends ConsumerWidget {
                       ref.refresh(movieReviewsProvider(movie.id.toString()));
                     }
                   },
-                  icon: const Icon(Icons.rate_review),
-                  label: const Text('レビューを書く'),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              );
+                  icon: Icon(showReviewButton ? Icons.star : Icons.rate_review),
+                  label: Text(showReviewButton ? 'この映画のレビューを書く' : 'レビューを書く'),
+                  style: showReviewButton 
+                      ? ElevatedButton.styleFrom(
+                          backgroundColor: theme.colorScheme.primary,
+                          foregroundColor: theme.colorScheme.onPrimary,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        )
+                      : ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                );
+              
             } else {
               return Container(
                 width: double.infinity,
