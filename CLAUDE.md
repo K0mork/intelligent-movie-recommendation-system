@@ -125,9 +125,10 @@ test/                     # テストスイート
 
 ### 映画機能
 - TMDb API統合
-- 映画検索・一覧表示
+- 映画検索・一覧表示（年指定検索対応）
 - 映画詳細画面
 - レスポンシブデザイン
+- 年代別フィルタリング機能
 
 ### レビューシステム
 - 星評価（1-5）
@@ -336,3 +337,42 @@ firebase deploy --only hosting
 - **v1.1.0**: Cloud Functions有効化（Blazeプラン後）
 - **v1.2.0**: PWA機能強化
 - **v1.3.0**: SEO最適化・多言語対応
+
+## Recent Updates (継続的機能追加)
+
+### 🎯 年指定検索機能追加（2025年6月19日）
+
+#### 実装内容
+1. **UI/UX改善**
+   - MovieSearchDelegateにPopupMenuButtonで年代選択機能を実装
+   - 5年間隔での年代選択（1900年〜現在）
+   - 年フィルタ状態の視覚的表示とクリア機能
+   - 検索結果件数の動的表示
+
+2. **API統合強化**
+   - TMDb API: `year`パラメータ対応
+   - OMDb API: `y`パラメータ対応
+   - クライアント側での年代範囲フィルタリング実装
+
+3. **アーキテクチャ全層対応**
+   - DataSource層: MovieRemoteDataSourceにyear引数追加
+   - Repository層: MovieRepositoryにyear引数追加
+   - UseCase層: SearchMoviesUseCaseにyear引数追加
+   - Presentation層: MovieControllerとUIコンポーネント対応
+
+4. **テスト強化**
+   - 年指定機能の包括的テストケース追加（4新規テスト）
+   - 既存テスト14件すべて通過維持
+   - mockファイル自動再生成による型安全性確保
+
+#### 技術的特徴
+- **型安全性**: Dart null safetyに完全対応
+- **パフォーマンス**: APIとクライアント両方でのフィルタリング最適化
+- **拡張性**: 将来的な検索フィルター追加への対応
+- **ユーザビリティ**: 直感的な年代選択インターフェース
+
+#### 影響範囲
+- **Files Modified**: 11ファイル
+- **Lines Added**: 332行追加、110行削除
+- **Test Coverage**: 全テスト通過（14/14）
+- **Breaking Changes**: なし（既存機能への影響なし）
