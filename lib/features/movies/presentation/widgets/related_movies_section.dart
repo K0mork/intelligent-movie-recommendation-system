@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../providers/movie_providers.dart';
 import 'package:filmflow/features/movies/data/models/movie.dart' as models;
 import '../pages/movie_detail_page.dart';
-import '../../../../core/widgets/error_widgets.dart';
 import '../../../../core/widgets/loading_animations.dart';
 
 class RelatedMoviesSection extends ConsumerWidget {

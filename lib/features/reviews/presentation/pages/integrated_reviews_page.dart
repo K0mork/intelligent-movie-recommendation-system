@@ -5,11 +5,10 @@ import '../providers/review_providers.dart';
 import '../widgets/review_card.dart';
 import '../widgets/review_statistics.dart';
 import '../../../movies/presentation/pages/movie_detail_page.dart';
-import '../../../movies/presentation/widgets/movie_search_delegate.dart';
+import '../../../movies/presentation/widgets/custom_movie_search_page.dart';
 import 'edit_review_page.dart';
 import '../../../../core/widgets/loading_animations.dart';
 import '../../../../core/widgets/error_widgets.dart';
-import '../../../../core/widgets/animated_widgets.dart';
 import '../../../../core/widgets/breadcrumb_widget.dart';
 
 class IntegratedReviewsPage extends ConsumerStatefulWidget {
@@ -219,9 +218,10 @@ class _NewReviewTab extends ConsumerWidget {
               // 映画検索ボタン
               ElevatedButton.icon(
                 onPressed: () async {
-                  final selectedMovie = await showSearch(
-                    context: context,
-                    delegate: MovieSearchDelegate(),
+                  final selectedMovie = await Navigator.of(context).push<dynamic>(
+                    MaterialPageRoute(
+                      builder: (context) => const CustomMovieSearchPage(),
+                    ),
                   );
                   
                   if (selectedMovie != null && context.mounted) {
