@@ -174,7 +174,6 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                       initialDate: _watchedDate ?? DateTime.now(),
                       firstDate: DateTime(1900),
                       lastDate: DateTime.now(),
-                      locale: const Locale('ja', 'JP'),
                     );
                     if (selectedDate != null) {
                       setState(() {
