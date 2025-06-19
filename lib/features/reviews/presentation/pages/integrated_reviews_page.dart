@@ -59,9 +59,10 @@ class _IntegratedReviewsPageState extends ConsumerState<IntegratedReviewsPage>
         ),
         actions: [
           // レビュー履歴タブの時のみソートメニューを表示
-          ValueListenableBuilder<int>(
-            valueListenable: _tabController,
-            builder: (context, index, child) {
+          AnimatedBuilder(
+            animation: _tabController,
+            builder: (context, child) {
+              final index = _tabController.index;
               if (index == 1) {
                 return PopupMenuButton<String>(
                   icon: const Icon(Icons.sort),
