@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../providers/movie_providers.dart';
-import '../../data/models/movie.dart';
+import '../../data/models/movie.dart' as models;
 import '../pages/movie_detail_page.dart';
 import '../../../../core/widgets/error_widgets.dart';
 import '../../../../core/widgets/loading_animations.dart';
@@ -165,7 +165,7 @@ class _RelatedMoviesList extends ConsumerWidget {
 }
 
 class _RelatedMovieCard extends StatelessWidget {
-  final Movie movie;
+  final models.Movie movie;
   final VoidCallback onTap;
 
   const _RelatedMovieCard({

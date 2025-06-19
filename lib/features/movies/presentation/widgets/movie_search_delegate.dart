@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/movie_providers.dart';
-import '../../data/models/movie.dart';
+import '../../data/models/movie.dart' as movie_model;
 
-class MovieSearchDelegate extends SearchDelegate<Movie?> {
+class MovieSearchDelegate extends SearchDelegate<movie_model.Movie?> {
   String? selectedYear;
   
   @override
@@ -23,7 +23,7 @@ class MovieSearchDelegate extends SearchDelegate<Movie?> {
           tooltip: '公開年で絞り込み',
           onSelected: (year) {
             selectedYear = year == 'all' ? null : year;
-            query = query; // 再検索をトリガー
+            showResults(context); // UIを強制的に再描画
           },
           itemBuilder: (context) {
             final currentYear = DateTime.now().year;
@@ -67,6 +67,7 @@ class MovieSearchDelegate extends SearchDelegate<Movie?> {
         onPressed: () {
           query = '';
           selectedYear = null;
+          showSuggestions(context);
         },
       ),
     ];
@@ -148,7 +149,7 @@ class MovieSearchDelegate extends SearchDelegate<Movie?> {
 class _SearchResults extends ConsumerWidget {
   final String query;
   final String? selectedYear;
-  final Function(Movie) onMovieSelected;
+  final Function(movie_model.Movie) onMovieSelected;
 
   const _SearchResults({
     required this.query,
