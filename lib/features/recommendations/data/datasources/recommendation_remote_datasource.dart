@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:flutter/foundation.dart';
 import '../models/recommendation_model.dart';
 
 abstract class RecommendationRemoteDataSource {
@@ -53,29 +54,60 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
 
   @override
   Future<List<RecommendationModel>> generateRecommendations(String userId) async {
-    // 開発中のため、一時的にサンプル推薦を生成
-    // （Cloud Functionsのデプロイには有料プランが必要）
-    // サンプル推薦を生成中
-    
-    // サンプル推薦を生成
-    final sampleRecommendations = _generateSampleRecommendations(userId);
-    
-    // Firestoreに保存（将来的な取得のため）
     try {
-      final batch = firestore.batch();
-      for (final recommendation in sampleRecommendations) {
-        final docRef = firestore.collection('recommendations').doc(recommendation.id);
-        batch.set(docRef, recommendation.toFirestore());
+      // Cloud Functions経由で実際のAI推薦を取得
+      final result = await functions
+          .httpsCallable('generateRecommendations')
+          .call({'userId': userId});
+      
+      final recommendationsData = result.data as Map<String, dynamic>;
+      final recommendationsList = recommendationsData['recommendations'] as List;
+      
+      final recommendations = recommendationsList
+          .map((item) => RecommendationModel.fromCloudFunction(
+                item as Map<String, dynamic>,
+                userId,
+              ))
+          .toList();
+      
+      // Firestoreに保存（将来的な取得のため）
+      try {
+        final batch = firestore.batch();
+        for (final recommendation in recommendations) {
+          final docRef = firestore.collection('recommendations').doc(recommendation.id);
+          batch.set(docRef, recommendation.toFirestore());
+        }
+        await batch.commit();
+      } catch (e) {
+        // Firestore保存エラーは無視（推薦自体は成功）
+        debugPrint('Firestore保存エラー: $e');
       }
-      await batch.commit();
+      
+      return recommendations;
     } catch (e) {
-      // Firestore保存エラー（一時的な推薦は正常に生成されました）
+      // Cloud Functions呼び出しエラーの場合、フォールバックとしてサンプル推薦を使用
+      debugPrint('Cloud Functions推薦エラー、サンプル推薦にフォールバック: $e');
+      
+      final sampleRecommendations = _generateSampleRecommendations(userId);
+      
+      // サンプル推薦もFirestoreに保存
+      try {
+        final batch = firestore.batch();
+        for (final recommendation in sampleRecommendations) {
+          final docRef = firestore.collection('recommendations').doc(recommendation.id);
+          batch.set(docRef, recommendation.toFirestore());
+        }
+        await batch.commit();
+      } catch (e) {
+        // Firestore保存エラーは無視
+        debugPrint('サンプル推薦のFirestore保存エラー: $e');
+      }
+      
+      return sampleRecommendations;
     }
-    
-    return sampleRecommendations;
   }
 
-  // 一時的なサンプル推薦を生成（開発・テスト用）
+  // フォールバック用のサンプル推薦を生成（Cloud Functions利用不可時）
   List<RecommendationModel> _generateSampleRecommendations(String userId) {
     final now = DateTime.now();
     return [
