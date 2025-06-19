@@ -189,14 +189,17 @@ class _SearchMoviesTab extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(16),
-          child: TextField(
-            controller: searchController,
-            decoration: const InputDecoration(
-              hintText: '映画を検索...',
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(),
+          child: Focus(
+            child: TextField(
+              controller: searchController,
+              autofocus: false,
+              decoration: const InputDecoration(
+                hintText: '映画を検索...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(),
+              ),
+              onChanged: onSearchChanged,
             ),
-            onChanged: onSearchChanged,
           ),
         ),
         Expanded(
