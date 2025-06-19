@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/constants/app_constants.dart';
-import 'core/config/env_config.dart';
+import 'core/services/app_initialization_service.dart';
 import 'features/auth/presentation/widgets/auth_wrapper.dart';
 import 'features/auth/presentation/widgets/demo_auth_wrapper.dart';
 import 'features/auth/presentation/pages/sign_in_page.dart';
@@ -21,75 +17,33 @@ import 'features/reviews/presentation/pages/integrated_reviews_page.dart';
 import 'features/recommendations/presentation/pages/recommendations_page.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/scroll_behavior.dart';
-import 'firebase_options.dart';
 
+/// アプリケーションのエントリーポイント
+/// 
+/// 初期化ロジックをAppInitializationServiceに分離し、
+/// 責任を明確にして保守性を向上。
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // アプリケーション初期化を実行
+  final initResult = await AppInitializationService.initialize();
   
-  // Web環境でセマンティクスを有効化
-  if (kIsWeb) {
-    try {
-      SemanticsBinding.instance.ensureSemantics();
-    } catch (e) {
-      debugPrint('Semantics initialization failed: $e');
-    }
-  }
-  
-  // .envファイルを読み込み
-  try {
-    await dotenv.load(fileName: ".env");
-  } catch (e) {
-    debugPrint('Warning: .env file not found or failed to load: $e');
-  }
-  
-  // 環境変数チェック
-  try {
-    EnvConfig.validateRequiredVariables();
-    debugPrint('✅ 必須環境変数チェック完了');
-    
-    // オプション環境変数の確認
-    final missingOptionals = EnvConfig.checkOptionalVariables();
-    if (missingOptionals.isNotEmpty) {
-      debugPrint('⚠️ オプション環境変数が未設定: ${missingOptionals.join(', ')}');
-    }
-    
-    // デバッグ時は環境変数の状態を表示
-    if (kDebugMode) {
-      debugPrint(EnvConfig.getConfigurationStatus());
-    }
-  } catch (e) {
-    debugPrint('❌ 環境変数チェックエラー: $e');
-    // 本番環境では致命的エラーとして扱う
-    if (kReleaseMode) {
-      rethrow;
-    }
-  }
-  
-  // Firebase初期化を試行（設定ファイルがなくても続行）
-  bool firebaseAvailable = false;
-  try {
-    debugPrint('Attempting Firebase initialization...');
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
+  if (initResult.hasError && !initResult.success) {
+    // 致命的エラーの場合はエラー画面を表示
+    runApp(
+      MaterialApp(
+        home: AppInitializationErrorPage(
+          errorMessage: initResult.errorMessage ?? '不明なエラーが発生しました',
+        ),
+      ),
     );
-    firebaseAvailable = true;
-    debugPrint('✅ Firebase initialized successfully');
-    
-    // Performance監視を有効化
-    if (kIsWeb) {
-      debugPrint('🔄 Firebase Performance monitoring enabled for Web');
-    }
-  } catch (e) {
-    debugPrint('❌ Firebase initialization failed: $e');
-    debugPrint('🔄 Running in demo mode without Firebase');
-    firebaseAvailable = false;
+    return;
   }
   
-  debugPrint('Starting app with firebaseAvailable: $firebaseAvailable');
-  
-  runApp(ProviderScope(
-    child: MyApp(firebaseAvailable: firebaseAvailable),
-  ));
+  // 正常に初期化完了した場合はメインアプリを起動
+  runApp(
+    ProviderScope(
+      child: MyApp(firebaseAvailable: initResult.firebaseAvailable),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -283,6 +237,75 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// アプリケーション初期化エラー時に表示するページ
+class AppInitializationErrorPage extends StatelessWidget {
+  final String errorMessage;
+
+  const AppInitializationErrorPage({
+    super.key,
+    required this.errorMessage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.red[50],
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 64,
+                color: Colors.red[700],
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'アプリケーション初期化エラー',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red[700],
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                errorMessage,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: () {
+                  // アプリケーションを再起動
+                  // 実際の実装では、main()を再実行するか、
+                  // ネイティブの再起動機能を使用
+                },
+                icon: const Icon(Icons.refresh),
+                label: const Text('再試行'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red[700],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
