@@ -4,6 +4,7 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/constants/app_constants.dart';
 import 'core/config/env_config.dart';
 import 'features/auth/presentation/widgets/auth_wrapper.dart';
@@ -106,6 +107,17 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
+      // 国際化設定
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ja', 'JP'), // 日本語
+        Locale('en', 'US'), // 英語（フォールバック）
+      ],
+      locale: const Locale('ja', 'JP'),
       initialRoute: '/',
       routes: {
         '/': (context) => firebaseAvailable
