@@ -5,7 +5,7 @@ import 'package:filmflow/features/movies/data/models/movie.dart';
 
 abstract class MovieRemoteDataSource {
   Future<List<Movie>> getPopularMovies({int page = 1});
-  Future<List<Movie>> searchMovies(String query, {int page = 1});
+  Future<List<Movie>> searchMovies(String query, {int page = 1, int? year});
   Future<Movie> getMovieDetails(int movieId);
   Future<List<Movie>> getTopRatedMovies({int page = 1});
   Future<List<Movie>> getNowPlayingMovies({int page = 1});
@@ -59,15 +59,22 @@ class TMDBRemoteDataSource implements MovieRemoteDataSource {
   }
 
   @override
-  Future<List<Movie>> searchMovies(String query, {int page = 1}) async {
+  Future<List<Movie>> searchMovies(String query, {int page = 1, int? year}) async {
     try {
+      final queryParams = {
+        ..._defaultParams,
+        'query': query,
+        'page': page,
+      };
+      
+      // 年が指定された場合、TMDb APIのyearパラメータを追加
+      if (year != null) {
+        queryParams['year'] = year;
+      }
+
       final response = await _dio.get(
         '$_baseUrl/search/movie',
-        queryParameters: {
-          ..._defaultParams,
-          'query': query,
-          'page': page,
-        },
+        queryParameters: queryParams,
       );
 
       final results = (response.data['results'] as List<dynamic>)
@@ -221,15 +228,22 @@ class OMDBRemoteDataSource implements MovieRemoteDataSource {
   }
 
   @override
-  Future<List<Movie>> searchMovies(String query, {int page = 1}) async {
+  Future<List<Movie>> searchMovies(String query, {int page = 1, int? year}) async {
     try {
+      final queryParams = {
+        ..._defaultParams,
+        's': query,
+        'page': page,
+      };
+      
+      // 年が指定された場合、OMDb APIのyパラメータを追加
+      if (year != null) {
+        queryParams['y'] = year;
+      }
+
       final response = await _dio.get(
         _baseUrl,
-        queryParameters: {
-          ..._defaultParams,
-          's': query,
-          'page': page,
-        },
+        queryParameters: queryParams,
       );
 
       if (response.data['Response'] == 'False') {
