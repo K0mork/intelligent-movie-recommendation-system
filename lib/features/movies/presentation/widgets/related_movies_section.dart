@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../providers/movie_providers.dart';
-import '../../data/models/movie.dart' as models;
+import 'package:filmflow/features/movies/data/models/movie.dart' as models;
 import '../pages/movie_detail_page.dart';
 import '../../../../core/widgets/error_widgets.dart';
 import '../../../../core/widgets/loading_animations.dart';

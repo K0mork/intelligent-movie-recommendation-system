@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/movie_providers.dart';
-import '../../data/models/movie.dart' as movie_model;
+import 'package:filmflow/features/movies/data/models/movie.dart' as movie_model;
 
 class MovieSearchDelegate extends SearchDelegate<movie_model.Movie?> {
   String? selectedYear;
