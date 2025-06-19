@@ -6,6 +6,7 @@ import '../widgets/recommendation_card.dart';
 import '../widgets/recommendation_empty_state.dart';
 import '../widgets/recommendation_error_widget.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
+import '../../../../core/widgets/breadcrumb_widget.dart';
 
 class RecommendationsPage extends ConsumerStatefulWidget {
   const RecommendationsPage({super.key});
@@ -87,11 +88,23 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
           ),
         ],
       ),
-      body: TabBarView(
-        controller: _tabController,
+      body: Column(
         children: [
-          _buildRecommendationsTab(),
-          _buildSavedRecommendationsTab(),
+          // パンくずナビゲーション
+          BreadcrumbWidget(
+            items: BreadcrumbHelper.createRecommendationBreadcrumbs(
+              context: context,
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _buildRecommendationsTab(),
+                _buildSavedRecommendationsTab(),
+              ],
+            ),
+          ),
         ],
       ),
     );

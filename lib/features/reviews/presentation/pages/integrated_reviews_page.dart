@@ -10,6 +10,7 @@ import 'edit_review_page.dart';
 import '../../../../core/widgets/loading_animations.dart';
 import '../../../../core/widgets/error_widgets.dart';
 import '../../../../core/widgets/animated_widgets.dart';
+import '../../../../core/widgets/breadcrumb_widget.dart';
 
 class IntegratedReviewsPage extends ConsumerStatefulWidget {
   const IntegratedReviewsPage({super.key});
@@ -119,11 +120,23 @@ class _IntegratedReviewsPageState extends ConsumerState<IntegratedReviewsPage>
           ),
         ],
       ),
-      body: TabBarView(
-        controller: _tabController,
+      body: Column(
         children: [
-          _NewReviewTab(),
-          _ReviewHistoryTab(sortBy: _sortBy),
+          // パンくずナビゲーション
+          BreadcrumbWidget(
+            items: BreadcrumbHelper.createReviewBreadcrumbs(
+              context: context,
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _NewReviewTab(),
+                _ReviewHistoryTab(sortBy: _sortBy),
+              ],
+            ),
+          ),
         ],
       ),
     );
