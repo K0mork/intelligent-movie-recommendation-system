@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
 import '../helpers/test_helpers.dart';
-import '../../lib/features/reviews/presentation/widgets/review_card.dart';
-import '../../lib/features/reviews/presentation/widgets/star_rating.dart';
-import '../../lib/features/reviews/domain/entities/review.dart';
+import 'package:filmflow/features/reviews/presentation/widgets/review_card.dart';
+import 'package:filmflow/features/reviews/presentation/widgets/star_rating.dart';
+import 'package:filmflow/features/reviews/domain/entities/review.dart';
 
 void main() {
   group('ReviewCard Widget Tests', () {

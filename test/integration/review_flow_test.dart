@@ -3,14 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../helpers/test_helpers.dart';
-import '../../lib/features/reviews/presentation/pages/add_review_page.dart';
-import '../../lib/features/reviews/presentation/pages/edit_review_page.dart';
-import '../../lib/features/reviews/presentation/pages/reviews_page.dart';
-import '../../lib/features/reviews/presentation/widgets/star_rating.dart';
-import '../../lib/features/reviews/domain/entities/review.dart';
-import '../../lib/features/movies/domain/entities/movie_entity.dart';
-import '../../lib/features/auth/domain/entities/app_user.dart';
-import '../../lib/main.dart';
+import 'package:filmflow/features/reviews/presentation/pages/add_review_page.dart';
+import 'package:filmflow/features/reviews/presentation/pages/edit_review_page.dart';
+import 'package:filmflow/features/reviews/presentation/pages/reviews_page.dart';
+import 'package:filmflow/features/reviews/presentation/widgets/star_rating.dart';
+import 'package:filmflow/features/reviews/domain/entities/review.dart';
+import 'package:filmflow/features/movies/domain/entities/movie_entity.dart';
+import 'package:filmflow/features/auth/domain/entities/app_user.dart';
+import 'package:filmflow/main.dart';
 
 void main() {
   group('Review Flow Integration Tests', () {
