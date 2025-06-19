@@ -181,5 +181,41 @@ void main() {
       expect(result, equals(testMovies));
       verify(mockRepository.searchMovies(query, page: 1)).called(1);
     });
+
+    test('calls repository with year parameter when year is provided', () async {
+      const query = 'Test Movie';
+      const year = 2020;
+      when(mockRepository.searchMovies(query, page: 1, year: year))
+          .thenAnswer((_) async => testMovies);
+
+      final result = await useCase.call(query, year: year);
+
+      expect(result, equals(testMovies));
+      verify(mockRepository.searchMovies(query, page: 1, year: year)).called(1);
+    });
+
+    test('calls repository without year parameter when year is null', () async {
+      const query = 'Test Movie';
+      when(mockRepository.searchMovies(query, page: 1, year: null))
+          .thenAnswer((_) async => testMovies);
+
+      final result = await useCase.call(query, year: null);
+
+      expect(result, equals(testMovies));
+      verify(mockRepository.searchMovies(query, page: 1, year: null)).called(1);
+    });
+
+    test('calls repository with year and custom page parameters', () async {
+      const query = 'Test Movie';
+      const year = 2020;
+      const page = 3;
+      when(mockRepository.searchMovies(query, page: page, year: year))
+          .thenAnswer((_) async => testMovies);
+
+      final result = await useCase.call(query, page: page, year: year);
+
+      expect(result, equals(testMovies));
+      verify(mockRepository.searchMovies(query, page: page, year: year)).called(1);
+    });
   });
 }

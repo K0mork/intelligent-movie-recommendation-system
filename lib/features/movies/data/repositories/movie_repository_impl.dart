@@ -24,9 +24,9 @@ class MovieRepositoryImpl implements MovieRepository {
   }
 
   @override
-  Future<List<Movie>> searchMovies(String query, {int page = 1}) async {
+  Future<List<Movie>> searchMovies(String query, {int page = 1, int? year}) async {
     try {
-      return await _remoteDataSource.searchMovies(query, page: page);
+      return await _remoteDataSource.searchMovies(query, page: page, year: year);
     } catch (e) {
       throw Exception('Failed to search movies: $e');
     }

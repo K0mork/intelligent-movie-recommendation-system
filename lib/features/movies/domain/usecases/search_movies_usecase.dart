@@ -6,10 +6,10 @@ class SearchMoviesUseCase {
 
   SearchMoviesUseCase(this._repository);
 
-  Future<List<Movie>> call(String query, {int page = 1}) async {
+  Future<List<Movie>> call(String query, {int page = 1, int? year}) async {
     if (query.trim().isEmpty) {
       throw ArgumentError('Search query cannot be empty');
     }
-    return await _repository.searchMovies(query, page: page);
+    return await _repository.searchMovies(query, page: page, year: year);
   }
 }

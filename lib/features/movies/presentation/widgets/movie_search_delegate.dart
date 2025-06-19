@@ -1,20 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/movie_providers.dart';
-import '../controllers/movie_controller.dart';
 import '../../data/models/movie.dart';
 
 class MovieSearchDelegate extends SearchDelegate<Movie?> {
+  String? selectedYear;
+  
   @override
   String get searchFieldLabel => '映画を検索...';
 
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
+      // 年指定フィルター
+      Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        child: PopupMenuButton<String>(
+          icon: Icon(
+            Icons.date_range,
+            color: selectedYear != null ? Theme.of(context).colorScheme.primary : null,
+          ),
+          tooltip: '公開年で絞り込み',
+          onSelected: (year) {
+            selectedYear = year == 'all' ? null : year;
+            query = query; // 再検索をトリガー
+          },
+          itemBuilder: (context) {
+            final currentYear = DateTime.now().year;
+            final years = <String>['all'];
+            for (int year = currentYear; year >= 1900; year -= 5) {
+              years.add(year.toString());
+            }
+            
+            return years.map((year) {
+              return PopupMenuItem<String>(
+                value: year,
+                child: Row(
+                  children: [
+                    if (year == 'all') ...[
+                      const Icon(Icons.clear),
+                      const SizedBox(width: 8),
+                      const Text('全ての年'),
+                    ] else ...[
+                      const Icon(Icons.calendar_today),
+                      const SizedBox(width: 8),
+                      Text('$year年代'),
+                    ],
+                    if (selectedYear == year || (selectedYear == null && year == 'all'))
+                      Container(
+                        margin: const EdgeInsets.only(left: 8),
+                        child: Icon(
+                          Icons.check,
+                          size: 16,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            }).toList();
+          },
+        ),
+      ),
       IconButton(
         icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
+          selectedYear = null;
         },
       ),
     ];
@@ -32,48 +84,75 @@ class MovieSearchDelegate extends SearchDelegate<Movie?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return _SearchResults(query: query, onMovieSelected: (movie) {
-      close(context, movie);
-    });
+    return _SearchResults(
+      query: query, 
+      selectedYear: selectedYear,
+      onMovieSelected: (movie) {
+        close(context, movie);
+      },
+    );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     if (query.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.search,
               size: 64,
               color: Colors.grey,
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               '映画を検索してください',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
               ),
             ),
+            if (selectedYear != null) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  '$selectedYear年代で絞り込み中',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       );
     }
 
-    return _SearchResults(query: query, onMovieSelected: (movie) {
-      close(context, movie);
-    });
+    return _SearchResults(
+      query: query, 
+      selectedYear: selectedYear,
+      onMovieSelected: (movie) {
+        close(context, movie);
+      },
+    );
   }
 }
 
 class _SearchResults extends ConsumerWidget {
   final String query;
+  final String? selectedYear;
   final Function(Movie) onMovieSelected;
 
   const _SearchResults({
     required this.query,
+    this.selectedYear,
     required this.onMovieSelected,
   });
 
@@ -87,7 +166,8 @@ class _SearchResults extends ConsumerWidget {
     // コントローラーから検索を実行
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (query.isNotEmpty) {
-        ref.read(movieControllerProvider.notifier).searchMovies(query);
+        final yearInt = selectedYear != null ? int.tryParse(selectedYear!) : null;
+        ref.read(movieControllerProvider.notifier).searchMovies(query, year: yearInt);
       }
     });
 
@@ -125,46 +205,123 @@ class _SearchResults extends ConsumerWidget {
       );
     }
 
-    final movies = movieState.searchResults;
+    var movies = movieState.searchResults;
+
+    // 年フィルタリング処理
+    if (selectedYear != null && movies.isNotEmpty) {
+      final yearInt = int.tryParse(selectedYear!);
+      if (yearInt != null) {
+        movies = movies.where((movie) {
+          if (movie.releaseDate?.isNotEmpty == true) {
+            try {
+              final movieYear = int.parse(movie.releaseDate!.substring(0, 4));
+              // 年代範囲での絞り込み（例：2020年代 = 2020-2024）
+              return movieYear >= yearInt && movieYear < yearInt + 5;
+            } catch (e) {
+              return false;
+            }
+          }
+          return false;
+        }).toList();
+      }
+    }
 
     if (movies.isEmpty && query.isNotEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.movie_outlined,
               size: 64,
               color: Colors.grey,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              '検索結果が見つかりませんでした',
-              style: TextStyle(
+              selectedYear != null 
+                ? '$selectedYear年代の検索結果が見つかりませんでした'
+                : '検索結果が見つかりませんでした',
+              style: const TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
               ),
+              textAlign: TextAlign.center,
             ),
+            if (selectedYear != null) ...[
+              const SizedBox(height: 8),
+              const Text(
+                '年代フィルターを解除して再度お試しください',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ],
         ),
       );
     }
 
-    return ListView.builder(
-      itemCount: movies.length,
-      itemBuilder: (context, index) {
-        final movie = movies[index];
-        return ListTile(
-          leading: movie.posterPath != null
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: Image.network(
-                    'https://image.tmdb.org/t/p/w92${movie.posterPath}',
-                    width: 46,
-                    height: 69,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
+    return Column(
+      children: [
+        // フィルター状態表示
+        if (selectedYear != null)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.filter_alt,
+                  size: 16,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '$selectedYear年代で絞り込み中 (${movies.length}件)',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: movies.length,
+            itemBuilder: (context, index) {
+              final movie = movies[index];
+              return ListTile(
+                leading: movie.posterPath != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: Image.network(
+                          'https://image.tmdb.org/t/p/w92${movie.posterPath}',
+                          width: 46,
+                          height: 69,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: 46,
+                              height: 69,
+                              color: Colors.grey[300],
+                              child: const Icon(
+                                Icons.movie,
+                                color: Colors.grey,
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    : Container(
                         width: 46,
                         height: 69,
                         color: Colors.grey[300],
@@ -172,52 +329,43 @@ class _SearchResults extends ConsumerWidget {
                           Icons.movie,
                           color: Colors.grey,
                         ),
-                      );
-                    },
-                  ),
-                )
-              : Container(
-                  width: 46,
-                  height: 69,
-                  color: Colors.grey[300],
-                  child: const Icon(
-                    Icons.movie,
-                    color: Colors.grey,
-                  ),
+                      ),
+                title: Text(
+                  movie.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-          title: Text(
-            movie.title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (movie.releaseDate?.isNotEmpty == true)
-                Text(
-                  movie.releaseDate!.substring(0, 4),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              if (movie.voteAverage > 0)
-                Row(
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      Icons.star,
-                      size: 16,
-                      color: Colors.amber,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      movie.voteAverage.toStringAsFixed(1),
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
+                    if (movie.releaseDate?.isNotEmpty == true)
+                      Text(
+                        movie.releaseDate!.substring(0, 4),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    if (movie.voteAverage > 0)
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            size: 16,
+                            color: Colors.amber,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            movie.voteAverage.toStringAsFixed(1),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
                   ],
                 ),
-            ],
+                onTap: () => onMovieSelected(movie),
+              );
+            },
           ),
-          onTap: () => onMovieSelected(movie),
-        );
-      },
+        ),
+      ],
     );
   }
 }

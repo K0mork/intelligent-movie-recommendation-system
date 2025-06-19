@@ -87,7 +87,7 @@ class MovieController extends StateNotifier<MovieState> {
     }
   }
 
-  Future<void> searchMovies(String query, {int page = 1}) async {
+  Future<void> searchMovies(String query, {int page = 1, int? year}) async {
     if (query.trim().isEmpty) {
       state = state.copyWith(
         searchResults: [],
@@ -107,7 +107,7 @@ class MovieController extends StateNotifier<MovieState> {
     }
 
     try {
-      final movies = await _searchMoviesUseCase.call(query, page: page);
+      final movies = await _searchMoviesUseCase.call(query, page: page, year: year);
       
       if (page == 1) {
         state = state.copyWith(
