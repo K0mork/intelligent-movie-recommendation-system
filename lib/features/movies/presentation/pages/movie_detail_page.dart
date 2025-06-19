@@ -12,10 +12,12 @@ import '../../../auth/presentation/providers/auth_providers.dart';
 
 class MovieDetailPage extends ConsumerWidget {
   final int movieId;
+  final bool showReviewButton;
 
   const MovieDetailPage({
     super.key,
     required this.movieId,
+    this.showReviewButton = false,
   });
 
   @override
@@ -24,7 +26,7 @@ class MovieDetailPage extends ConsumerWidget {
 
     return Scaffold(
       body: movieAsync.when(
-        data: (movie) => _MovieDetailView(movie: movie),
+        data: (movie) => _MovieDetailView(movie: movie, showReviewButton: showReviewButton),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stackTrace) => Center(
           child: Column(
@@ -61,8 +63,9 @@ class MovieDetailPage extends ConsumerWidget {
 
 class _MovieDetailView extends ConsumerWidget {
   final Movie movie;
+  final bool showReviewButton;
 
-  const _MovieDetailView({required this.movie});
+  const _MovieDetailView({required this.movie, this.showReviewButton = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
