@@ -247,7 +247,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     Navigator.of(context).pushNamed('/reviews');
                   },
                   icon: const Icon(Icons.rate_review),
-                  label: const Text('レビュー'),
+                  label: const Text('マイレビュー'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.secondary,
                     foregroundColor: Theme.of(context).colorScheme.onSecondary,
