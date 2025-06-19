@@ -9,50 +9,18 @@ import '../../../../core/widgets/loading_animations.dart';
 import '../../../../core/widgets/error_widgets.dart';
 import '../../../../core/widgets/animated_widgets.dart';
 
-class ReviewsPage extends ConsumerStatefulWidget {
+class ReviewsPage extends ConsumerWidget {
   const ReviewsPage({super.key});
 
   @override
-  ConsumerState<ReviewsPage> createState() => _ReviewsPageState();
-}
-
-class _ReviewsPageState extends ConsumerState<ReviewsPage> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final authState = ref.watch(authStateProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('レビュー'),
+        title: const Text('マイレビュー'),
         backgroundColor: theme.colorScheme.surface,
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(
-              icon: Icon(Icons.public),
-              text: 'すべてのレビュー',
-            ),
-            Tab(
-              icon: Icon(Icons.person),
-              text: 'マイレビュー',
-            ),
-          ],
-        ),
       ),
       body: authState.when(
         data: (user) {
@@ -79,15 +47,7 @@ class _ReviewsPageState extends ConsumerState<ReviewsPage> with SingleTickerProv
             );
           }
 
-          return TabBarView(
-            controller: _tabController,
-            children: [
-              // All Reviews Tab
-              _AllReviewsTab(),
-              // My Reviews Tab
-              _MyReviewsTab(userId: user.uid),
-            ],
-          );
+          return _MyReviewsTab(userId: user.uid);
         },
         loading: () => Center(
           child: Column(
@@ -116,41 +76,6 @@ class _ReviewsPageState extends ConsumerState<ReviewsPage> with SingleTickerProv
           },
           retryText: '再試行',
         ),
-      ),
-    );
-  }
-}
-
-class _AllReviewsTab extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // For now, show a placeholder since we need to implement a way to get all reviews
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.construction,
-            size: 64,
-            color: Colors.grey,
-          ),
-          SizedBox(height: 16),
-          Text(
-            'すべてのレビュー機能は実装中です',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.grey,
-            ),
-          ),
-          SizedBox(height: 8),
-          Text(
-            '現在はマイレビューのみ表示できます',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
-            ),
-          ),
-        ],
       ),
     );
   }
