@@ -34,7 +34,7 @@ class ResultStateWidget<T> extends StatelessWidget {
       success: builder,
       initial: () => initialBuilder?.call() ?? _buildDefaultInitial(),
       loading: (message) => loadingBuilder?.call(message) ?? _buildDefaultLoading(message),
-      error: (message, error, stackTrace) =>
+      onError: (message, error, stackTrace) =>
           errorBuilder?.call(message, error, stackTrace) ??
           _buildDefaultError(message, error, stackTrace),
     );
@@ -89,7 +89,7 @@ class SliverResultStateWidget<T> extends StatelessWidget {
       success: builder,
       initial: () => initialBuilder?.call() ?? _buildDefaultInitial(),
       loading: (message) => loadingBuilder?.call(message) ?? _buildDefaultLoading(message),
-      error: (message, error, stackTrace) =>
+      onError: (message, error, stackTrace) =>
           errorBuilder?.call(message, error, stackTrace) ??
           _buildDefaultError(message, error, stackTrace),
     );
@@ -187,7 +187,7 @@ class ListResultStateWidget<T> extends StatelessWidget {
       },
       initial: () => initialBuilder?.call() ?? _buildDefaultInitial(),
       loading: (message) => loadingBuilder?.call(message) ?? _buildDefaultLoading(message),
-      error: (message, error, stackTrace) =>
+      onError: (message, error, stackTrace) =>
           errorBuilder?.call(message, error, stackTrace) ??
           _buildDefaultError(message, error, stackTrace),
     );
@@ -263,7 +263,7 @@ class PaginatedResultStateWidget<T> extends StatelessWidget {
       loading: (message) => LoadingStateWidget.fullScreen(
         message: message ?? '読み込み中...',
       ),
-      error: (message, error, stackTrace) => ErrorDisplay(
+      onError: (message, error, stackTrace) => ErrorDisplay(
         message: message,
         onRetry: onRetry,
       ),
