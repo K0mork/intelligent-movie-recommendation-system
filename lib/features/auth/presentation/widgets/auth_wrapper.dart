@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../pages/sign_in_page.dart';
 import '../providers/auth_providers.dart';
+import '../../../../core/widgets/loading_state_widget.dart';
 
 class AuthWrapper extends ConsumerWidget {
   final Widget child;
@@ -26,9 +27,7 @@ class AuthWrapper extends ConsumerWidget {
         return const SignInPage();
       },
       loading: () => const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: LoadingStateWidget.fullScreen(),
       ),
       error: (error, stack) => Scaffold(
         body: Center(

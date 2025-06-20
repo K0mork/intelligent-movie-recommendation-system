@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/auth_controller.dart';
+import '../../../../core/widgets/loading_state_widget.dart';
 
 class AnonymousSignInButton extends ConsumerWidget {
   final VoidCallback? onPressed;
@@ -34,15 +35,10 @@ class AnonymousSignInButton extends ConsumerWidget {
           ),
         ),
         icon: isLoading
-            ? SizedBox(
+            ? const SizedBox(
                 width: 16,
                 height: 16,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    theme.colorScheme.primary,
-                  ),
-                ),
+                child: LoadingStateWidget.inline(),
               )
             : Icon(
                 Icons.explore,

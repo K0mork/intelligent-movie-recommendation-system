@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/auth_controller.dart';
+import '../../../../core/widgets/loading_state_widget.dart';
 
 class GoogleSignInButton extends ConsumerWidget {
   final VoidCallback? onPressed;
@@ -35,15 +36,10 @@ class GoogleSignInButton extends ConsumerWidget {
           ),
         ),
         icon: isLoading
-            ? SizedBox(
+            ? const SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    theme.colorScheme.primary,
-                  ),
-                ),
+                child: LoadingStateWidget.inline(),
               )
             : Icon(
                 Icons.login,
