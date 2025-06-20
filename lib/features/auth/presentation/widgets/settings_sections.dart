@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/app_user.dart';
 import 'user_avatar.dart';
+import '../../../../core/utils/snack_bar_helper.dart';
 
 /// 設定画面のセクション別ウィジェット群
 /// 

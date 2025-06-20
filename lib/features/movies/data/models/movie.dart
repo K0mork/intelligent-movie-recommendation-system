@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:filmflow/features/movies/domain/entities/movie_entity.dart';
 
 part 'movie.g.dart';
 
@@ -98,4 +99,24 @@ class Movie {
   String get fullBackdropUrl => backdropPath != null 
     ? 'https://image.tmdb.org/t/p/w780$backdropPath' 
     : '';
+
+  /// MovieEntityへの変換メソッド
+  MovieEntity toEntity() {
+    return MovieEntity(
+      id: id,
+      title: title,
+      overview: overview,
+      posterPath: posterPath,
+      backdropPath: backdropPath,
+      releaseDate: releaseDate,
+      voteAverage: voteAverage,
+      voteCount: voteCount,
+      genreIds: genreIds,
+      adult: adult,
+      originalLanguage: originalLanguage,
+      originalTitle: originalTitle,
+      popularity: popularity,
+      video: video,
+    );
+  }
 }

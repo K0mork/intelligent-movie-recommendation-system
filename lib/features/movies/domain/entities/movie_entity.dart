@@ -15,6 +15,9 @@ class MovieEntity {
   final String originalTitle;
   final double popularity;
   final bool video;
+  
+  // ジャンル名のリスト（UI表示用）
+  final List<String>? genres;
 
   const MovieEntity({
     required this.id,
@@ -31,6 +34,7 @@ class MovieEntity {
     required this.originalTitle,
     required this.popularity,
     required this.video,
+    this.genres,
   });
 
   /// 完全なポスター画像URLを取得
