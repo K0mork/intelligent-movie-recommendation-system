@@ -86,18 +86,27 @@ class AppInitializationService {
   static Future<void> _validateEnvironmentVariables() async {
     _log('Validating environment variables...');
     try {
-      EnvConfig.validateRequiredVariables();
-      _log('✅ Required environment variables validated');
+      // 完全な環境変数バリデーションを実行
+      final validationResult = EnvConfig.validateEnvironment();
       
-      // オプション環境変数の確認
-      final missingOptionals = EnvConfig.checkOptionalVariables();
-      if (missingOptionals.isNotEmpty) {
-        _log('⚠️ Optional environment variables missing: ${missingOptionals.join(', ')}');
+      if (validationResult.isFatal) {
+        throw InitializationError(
+          type: InitializationErrorType.environmentVariables,
+          message: validationResult.userFriendlyMessage,
+        );
       }
       
-      // デバッグ時は環境変数の状態を表示
+      _log('✅ Required environment variables validated');
+      
+      // 警告がある場合はログに出力
+      if (validationResult.hasWarnings) {
+        _log('⚠️ ${validationResult.userFriendlyMessage}');
+        _log('Missing optional variables: ${validationResult.missingOptional.join(', ')}');
+      }
+      
+      // デバッグ時は詳細な環境変数状態を表示
       if (kDebugMode) {
-        _log('\n${EnvConfig.getConfigurationStatus()}');
+        _log('\n${validationResult.debugMessage}');
       }
       
     } catch (error) {

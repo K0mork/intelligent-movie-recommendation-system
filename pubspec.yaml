@@ -85,6 +85,8 @@ dev_dependencies:
 
   # Testing dependencies
   mockito: ^5.4.4
+  integration_test:
+    sdk: flutter
   
   # JSON serialization
   json_serializable: ^6.8.0
