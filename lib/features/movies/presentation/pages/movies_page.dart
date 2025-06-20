@@ -7,6 +7,7 @@ import 'package:filmflow/features/movies/presentation/pages/movie_detail_page.da
 import 'package:filmflow/features/movies/presentation/pages/api_setup_page.dart';
 import 'package:filmflow/features/movies/data/models/movie.dart';
 import '../../../../core/widgets/breadcrumb_widget.dart';
+import '../../../../core/widgets/loading_state_widget.dart';
 
 class MoviesPage extends ConsumerStatefulWidget {
   const MoviesPage({super.key});
@@ -177,7 +178,7 @@ class _PopularMoviesTab extends StatelessWidget {
     }
 
     if (movies.isEmpty && isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const LoadingStateWidget.fullScreen();
     }
 
     return MovieGrid(
@@ -406,7 +407,7 @@ class _SearchMoviesTab extends StatelessWidget {
     }
 
     if (movies.isEmpty && isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const LoadingStateWidget.fullScreen();
     }
 
     if (movies.isEmpty) {

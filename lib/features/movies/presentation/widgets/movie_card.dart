@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmflow/features/movies/data/models/movie.dart';
+import '../../../../core/widgets/loading_state_widget.dart';
 
 class MovieCard extends StatelessWidget {
   final Movie movie;
@@ -31,9 +32,7 @@ class MovieCard extends StatelessWidget {
                     ? CachedNetworkImage(
                         imageUrl: movie.fullPosterUrl,
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => const Center(
-                          child: CircularProgressIndicator(),
-                        ),
+                        placeholder: (context, url) => const LoadingStateWidget.inline(),
                         errorWidget: (context, url, error) => const Icon(
                           Icons.movie,
                           size: 50,

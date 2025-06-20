@@ -32,7 +32,12 @@ class ReviewHistoryTabView extends ConsumerWidget {
     return authState.when(
       data: (user) {
         if (user == null) {
-          return const AuthRequiredView();
+          return const AuthRequiredWidget(
+            title: 'ログインが必要です',
+            message: 'レビュー履歴を見るにはログインしてください',
+            type: AuthRequiredType.reviews,
+            padding: EdgeInsets.all(32.0),
+          );
         }
         return _buildHistoryContent(context, ref, user.uid);
       },
@@ -374,43 +379,3 @@ class _DeleteConfirmationDialog extends StatelessWidget {
   }
 }
 
-/// 認証が必要であることを表示するウィジェット
-class AuthRequiredView extends StatelessWidget {
-  const AuthRequiredView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.account_circle_outlined,
-              size: 80,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'ログインが必要です',
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'レビュー履歴を確認するにはログインしてください',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

@@ -7,6 +7,8 @@ import '../../../reviews/presentation/widgets/review_card.dart';
 import '../../../reviews/presentation/providers/review_providers.dart';
 import '../../../reviews/domain/entities/review.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
+import '../../../../core/widgets/error_widgets.dart';
+import '../../../../core/widgets/loading_state_widget.dart';
 
 /// 映画レビューセクション
 /// レビューボタン、レビューリスト、認証状態の管理を行う
@@ -86,10 +88,12 @@ class _ReviewButton extends StatelessWidget {
             ),
           );
         } else {
-          return _AuthRequiredView(theme: theme);
+          return const AuthRequiredWidget(
+            type: AuthRequiredType.reviews,
+          );
         }
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const LoadingStateWidget.inline(),
       error: (error, stackTrace) => _ErrorView(
         theme: theme,
         error: error,
@@ -107,44 +111,6 @@ class _ReviewButton extends StatelessWidget {
   }
 }
 
-/// 認証が必要なことを示すビュー
-class _AuthRequiredView extends StatelessWidget {
-  final ThemeData theme;
-
-  const _AuthRequiredView({required this.theme});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.3),
-        ),
-      ),
-      child: Column(
-        children: [
-          const Icon(
-            Icons.login,
-            size: 48,
-            color: Colors.grey,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'レビューを書くにはログインが必要です',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[600],
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 /// エラー表示ビュー
 class _ErrorView extends StatelessWidget {

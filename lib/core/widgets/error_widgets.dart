@@ -1,6 +1,98 @@
 import 'package:flutter/material.dart';
 import 'animated_widgets.dart';
 
+/// 認証が必要なことを示すウィジェット
+class AuthRequiredWidget extends StatelessWidget {
+  final String? title;
+  final String? message;
+  final Widget? action;
+  final AuthRequiredType type;
+  final EdgeInsetsGeometry? padding;
+
+  const AuthRequiredWidget({
+    super.key,
+    this.title,
+    this.message,
+    this.action,
+    this.type = AuthRequiredType.general,
+    this.padding,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final defaultPadding = padding ?? const EdgeInsets.all(16);
+    
+    return Container(
+      width: double.infinity,
+      padding: defaultPadding,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: theme.colorScheme.outline.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            _getIconForType(type),
+            size: 48,
+            color: Colors.grey,
+          ),
+          const SizedBox(height: 8),
+          if (title != null) ...[
+            Text(
+              title!,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+          ],
+          Text(
+            message ?? _getDefaultMessageForType(type),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[600],
+            ),
+            textAlign: TextAlign.center,
+          ),
+          if (action != null) ...[
+            const SizedBox(height: 16),
+            action!,
+          ],
+        ],
+      ),
+    );
+  }
+
+  IconData _getIconForType(AuthRequiredType type) {
+    switch (type) {
+      case AuthRequiredType.general:
+        return Icons.login;
+      case AuthRequiredType.reviews:
+        return Icons.rate_review;
+      case AuthRequiredType.recommendations:
+        return Icons.recommend;
+    }
+  }
+
+  String _getDefaultMessageForType(AuthRequiredType type) {
+    switch (type) {
+      case AuthRequiredType.general:
+        return 'この機能を使用するにはログインが必要です';
+      case AuthRequiredType.reviews:
+        return 'レビューを書くにはログインが必要です';
+      case AuthRequiredType.recommendations:
+        return '推薦機能を利用するにはログインが必要です';
+    }
+  }
+}
+
+enum AuthRequiredType { general, reviews, recommendations }
+
 class ErrorDisplay extends StatelessWidget {
   final String message;
   final String? title;

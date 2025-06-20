@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/widgets/loading_state_widget.dart';
 
 
 /// Firebase設定がない場合のデモ用認証ラッパー
@@ -48,15 +49,8 @@ class _DemoAuthWrapperState extends ConsumerState<DemoAuthWrapper> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16),
-              Text('アプリを初期化中...'),
-            ],
-          ),
+        body: LoadingStateWidget.fullScreen(
+          message: 'アプリを初期化中...',
         ),
       );
     }
