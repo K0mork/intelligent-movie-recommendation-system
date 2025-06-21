@@ -74,6 +74,13 @@ class AppInitializationService {
   /// 環境変数ファイルの読み込み
   static Future<void> _loadEnvironmentVariables() async {
     _log('Loading environment variables...');
+    
+    // Web環境では内蔵設定を使用するため、.envファイルの読み込みをスキップ
+    if (kIsWeb) {
+      _log('✅ Web environment detected, using built-in configuration');
+      return;
+    }
+    
     try {
       await dotenv.load(fileName: ".env");
       _log('✅ Environment variables loaded successfully');
@@ -85,11 +92,30 @@ class AppInitializationService {
   /// 環境変数の検証
   static Future<void> _validateEnvironmentVariables() async {
     _log('Validating environment variables...');
+    
+    // Web環境での事前チェック
+    if (kIsWeb) {
+      _log('🌐 Web environment detected');
+      // ignore: avoid_print
+      print('FilmFlow - Web environment validation starting...');
+      // ignore: avoid_print
+      print('Firebase API Key available: ${EnvConfig.firebaseApiKey.isNotEmpty}');
+      // ignore: avoid_print
+      print('TMDb API Key available: ${EnvConfig.tmdbApiKey.isNotEmpty}');
+    }
+    
     try {
       // 完全な環境変数バリデーションを実行
       final validationResult = EnvConfig.validateEnvironment();
       
       if (validationResult.isFatal) {
+        // Web環境では内蔵設定を使用するため、追加ログを出力
+        if (kIsWeb) {
+          _log('⚠️ Web環境でのバリデーションエラー、内蔵設定確認中...');
+          _log('Firebase API Key: ${EnvConfig.firebaseApiKey.isNotEmpty ? "✅" : "❌"}');
+          _log('TMDb API Key: ${EnvConfig.tmdbApiKey.isNotEmpty ? "✅" : "❌"}');
+        }
+        
         throw InitializationError(
           type: InitializationErrorType.environmentVariables,
           message: validationResult.userFriendlyMessage,
@@ -111,6 +137,20 @@ class AppInitializationService {
       
     } catch (error) {
       _logError('❌ Environment variable validation failed', error);
+      
+      // Web環境では詳細なデバッグ情報を出力
+      if (kIsWeb) {
+        _log('Web Environment Debug Info:');
+        _log('kIsWeb: $kIsWeb');
+        _log('kReleaseMode: $kReleaseMode');
+        _log('Firebase configured: ${EnvConfig.isFirebaseConfigured}');
+        _log('TMDb configured: ${EnvConfig.isTmdbConfigured}');
+        _log('Firebase API Key: ${EnvConfig.firebaseApiKey.substring(0, 10)}...');
+        _log('TMDb API Key: ${EnvConfig.tmdbApiKey.substring(0, 10)}...');
+        // 強制的にコンソールにも出力
+        // ignore: avoid_print
+        print('FilmFlow Debug - Firebase: ${EnvConfig.isFirebaseConfigured}, TMDb: ${EnvConfig.isTmdbConfigured}');
+      }
       
       // 本番環境では致命的エラーとして扱う
       if (kReleaseMode) {
