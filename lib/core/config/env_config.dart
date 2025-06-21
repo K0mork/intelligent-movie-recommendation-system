@@ -25,9 +25,11 @@ class EnvConfig {
     // Web環境の場合
     if (kIsWeb) {
       // 機密情報は実行時環境変数から取得
-      if (key == 'FIREBASE_API_KEY' || key == 'TMDB_API_KEY') {
-        // JavaScript環境変数から取得（Firebase Hosting環境変数など）
-        return const String.fromEnvironment(key, defaultValue: defaultValue);
+      if (key == 'FIREBASE_API_KEY') {
+        return const String.fromEnvironment('FIREBASE_API_KEY', defaultValue: '');
+      }
+      if (key == 'TMDB_API_KEY') {
+        return const String.fromEnvironment('TMDB_API_KEY', defaultValue: '');
       }
       // 公開可能な設定は内蔵値を使用
       return _webEnvVars[key] ?? defaultValue;
