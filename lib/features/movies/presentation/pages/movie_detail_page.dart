@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmflow/features/movies/presentation/providers/movie_providers.dart';
 import 'package:filmflow/features/movies/data/models/movie.dart';
 import '../widgets/movie_detail_header.dart';
@@ -56,7 +55,7 @@ class _MovieDetailView extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         // ヘッダー（背景画像付きSliverAppBar）
-        MovieDetailHeader(movie: movie.toEntity()),
+        MovieDetailHeader(movie: movie),
         
         // パンくずナビゲーション
         SliverToBoxAdapter(

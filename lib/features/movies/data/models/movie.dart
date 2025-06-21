@@ -119,4 +119,39 @@ class Movie {
       video: video,
     );
   }
+
+  /// copyWithメソッド
+  Movie copyWith({
+    int? id,
+    String? title,
+    String? overview,
+    String? posterPath,
+    String? backdropPath,
+    String? releaseDate,
+    double? voteAverage,
+    int? voteCount,
+    List<int>? genreIds,
+    bool? adult,
+    String? originalLanguage,
+    String? originalTitle,
+    double? popularity,
+    bool? video,
+  }) {
+    return Movie(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      overview: overview ?? this.overview,
+      posterPath: posterPath ?? this.posterPath,
+      backdropPath: backdropPath ?? this.backdropPath,
+      releaseDate: releaseDate ?? this.releaseDate,
+      voteAverage: voteAverage ?? this.voteAverage,
+      voteCount: voteCount ?? this.voteCount,
+      genreIds: genreIds ?? this.genreIds,
+      adult: adult ?? this.adult,
+      originalLanguage: originalLanguage ?? this.originalLanguage,
+      originalTitle: originalTitle ?? this.originalTitle,
+      popularity: popularity ?? this.popularity,
+      video: video ?? this.video,
+    );
+  }
 }

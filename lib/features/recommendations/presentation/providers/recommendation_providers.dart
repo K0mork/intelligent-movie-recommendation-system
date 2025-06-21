@@ -19,8 +19,8 @@ final functionsProvider = Provider<FirebaseFunctions>((ref) {
 
 // Data Source
 final recommendationRemoteDataSourceProvider = Provider<RecommendationRemoteDataSource>((ref) {
-  final firestore = ref.watch(firestoreProvider);
-  final functions = ref.watch(functionsProvider);
+  final firestore = ref.read(firestoreProvider);
+  final functions = ref.read(functionsProvider);
   
   return RecommendationRemoteDataSourceImpl(
     firestore: firestore,
@@ -30,7 +30,7 @@ final recommendationRemoteDataSourceProvider = Provider<RecommendationRemoteData
 
 // Repository
 final recommendationRepositoryProvider = Provider<RecommendationRepository>((ref) {
-  final remoteDataSource = ref.watch(recommendationRemoteDataSourceProvider);
+  final remoteDataSource = ref.read(recommendationRemoteDataSourceProvider);
   
   return RecommendationRepositoryImpl(
     remoteDataSource: remoteDataSource,
@@ -39,39 +39,39 @@ final recommendationRepositoryProvider = Provider<RecommendationRepository>((ref
 
 // Use Cases
 final getRecommendationsUseCaseProvider = Provider<GetRecommendationsUseCase>((ref) {
-  final repository = ref.watch(recommendationRepositoryProvider);
+  final repository = ref.read(recommendationRepositoryProvider);
   return GetRecommendationsUseCase(repository);
 });
 
 final generateRecommendationsUseCaseProvider = Provider<GenerateRecommendationsUseCase>((ref) {
-  final repository = ref.watch(recommendationRepositoryProvider);
+  final repository = ref.read(recommendationRepositoryProvider);
   return GenerateRecommendationsUseCase(repository);
 });
 
 final saveRecommendationUseCaseProvider = Provider<SaveRecommendationUseCase>((ref) {
-  final repository = ref.watch(recommendationRepositoryProvider);
+  final repository = ref.read(recommendationRepositoryProvider);
   return SaveRecommendationUseCase(repository);
 });
 
 final getSavedRecommendationsUseCaseProvider = Provider<GetSavedRecommendationsUseCase>((ref) {
-  final repository = ref.watch(recommendationRepositoryProvider);
+  final repository = ref.read(recommendationRepositoryProvider);
   return GetSavedRecommendationsUseCase(repository);
 });
 
 final deleteRecommendationUseCaseProvider = Provider<DeleteRecommendationUseCase>((ref) {
-  final repository = ref.watch(recommendationRepositoryProvider);
+  final repository = ref.read(recommendationRepositoryProvider);
   return DeleteRecommendationUseCase(repository);
 });
 
 final submitFeedbackUseCaseProvider = Provider<SubmitFeedbackUseCase>((ref) {
-  final repository = ref.watch(recommendationRepositoryProvider);
+  final repository = ref.read(recommendationRepositoryProvider);
   return SubmitFeedbackUseCase(repository);
 });
 
 // State Providers
 final recommendationsProvider = StateNotifierProvider<RecommendationsNotifier, AsyncValue<List<Recommendation>>>((ref) {
-  final getRecommendationsUseCase = ref.watch(getRecommendationsUseCaseProvider);
-  final generateRecommendationsUseCase = ref.watch(generateRecommendationsUseCaseProvider);
+  final getRecommendationsUseCase = ref.read(getRecommendationsUseCaseProvider);
+  final generateRecommendationsUseCase = ref.read(generateRecommendationsUseCaseProvider);
   
   return RecommendationsNotifier(
     getRecommendationsUseCase: getRecommendationsUseCase,
@@ -80,9 +80,9 @@ final recommendationsProvider = StateNotifierProvider<RecommendationsNotifier, A
 });
 
 final savedRecommendationsProvider = StateNotifierProvider<SavedRecommendationsNotifier, AsyncValue<List<Recommendation>>>((ref) {
-  final getSavedRecommendationsUseCase = ref.watch(getSavedRecommendationsUseCaseProvider);
-  final saveRecommendationUseCase = ref.watch(saveRecommendationUseCaseProvider);
-  final deleteRecommendationUseCase = ref.watch(deleteRecommendationUseCaseProvider);
+  final getSavedRecommendationsUseCase = ref.read(getSavedRecommendationsUseCaseProvider);
+  final saveRecommendationUseCase = ref.read(saveRecommendationUseCaseProvider);
+  final deleteRecommendationUseCase = ref.read(deleteRecommendationUseCaseProvider);
   
   return SavedRecommendationsNotifier(
     getSavedRecommendationsUseCase: getSavedRecommendationsUseCase,

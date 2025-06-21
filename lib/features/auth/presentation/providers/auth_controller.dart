@@ -16,9 +16,6 @@ class AuthController extends StateNotifier<AsyncValue<AppUser?>> {
 
     try {
       final signInUseCase = _ref.read(signInUseCaseProvider);
-      if (signInUseCase == null) {
-        throw AuthException('Firebase authentication is not available');
-      }
       final user = await signInUseCase.signInWithGoogle();
       
       state = AsyncValue.data(user);
@@ -41,9 +38,6 @@ class AuthController extends StateNotifier<AsyncValue<AppUser?>> {
 
     try {
       final signInUseCase = _ref.read(signInUseCaseProvider);
-      if (signInUseCase == null) {
-        throw AuthException('Firebase authentication is not available');
-      }
       final user = await signInUseCase.signInAnonymously();
       
       state = AsyncValue.data(user);
@@ -66,9 +60,6 @@ class AuthController extends StateNotifier<AsyncValue<AppUser?>> {
 
     try {
       final signOutUseCase = _ref.read(signOutUseCaseProvider);
-      if (signOutUseCase == null) {
-        throw AuthException('Firebase authentication is not available');
-      }
       await signOutUseCase.signOut();
       
       state = const AsyncValue.data(null);

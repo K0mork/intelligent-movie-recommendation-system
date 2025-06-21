@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../movies/domain/entities/movie_entity.dart';
+import 'package:filmflow/features/movies/data/models/movie.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 import '../widgets/star_rating.dart';
 import '../providers/review_providers.dart';
 import '../../../../core/widgets/error_widgets.dart';
 
 class AddReviewPage extends ConsumerStatefulWidget {
-  final MovieEntity movie;
+  final Movie movie;
 
   const AddReviewPage({
     super.key,
@@ -58,7 +58,7 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                           borderRadius: BorderRadius.circular(8.0),
                           child: widget.movie.posterPath != null
                               ? Image.network(
-                                  'https://image.tmdb.org/t/p/w200${widget.movie.posterPath}',
+                                  widget.movie.fullPosterUrl,
                                   width: 80,
                                   height: 120,
                                   fit: BoxFit.cover,
@@ -98,9 +98,9 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 8),
-                              if (widget.movie.releaseYear != null)
+                              if (widget.movie.releaseDate != null)
                                 Text(
-                                  '公開日: ${widget.movie.releaseYear}年',
+                                  '公開日: ${_getReleaseYear(widget.movie.releaseDate!)}年',
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: theme.colorScheme.onSurfaceVariant,
                                   ),
@@ -299,7 +299,7 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
         movieId: widget.movie.id.toString(),
         movieTitle: widget.movie.title,
         moviePosterUrl: widget.movie.posterPath != null
-            ? 'https://image.tmdb.org/t/p/w200${widget.movie.posterPath}'
+            ? widget.movie.fullPosterUrl
             : null,
         rating: _rating,
         comment: _commentController.text.trim().isEmpty
@@ -342,6 +342,14 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
           _isSubmitting = false;
         });
       }
+    }
+  }
+
+  String _getReleaseYear(String releaseDate) {
+    try {
+      return DateTime.parse(releaseDate).year.toString();
+    } catch (e) {
+      return '';
     }
   }
 }
