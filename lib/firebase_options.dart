@@ -47,7 +47,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: '***REMOVED***',
+    apiKey: '<FIREBASE_API_KEY_PLACEHOLDER>',
     appId: '1:519346109803:web:ac06582ded29f1c88c202e',
     messagingSenderId: '519346109803',
     projectId: 'movie-recommendation-sys-21b5d',

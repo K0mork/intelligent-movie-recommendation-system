@@ -104,30 +104,9 @@
   <meta name="google-signin-client_id" content="519346109803-b527n0aduaa262qv0sv57uml4f3q7ad6.apps.googleusercontent.com">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-  <!-- Environment Variables for Web Production -->
-  <script>
-    window.envConfig = {
-      // Firebase Configuration
-      FIREBASE_API_KEY: "***REMOVED***",
-      FIREBASE_AUTH_DOMAIN: "movie-recommendation-sys-21b5d.firebaseapp.com",
-      FIREBASE_PROJECT_ID: "movie-recommendation-sys-21b5d",
-      FIREBASE_STORAGE_BUCKET: "movie-recommendation-sys-21b5d.firebasestorage.app",
-      FIREBASE_MESSAGING_SENDER_ID: "519346109803",
-      FIREBASE_APP_ID: "1:519346109803:web:ac06582ded29f1c88c202e",
-      
-      // TMDb API Configuration
-      TMDB_API_KEY: "***REMOVED***",
-      TMDB_BASE_URL: "https://api.themoviedb.org/3",
-      
-      // Optional APIs (empty for security)
-      OMDB_API_KEY: "",
-      OMDB_BASE_URL: "https://www.omdbapi.com",
-      
-      // Google Cloud (empty for security)
-      GOOGLE_CLOUD_PROJECT_ID: "",
-      VERTEX_AI_REGION: "asia-northeast1"
-    };
-  </script>
+  <!-- セキュリティ強化: 機密情報削除済み -->
+  <!-- API キーは実行時環境変数から取得 -->
+  <!-- Firebase Hosting環境変数: FIREBASE_API_KEY, TMDB_API_KEY -->
 
 </head>
 <body>

@@ -5,25 +5,31 @@ import '../constants/app_constants.dart';
 /// 環境変数の管理を行うクラス
 class EnvConfig {
   // Web環境での環境変数定義（本番用）
+  // セキュリティ強化: 機密情報は環境変数から読み込み
   static const Map<String, String> _webEnvVars = {
-    'FIREBASE_API_KEY': '***REMOVED***',
+    // Firebase設定（公開可能な設定のみ）
     'FIREBASE_AUTH_DOMAIN': 'movie-recommendation-sys-21b5d.firebaseapp.com',
     'FIREBASE_PROJECT_ID': 'movie-recommendation-sys-21b5d',
     'FIREBASE_STORAGE_BUCKET': 'movie-recommendation-sys-21b5d.firebasestorage.app',
     'FIREBASE_MESSAGING_SENDER_ID': '519346109803',
     'FIREBASE_APP_ID': '1:519346109803:web:ac06582ded29f1c88c202e',
-    'TMDB_API_KEY': '***REMOVED***',
+    
+    // API設定（Base URLのみ）
     'TMDB_BASE_URL': 'https://api.themoviedb.org/3',
-    'OMDB_API_KEY': '',
     'OMDB_BASE_URL': 'https://www.omdbapi.com',
-    'GOOGLE_CLOUD_PROJECT_ID': '',
     'VERTEX_AI_REGION': 'asia-northeast1',
   };
 
-  /// 環境変数の取得（Web対応）
+  /// 環境変数の取得（Web対応・セキュリティ強化）
   static String _getEnvVar(String key, {String defaultValue = ''}) {
-    // Web環境の場合は内蔵の設定値を使用
+    // Web環境の場合
     if (kIsWeb) {
+      // 機密情報は実行時環境変数から取得
+      if (key == 'FIREBASE_API_KEY' || key == 'TMDB_API_KEY') {
+        // JavaScript環境変数から取得（Firebase Hosting環境変数など）
+        return const String.fromEnvironment(key, defaultValue: defaultValue);
+      }
+      // 公開可能な設定は内蔵値を使用
       return _webEnvVars[key] ?? defaultValue;
     }
     
