@@ -1,23 +1,51 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../constants/app_constants.dart';
 
 /// 環境変数の管理を行うクラス
 class EnvConfig {
-  static String get firebaseApiKey => dotenv.env['FIREBASE_API_KEY'] ?? '';
-  static String get firebaseAuthDomain => dotenv.env['FIREBASE_AUTH_DOMAIN'] ?? '';
-  static String get firebaseProjectId => dotenv.env['FIREBASE_PROJECT_ID'] ?? '';
-  static String get firebaseStorageBucket => dotenv.env['FIREBASE_STORAGE_BUCKET'] ?? '';
-  static String get firebaseMessagingSenderId => dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] ?? '';
-  static String get firebaseAppId => dotenv.env['FIREBASE_APP_ID'] ?? '';
+  // Web環境での環境変数定義（本番用）
+  static const Map<String, String> _webEnvVars = {
+    'FIREBASE_API_KEY': '***REMOVED***',
+    'FIREBASE_AUTH_DOMAIN': 'movie-recommendation-sys-21b5d.firebaseapp.com',
+    'FIREBASE_PROJECT_ID': 'movie-recommendation-sys-21b5d',
+    'FIREBASE_STORAGE_BUCKET': 'movie-recommendation-sys-21b5d.firebasestorage.app',
+    'FIREBASE_MESSAGING_SENDER_ID': '519346109803',
+    'FIREBASE_APP_ID': '1:519346109803:web:ac06582ded29f1c88c202e',
+    'TMDB_API_KEY': '***REMOVED***',
+    'TMDB_BASE_URL': 'https://api.themoviedb.org/3',
+    'OMDB_API_KEY': '',
+    'OMDB_BASE_URL': 'https://www.omdbapi.com',
+    'GOOGLE_CLOUD_PROJECT_ID': '',
+    'VERTEX_AI_REGION': 'asia-northeast1',
+  };
 
-  static String get tmdbApiKey => dotenv.env['TMDB_API_KEY'] ?? '';
-  static String get tmdbBaseUrl => dotenv.env['TMDB_BASE_URL'] ?? AppConstants.tmdbBaseUrl;
+  /// 環境変数の取得（Web対応）
+  static String _getEnvVar(String key, {String defaultValue = ''}) {
+    // Web環境の場合は内蔵の設定値を使用
+    if (kIsWeb) {
+      return _webEnvVars[key] ?? defaultValue;
+    }
+    
+    // ローカル開発環境の場合は.envファイルから取得
+    return dotenv.env[key] ?? defaultValue;
+  }
 
-  static String get omdbApiKey => dotenv.env['OMDB_API_KEY'] ?? '';
-  static String get omdbBaseUrl => dotenv.env['OMDB_BASE_URL'] ?? AppConstants.omdbBaseUrl;
+  static String get firebaseApiKey => _getEnvVar('FIREBASE_API_KEY');
+  static String get firebaseAuthDomain => _getEnvVar('FIREBASE_AUTH_DOMAIN');
+  static String get firebaseProjectId => _getEnvVar('FIREBASE_PROJECT_ID');
+  static String get firebaseStorageBucket => _getEnvVar('FIREBASE_STORAGE_BUCKET');
+  static String get firebaseMessagingSenderId => _getEnvVar('FIREBASE_MESSAGING_SENDER_ID');
+  static String get firebaseAppId => _getEnvVar('FIREBASE_APP_ID');
 
-  static String get googleCloudProjectId => dotenv.env['GOOGLE_CLOUD_PROJECT_ID'] ?? '';
-  static String get vertexAiRegion => dotenv.env['VERTEX_AI_REGION'] ?? AppConstants.defaultRegion;
+  static String get tmdbApiKey => _getEnvVar('TMDB_API_KEY');
+  static String get tmdbBaseUrl => _getEnvVar('TMDB_BASE_URL', defaultValue: AppConstants.tmdbBaseUrl);
+
+  static String get omdbApiKey => _getEnvVar('OMDB_API_KEY');
+  static String get omdbBaseUrl => _getEnvVar('OMDB_BASE_URL', defaultValue: AppConstants.omdbBaseUrl);
+
+  static String get googleCloudProjectId => _getEnvVar('GOOGLE_CLOUD_PROJECT_ID');
+  static String get vertexAiRegion => _getEnvVar('VERTEX_AI_REGION', defaultValue: AppConstants.defaultRegion);
 
   static bool get isFirebaseConfigured =>
       firebaseApiKey.isNotEmpty &&
@@ -89,8 +117,9 @@ class EnvConfig {
     return '''
 環境変数設定状況:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌐 Web環境: ${kIsWeb ? '✅' : '❌'}
 🔥 Firebase設定: ${isFirebaseConfigured ? '✅ 完了' : '❌ 不完全'}
-  - API Key: ${firebaseApiKey.isNotEmpty ? '✅' : '❌'}
+  - API Key: ${firebaseApiKey.isNotEmpty ? '✅' : '❌'} (${firebaseApiKey.length > 0 ? firebaseApiKey.substring(0, 10) + '...' : 'empty'})
   - Auth Domain: ${firebaseAuthDomain.isNotEmpty ? '✅' : '❌'}
   - Project ID: ${firebaseProjectId.isNotEmpty ? '✅' : '❌'}
   - Storage Bucket: ${firebaseStorageBucket.isNotEmpty ? '✅' : '❌'}
@@ -98,7 +127,7 @@ class EnvConfig {
   - App ID: ${firebaseAppId.isNotEmpty ? '✅' : '❌'}
 
 🎬 TMDb API設定: ${isTmdbConfigured ? '✅ 完了' : '❌ 未設定'}
-  - API Key: ${tmdbApiKey.isNotEmpty ? '✅' : '❌'}
+  - API Key: ${tmdbApiKey.isNotEmpty ? '✅' : '❌'} (${tmdbApiKey.length > 0 ? tmdbApiKey.substring(0, 10) + '...' : 'empty'})
   - Base URL: ${tmdbBaseUrl.isNotEmpty ? '✅' : '❌'}
 
 🎭 OMDb API設定: ${isOmdbConfigured ? '✅ 完了' : '⚠️ 未設定（オプション）'}
