@@ -93,6 +93,7 @@ void main() {
         await tester.pumpWidget(
           createTestWidget(
             MovieInfoSection(movie: movieWithoutDate),
+          ),
         );
 
         // Assert
@@ -101,12 +102,28 @@ void main() {
 
       testWidgets('should not display release date when null', (WidgetTester tester) async {
         // Arrange
-        final movieWithNullDate = testMovie.copyWith(releaseDate: null);
+        const movieWithNullDate = Movie(
+          id: 12345,
+          title: 'Test Movie Title',
+          overview: 'Test overview',
+          posterPath: '/test-poster.jpg',
+          backdropPath: '/test-backdrop.jpg',
+          releaseDate: null, // 明示的にnull
+          voteAverage: 7.8,
+          voteCount: 1250,
+          genreIds: [28, 12, 16],
+          adult: false,
+          originalLanguage: 'en',
+          originalTitle: 'Original Test Movie Title',
+          popularity: 125.5,
+          video: false,
+        );
 
         // Act
         await tester.pumpWidget(
           createTestWidget(
             MovieInfoSection(movie: movieWithNullDate),
+          ),
         );
 
         // Assert
@@ -144,6 +161,7 @@ void main() {
         await tester.pumpWidget(
           createTestWidget(
             MovieInfoSection(movie: movieWithZeroVotes),
+          ),
         );
 
         // Assert
@@ -158,6 +176,7 @@ void main() {
         await tester.pumpWidget(
           createTestWidget(
             MovieInfoSection(movie: movieWithPreciseRating),
+          ),
         );
 
         // Assert
@@ -238,6 +257,7 @@ void main() {
         await tester.pumpWidget(
           createTestWidget(
             MovieInfoSection(movie: movieWithLongOverview),
+          ),
         );
 
         // Assert
@@ -285,7 +305,7 @@ void main() {
 
         // Arrange - Set large screen size
         await tester.binding.setSurfaceSize(const Size(1200, 800));
-        await tester.pumpAndSettle();
+        await tester.pump();
 
         // Assert - Widget should still render properly
         expect(tester.takeException(), isNull);
@@ -319,6 +339,7 @@ void main() {
         await tester.pumpWidget(
           createTestWidget(
             MovieInfoSection(movie: minimalMovie),
+          ),
         );
 
         // Assert
@@ -337,6 +358,7 @@ void main() {
         await tester.pumpWidget(
           createTestWidget(
             MovieInfoSection(movie: movieWithHighVotes),
+          ),
         );
 
         // Assert
@@ -351,6 +373,7 @@ void main() {
         await tester.pumpWidget(
           createTestWidget(
             MovieInfoSection(movie: movieWithExtremeRating),
+          ),
         );
 
         // Assert
@@ -380,6 +403,7 @@ void main() {
         await tester.pumpWidget(
           createTestWidget(
             MovieInfoSection(movie: testMovie),
+          ),
         );
 
         // Assert - Widget should render without issues in dark theme
@@ -392,6 +416,7 @@ void main() {
         await tester.pumpWidget(
           createTestWidget(
             MovieInfoSection(movie: testMovie),
+          ),
         );
 
         // Assert - Widget should render without issues in light theme
