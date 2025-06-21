@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../domain/entities/movie_entity.dart';
-import '../../../../core/widgets/loading_state_widget.dart';
+import 'package:filmflow/features/movies/data/models/movie.dart';
 
 /// 映画詳細ヘッダーウィジェット
 /// 
 /// 映画のポスター、タイトル、基本情報を表示。
 /// movie_detail_page.dartから分離。
 class MovieDetailHeader extends StatelessWidget {
-  final MovieEntity movie;
+  final Movie movie;
   final bool showReviewButton;
   final VoidCallback? onReviewPressed;
 
@@ -47,7 +46,7 @@ class MovieDetailHeader extends StatelessWidget {
       image: movie.backdropPath != null
           ? DecorationImage(
               image: CachedNetworkImageProvider(
-                'https://image.tmdb.org/t/p/w1280${movie.backdropPath}',
+                movie.fullBackdropUrl,
               ),
               fit: BoxFit.cover,
               opacity: 0.3,
@@ -63,7 +62,7 @@ class MovieDetailHeader extends StatelessWidget {
     
     return SizedBox.expand(
       child: CachedNetworkImage(
-        imageUrl: 'https://image.tmdb.org/t/p/w1280${movie.backdropPath}',
+        imageUrl: movie.fullBackdropUrl,
         fit: BoxFit.cover,
         placeholder: (context, url) => Container(
           color: Colors.grey[900],
@@ -158,7 +157,7 @@ class MovieDetailHeader extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -168,7 +167,7 @@ class MovieDetailHeader extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         child: movie.posterPath != null
             ? CachedNetworkImage(
-                imageUrl: 'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                imageUrl: movie.fullPosterUrl,
                 fit: BoxFit.cover,
                 placeholder: (context, url) => Container(
                   color: Colors.grey[800],
@@ -217,7 +216,7 @@ class MovieDetailHeader extends StatelessWidget {
         // 公開年
         if (movie.releaseDate != null) ...[
           Text(
-            movie.releaseYear?.toString() ?? '',
+            _getReleaseYear(movie.releaseDate!),
             style: theme.textTheme.titleMedium?.copyWith(
               color: Colors.white70,
             ),
@@ -252,29 +251,16 @@ class MovieDetailHeader extends StatelessWidget {
           ),
           const SizedBox(height: 12),
         ],
-        
-        // ジャンル
-        if (movie.genres?.isNotEmpty == true) ...[
-          Wrap(
-            spacing: 8,
-            runSpacing: 4,
-            children: movie.genres!.take(3).map((genre) => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                genre,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.white,
-                ),
-              ),
-            )).toList(),
-          ),
-        ],
       ],
     );
+  }
+
+  String _getReleaseYear(String releaseDate) {
+    try {
+      return DateTime.parse(releaseDate).year.toString();
+    } catch (e) {
+      return '';
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../movies/data/models/movie.dart';
+import 'package:filmflow/features/movies/data/models/movie.dart';
 import '../../../reviews/presentation/pages/add_review_page.dart';
 import '../../../reviews/presentation/pages/edit_review_page.dart';
 import '../../../reviews/presentation/widgets/review_card.dart';
@@ -105,7 +105,7 @@ class _ReviewButton extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddReviewPage(movie: movie.toEntity()),
+        builder: (context) => AddReviewPage(movie: movie),
       ),
     );
   }

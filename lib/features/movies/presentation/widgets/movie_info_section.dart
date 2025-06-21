@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../movies/data/models/movie.dart';
+import 'package:filmflow/features/movies/data/models/movie.dart';
 
 /// 映画の基本情報を表示するセクション
 /// ポスター、タイトル、公開日、評価、あらすじを含む
