@@ -1,13 +1,16 @@
 {
-    "name": "FilmFlow",
+    "name": "FilmFlow - AI映画推薦システム",
     "short_name": "FilmFlow",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "FilmFlow - AI-powered intelligent movie recommendation system",
+    "background_color": "#2196F3",
+    "theme_color": "#2196F3",
+    "description": "FilmFlow（フィルムフロー）は、AI技術を活用してあなたの映画レビューを分析し、個人の好みに合わせた映画を推薦する次世代映画推薦システムです。",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
+    "lang": "ja",
+    "scope": "/",
+    "categories": ["entertainment", "movies", "recommendations"],
     "icons": [
         {
             "src": "icons/Icon-192.png",
