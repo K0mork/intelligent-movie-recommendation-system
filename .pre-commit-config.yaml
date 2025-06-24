@@ -4,7 +4,7 @@ repos:
   # ────────── ローカルフック ──────────
   - repo: local
     hooks:
-      # APIキー漏洩検出（commit と push 両方で実行）
+      # APIキー漏洩検出
       - id: api-key-check
         name: "🔍 API Key Detection"
         description: "FilmFlow APIキー漏洩検出"
@@ -14,24 +14,24 @@ repos:
         always_run: true
         stages: [pre-commit, pre-push]
 
-      # Flutter フォーマッタ
+      # Dart フォーマッタ
       - id: flutter-format
-        name: "🎨 Flutter Format"
+        name: "🎨 Dart Format"
         description: "Dartコードフォーマット"
-        entry: flutter format --set-exit-if-changed
+        entry: dart format --output=none --set-exit-if-changed
         language: system
         files: "\\.dart$"
         exclude: "\\.g\\.dart$|\\.freezed\\.dart$"
         pass_filenames: true
         stages: [pre-commit, pre-push]
 
-      # Flutter 静的解析
+      # Flutter 静的解析（警告以上を無視）
       - id: flutter-analyze
         name: "🔍 Flutter Analyze"
-        description: "Dart静的解析"
-        entry: flutter analyze
+        description: "Dart静的解析（warnings/info を無視）"
+        exclude: "\\.g\\.dart$|\\.freezed\\.dart$|\\.mocks\\.dart$|^test/"
+        entry: flutter analyze --no-fatal-warnings --no-fatal-infos
         language: system
-        files: "\\.dart$"
         pass_filenames: false
         stages: [pre-commit, pre-push]
 

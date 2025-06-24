@@ -65,7 +65,7 @@ cat > api-key-replacements.txt << 'EOF'
 # Firebase APIキー置換ルール
 regex:AIzaSy[0-9A-Za-z_-]{33}==><FIREBASE_API_KEY_PLACEHOLDER>
 
-# TMDb APIキー置換ルール  
+# TMDb APIキー置換ルール
 regex:[0-9a-f]{32}==><TMDB_API_KEY_PLACEHOLDER>
 
 # 特定の漏洩キー（既にプレースホルダーに置換済み）

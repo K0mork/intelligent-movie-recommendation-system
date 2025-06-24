@@ -70,3 +70,5 @@ test-results/
 
 # Coverage
 coverage/
+# Build directories
+/build/

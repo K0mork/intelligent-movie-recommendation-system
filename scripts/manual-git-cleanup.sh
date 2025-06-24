@@ -56,14 +56,14 @@ echo -e "${YELLOW}この処理には時間がかかります...${NC}"
 # 各APIキーを順次置換
 for key in "${LEAKED_KEYS[@]}"; do
     echo -e "\n${BLUE}🔄 処理中: ${key:0:10}...${NC}"
-    
+
     # Firebase APIキーの場合
     if [[ $key == AIzaSy* ]]; then
         placeholder="<FIREBASE_API_KEY_PLACEHOLDER>"
     else
         placeholder="<TMDB_API_KEY_PLACEHOLDER>"
     fi
-    
+
     # filter-branchで置換実行
     git filter-branch --force --tree-filter "
         find . -type f -name '*.dart' -o -name '*.md' -o -name '*.json' -o -name '*.yml' -o -name '*.yaml' -o -name '*.sh' -o -name '*.txt' | \
