@@ -43,7 +43,7 @@ jobs:
     - name: 🔧 Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.7.2'
+        flutter-version: '3.24.0'
         channel: 'stable'
 
     # ────────────────────────────────────
@@ -55,12 +55,16 @@ jobs:
       run: |
         echo "🔒 Running pre-commit (verbose, diff on failure)…"
         pre-commit install
-        pre-commit run --all-files --verbose --color always --show-diff-on-failure
-        echo "::set-output name=exit_code::$?"
+        if pre-commit run --all-files --verbose --color always --show-diff-on-failure; then
+          echo "exit_code=0" >> $GITHUB_OUTPUT
+        else
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+        fi
 
     # ────────────────────────────────────
     # ② カスタム grep スキャン
     - name: 🔍 Scan for API Keys and Secrets
+      continue-on-error: true
       id: customscan
       run: |
         set -euo pipefail
@@ -124,9 +128,11 @@ jobs:
 
         if [[ $FOUND -eq 1 ]]; then
           echo -e "${RED}${BOLD}🚨 セキュリティアラート：機密情報が検出されました${NC}"
+          echo "scan_result=failure" >> $GITHUB_OUTPUT
           exit 2  # exit code 2 = custom scan failure
         else
           echo -e "${GREEN}${BOLD}✅ カスタムスキャン：問題なし${NC}"
+          echo "scan_result=success" >> $GITHUB_OUTPUT
         fi
 
     # ────────────────────────────────────
@@ -135,11 +141,12 @@ jobs:
       if: always()
       run: |
         PRECOMMIT_EXIT=${{ steps.precommit.outputs.exit_code }}
-        CUSTOM_EXIT=${{ steps.customscan.outcome }}
+        CUSTOM_SCAN_RESULT=${{ steps.customscan.outputs.scan_result }}
         echo "pre-commit exit: ${PRECOMMIT_EXIT}"
-        echo "custom scan   : ${CUSTOM_EXIT}"
+        echo "custom scan result: ${CUSTOM_SCAN_RESULT}"
+
         # pre-commit が非ゼロ，または custom scan が failure ならエラー終了
-        if [[ "${PRECOMMIT_EXIT}" != "0" || "${CUSTOM_EXIT}" == "failure" ]]; then
+        if [[ "${PRECOMMIT_EXIT}" != "0" || "${CUSTOM_SCAN_RESULT}" == "failure" ]]; then
           echo "::error title=Security Violation::API keys or secrets detected in the codebase"
           echo "::error::Remove hard-coded secrets，rewrite history if necessary，and store them in GitHub Secrets or environment variables．"
           exit 1
