@@ -134,7 +134,7 @@ class EnvConfig {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🌐 Web環境: ${kIsWeb ? '✅' : '❌'}
 🔥 Firebase設定: ${isFirebaseConfigured ? '✅ 完了' : '❌ 不完全'}
-  - API Key: ${firebaseApiKey.isNotEmpty ? '✅' : '❌'} (${firebaseApiKey.length > 0 ? firebaseApiKey.substring(0, 10) + '...' : 'empty'})
+  - API Key: ${firebaseApiKey.isNotEmpty ? '✅' : '❌'} (${firebaseApiKey.length > 10 ? firebaseApiKey.substring(0, 10) + '...' : firebaseApiKey.isEmpty ? 'empty' : firebaseApiKey})
   - Auth Domain: ${firebaseAuthDomain.isNotEmpty ? '✅' : '❌'}
   - Project ID: ${firebaseProjectId.isNotEmpty ? '✅' : '❌'}
   - Storage Bucket: ${firebaseStorageBucket.isNotEmpty ? '✅' : '❌'}
@@ -142,7 +142,7 @@ class EnvConfig {
   - App ID: ${firebaseAppId.isNotEmpty ? '✅' : '❌'}
 
 🎬 TMDb API設定: ${isTmdbConfigured ? '✅ 完了' : '❌ 未設定'}
-  - API Key: ${tmdbApiKey.isNotEmpty ? '✅' : '❌'} (${tmdbApiKey.length > 0 ? tmdbApiKey.substring(0, 10) + '...' : 'empty'})
+  - API Key: ${tmdbApiKey.isNotEmpty ? '✅' : '❌'} (${tmdbApiKey.length > 10 ? tmdbApiKey.substring(0, 10) + '...' : tmdbApiKey.isEmpty ? 'empty' : tmdbApiKey})
   - Base URL: ${tmdbBaseUrl.isNotEmpty ? '✅' : '❌'}
 
 🎭 OMDb API設定: ${isOmdbConfigured ? '✅ 完了' : '⚠️ 未設定（オプション）'}
