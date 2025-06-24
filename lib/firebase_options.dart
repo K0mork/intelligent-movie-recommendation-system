@@ -47,7 +47,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: '<FIREBASE_API_KEY_PLACEHOLDER>',
+    apiKey: String.fromEnvironment('FIREBASE_API_KEY'),
     appId: '1:519346109803:web:ac06582ded29f1c88c202e',
     messagingSenderId: '519346109803',
     projectId: 'movie-recommendation-sys-21b5d',
@@ -57,7 +57,7 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: '<FIREBASE_API_KEY_PLACEHOLDER>',
+    apiKey: String.fromEnvironment('FIREBASE_API_KEY'),
     appId: '1:519346109803:android:571ebca38f49e2eb8c202e',
     messagingSenderId: '519346109803',
     projectId: 'movie-recommendation-sys-21b5d',
@@ -65,7 +65,7 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: '<FIREBASE_API_KEY_PLACEHOLDER>',
+    apiKey: String.fromEnvironment('FIREBASE_API_KEY'),
     appId: '1:519346109803:ios:68d03e1f293ea7118c202e',
     messagingSenderId: '519346109803',
     projectId: 'movie-recommendation-sys-21b5d',

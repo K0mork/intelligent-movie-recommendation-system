@@ -176,6 +176,56 @@ FIREBASE_APP_ID=your_app_id
 - デバッグモードでの詳細設定状況表示
 - 本番環境での致命的エラーハンドリング
 
+### 🔑 APIキー設定手順（セキュリティ対応）
+
+#### **1. ローカル開発環境**
+```bash
+# .env ファイルに新しいAPIキーを設定
+FIREBASE_API_KEY=your_new_firebase_api_key
+TMDB_API_KEY=your_new_tmdb_api_key
+```
+
+#### **2. 本番環境（Firebase Hosting）**
+```bash
+# Firebase CLI で環境変数を設定
+firebase functions:config:set \
+  firebase.api_key="your_new_firebase_api_key" \
+  tmdb.api_key="your_new_tmdb_api_key"
+
+# 設定確認
+firebase functions:config:get
+```
+
+#### **3. Flutter Web ビルド時の環境変数**
+```bash
+# 開発時
+flutter run -d chrome --dart-define=FIREBASE_API_KEY=your_new_firebase_api_key
+
+# 本番ビルド時
+flutter build web --dart-define=FIREBASE_API_KEY=your_new_firebase_api_key \
+                  --dart-define=TMDB_API_KEY=your_new_tmdb_api_key
+```
+
+#### **4. GitHub Actions（CI/CD）の場合**
+```yaml
+# .github/workflows/deploy.yml
+env:
+  FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+  TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+```
+
+#### **推奨設定順序**
+1. **まず.envファイルに新しいAPIキーを設定**（ローカル開発用）
+2. **ローカルでテスト実行**
+3. **Firebase Hostingに環境変数設定**（本番用）
+4. **本番デプロイ実行**
+
+#### **セキュリティ注意事項**
+- APIキーが漏洩した場合は即座に無効化
+- 新しいAPIキーは環境変数のみで管理
+- .envファイルは.gitignoreに含める
+- 本番環境ではFirebase環境変数を使用
+
 ## Testing Coverage
 
 - **テストファイル総数**: 20ファイル（包括的なテストスイート）

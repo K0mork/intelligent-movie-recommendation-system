@@ -19,7 +19,7 @@ class TestHelpers {
   static Widget createTestWidgetWithProviders({
     required Widget child,
     ThemeData? theme,
-    List<Override>? overrides,
+    List<ProviderOverride>? overrides,
   }) {
     return MaterialApp(
       theme: theme ?? ThemeData.light(),
