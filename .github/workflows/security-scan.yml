@@ -101,6 +101,7 @@ jobs:
           ! -name "*.log" \
           ! -name "*.mocks.dart" \
           ! -name ".metadata" \
+          ! -name "pubspec.lock" \
           -print0)
 
         FOUND=0
