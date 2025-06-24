@@ -1,3 +1,12 @@
+# =========================================
+#  🔒 Security Scan - API Key Detection
+# =========================================
+# 目的：
+#   1.  pre-commit フックで静的解析を実行（verbose出力で原因を特定しやすく）
+#   2.  独自シェルスクリプトで追加の API キー／シークレット探索
+#   3.  いずれかで問題が見つかった場合はワークフロー全体を失敗させる
+# =========================================
+
 name: 🔒 Security Scan - API Key Detection
 
 on:
@@ -13,37 +22,52 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # ────────────────────────────────────
     - name: 📥 Checkout code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # 全履歴取得（過去のコミットもチェック）
+        # 過去コミットも含めてスキャン対象にするため履歴を全取得
+        fetch-depth: 0
 
+    # ────────────────────────────────────
     - name: 🐍 Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
 
+    # ────────────────────────────────────
     - name: 📦 Install pre-commit
-      run: |
-        pip install pre-commit
+      run: pip install pre-commit
 
+    # ────────────────────────────────────
     - name: 🔧 Setup Flutter
       uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.7.2'
         channel: 'stable'
 
+    # ────────────────────────────────────
+    # ① pre-commit を verbose で実行
+    #    continue-on-error: true にして後続ステップを必ず走らせる
     - name: 🔍 Run Pre-commit All Files
+      continue-on-error: true
+      id: precommit
       run: |
-        echo "🔒 Running pre-commit on all files..."
+        echo "🔒 Running pre-commit (verbose, diff on failure)…"
         pre-commit install
-        pre-commit run --all-files
+        pre-commit run --all-files --verbose --color always --show-diff-on-failure
+        echo "::set-output name=exit_code::$?"
 
+    # ────────────────────────────────────
+    # ② カスタム grep スキャン
     - name: 🔍 Scan for API Keys and Secrets
+      id: customscan
       run: |
-        echo "🔒 FilmFlow Security Scan: APIキー検出を開始..."
+        set -euo pipefail
 
-        # カラー定義
+        echo "🛡️  FilmFlow Security Scan: APIキー／シークレット検出を開始…"
+
+        # ───── 色設定（ANSI）─────
         RED='\033[0;31m'
         GREEN='\033[0;32m'
         YELLOW='\033[1;33m'
@@ -51,126 +75,77 @@ jobs:
         NC='\033[0m'
         BOLD='\033[1m'
 
-        # 検出パターン（JSON形式で管理）
-        cat > patterns.json << 'EOF'
-        {
-          "patterns": [
-            {
-              "name": "Firebase API Key",
-              "regex": "AIzaSy[0-9A-Za-z_-]{33}",
-              "description": "Firebase API キーが検出されました"
-            },
-            {
-              "name": "TMDb API Key",
-              "regex": "[0-9a-f]{32}",
-              "description": "TMDb API キー（32文字hex）が検出されました"
-            },
-            {
-              "name": "Generic API Key",
-              "regex": "[Aa][Pp][Ii]_?[Kk][Ee][Yy].*['\"][0-9A-Za-z_-]{20,}['\"]",
-              "description": "汎用APIキーパターンが検出されました"
-            },
-            {
-              "name": "Secret Pattern",
-              "regex": "[Ss][Ee][Cc][Rr][Ee][Tt].*['\"][0-9A-Za-z_-]{20,}['\"]",
-              "description": "シークレット情報が検出されました"
-            },
-            {
-              "name": "Token Pattern",
-              "regex": "[Tt][Oo][Kk][Ee][Nn].*['\"][0-9A-Za-z_-]{20,}['\"]",
-              "description": "トークン情報が検出されました"
-            }
-          ]
-        }
-        EOF
+        # ───── 検索パターン定義 ─────
+        REGEX_LIST=(
+          "AIzaSy[0-9A-Za-z_-]{33}"                # Firebase API Key
+          "[0-9a-f]{32}"                           # TMDb など 32桁 hex
+          "[Aa][Pp][Ii]_?[Kk][Ee][Yy].*[0-9A-Za-z_-]{20,}"  # 'API_KEY=' 等
+          "[Ss][Ee][Cc][Rr][Ee][Tt].*[0-9A-Za-z_-]{20,}"    # 'SECRET=' 等
+          "[Tt][Oo][Kk][Ee][Nn].*[0-9A-Za-z_-]{20,}"        # 'TOKEN=' 等
+        )
+        # ───── 除外キーワード ─────
+        EXCLUDE_CONTENT='(YOUR_|PLACEHOLDER|EXAMPLE|TEST|TEMPLATE)'
 
-        # 除外パターン
-        EXCLUDE_DIRS=".git|node_modules|build|.flutter-plugins|.dart_tool|coverage"
-        EXCLUDE_FILES="*.log|*.md"
-
-        # スキャン実行
-        FOUND_SECRETS=0
-        SCAN_RESULTS=""
-
-        echo -e "${BLUE}📝 スキャン対象ファイルを収集中...${NC}"
-
-        # 全ファイルをスキャン（除外パターン適用）
-        find . -type f \
+        echo -e "${BLUE}📝 スキャン対象ファイル収集中…${NC}"
+        mapfile -d '' FILES < <(find . -type f \
           ! -path "*/.git/*" \
           ! -path "*/node_modules/*" \
           ! -path "*/build/*" \
           ! -path "*/.dart_tool/*" \
           ! -path "*/coverage/*" \
           ! -name "*.log" \
-          ! -name "security-scan.yml" \
-          -print0 | while IFS= read -r -d '' file; do
+          -print0)
 
-          echo "🔍 Scanning: $file"
+        FOUND=0
 
-          # Firebase APIキーチェック
-          if grep -Hn "AIzaSy[0-9A-Za-z_-]\{33\}" "$file" 2>/dev/null; then
-            echo "🚨 Firebase API Key detected in: $file"
-            FOUND_SECRETS=1
-          fi
-
-          # TMDb APIキーチェック（除外条件付き）
-          if grep -Hn "[0-9a-f]\{32\}" "$file" 2>/dev/null | grep -v -E "(YOUR_|PLACEHOLDER|EXAMPLE|TEST|TEMPLATE)" 2>/dev/null; then
-            echo "🚨 Potential TMDb API Key detected in: $file"
-            FOUND_SECRETS=1
-          fi
-
-          # 危険な文字列パターン
-          DANGEROUS_PATTERNS=(
-            "firebase.*api.*key.*="
-            "tmdb.*api.*key.*="
-            "api_key.*=.*['\"][0-9a-zA-Z_-]{20,}['\"]"
-            "apiKey.*=.*['\"][0-9a-zA-Z_-]{20,}['\"]"
-          )
-
-          for pattern in "${DANGEROUS_PATTERNS[@]}"; do
-            if grep -Hn -i -E "$pattern" "$file" 2>/dev/null | grep -v -E "(YOUR_|PLACEHOLDER|EXAMPLE|TEST|TEMPLATE)" 2>/dev/null; then
-              echo "🚨 Dangerous pattern detected in: $file - $pattern"
-              FOUND_SECRETS=1
+        echo -e "${BLUE}🔍 ワーキングツリーをスキャン中…${NC}"
+        for file in "${FILES[@]}"; do
+          for regex in "${REGEX_LIST[@]}"; do
+            if grep -HnEI "$regex" "$file" | grep -vE "$EXCLUDE_CONTENT" >/dev/null 2>&1; then
+              echo -e "${RED}🚨 機密情報検出:${NC} ${file} (pattern: ${regex})"
+              grep -HnEI "$regex" "$file" | grep -vE "$EXCLUDE_CONTENT" || true
+              FOUND=1
             fi
           done
         done
 
-        # 特別なGitコミット履歴チェック
-        echo -e "${YELLOW}📚 Git履歴をスキャン中...${NC}"
-
-        # 最近の10コミットをチェック
-        git log --oneline -10 --pretty=format:"%h %s" | while read commit; do
-          commit_hash=$(echo "$commit" | cut -d' ' -f1)
-
-          # コミットの差分から秘密情報を検索
-          if git show "$commit_hash" | grep -E "AIzaSy[0-9A-Za-z_-]{33}|[0-9a-f]{32}" | grep -v -E "(YOUR_|PLACEHOLDER|EXAMPLE|TEST)" 2>/dev/null; then
-            echo "⚠️  Potential secrets in commit: $commit"
-            echo "   Consider rewriting history if this commit contains real secrets"
-          fi
+        echo -e "${YELLOW}📚 Git履歴（直近50コミット）をスキャン中…${NC}"
+        git rev-list --max-count=50 --all | while read commit; do
+          for regex in "${REGEX_LIST[@]}"; do
+            if git grep -INE "$regex" "$commit" -- . | grep -vE "$EXCLUDE_CONTENT" >/dev/null 2>&1; then
+              echo -e "${RED}⚠️  履歴内で機密情報検出:${NC} commit ${commit}"
+              git grep -INE "$regex" "$commit" -- . | grep -vE "$EXCLUDE_CONTENT" || true
+              FOUND=1
+            fi
+          done
         done
 
-        echo -e "\n${GREEN}🔍 スキャン完了${NC}"
+        echo -e "${GREEN}🔍 スキャン完了${NC}"
 
-        # 最終結果
-        if [ $FOUND_SECRETS -eq 1 ]; then
-          echo -e "\n${RED}${BOLD}🚨 セキュリティアラート: 機密情報が検出されました！${NC}"
-          echo -e "${RED}このプルリクエスト/プッシュは拒否されます。${NC}"
-          echo -e "\n${YELLOW}対応方法:${NC}"
-          echo -e "1. 検出された機密情報を削除してください"
-          echo -e "2. 環境変数(.env)またはGitHub Secretsを使用してください"
-          echo -e "3. プレースホルダー(YOUR_API_KEY)に置き換えてください"
-          exit 1
+        if [[ $FOUND -eq 1 ]]; then
+          echo -e "${RED}${BOLD}🚨 セキュリティアラート：機密情報が検出されました${NC}"
+          exit 2  # exit code 2 = custom scan failure
         else
-          echo -e "\n${GREEN}${BOLD}✅ セキュリティチェック通過${NC}"
-          echo -e "${GREEN}🔒 機密情報は検出されませんでした${NC}"
+          echo -e "${GREEN}${BOLD}✅ カスタムスキャン：問題なし${NC}"
         fi
 
-    - name: 📊 Security Report
-      if: failure()
+    # ────────────────────────────────────
+    # ③ 結果判定：どちらかが失敗していればジョブを失敗扱いにする
+    - name: 🗂️  Aggregate results
+      if: always()
       run: |
-        echo "::error title=Security Violation::API keys or secrets detected in the codebase"
-        echo "::error::Please remove all hardcoded secrets and use environment variables or GitHub Secrets instead"
+        PRECOMMIT_EXIT=${{ steps.precommit.outputs.exit_code }}
+        CUSTOM_EXIT=${{ steps.customscan.outcome }}
+        echo "pre-commit exit: ${PRECOMMIT_EXIT}"
+        echo "custom scan   : ${CUSTOM_EXIT}"
+        # pre-commit が非ゼロ，または custom scan が failure ならエラー終了
+        if [[ "${PRECOMMIT_EXIT}" != "0" || "${CUSTOM_EXIT}" == "failure" ]]; then
+          echo "::error title=Security Violation::API keys or secrets detected in the codebase"
+          echo "::error::Remove hard-coded secrets，rewrite history if necessary，and store them in GitHub Secrets or environment variables．"
+          exit 1
+        fi
 
+    # ────────────────────────────────────
     - name: ✅ Security Check Passed
       if: success()
       run: |
