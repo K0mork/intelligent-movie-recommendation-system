@@ -22,17 +22,24 @@ class EnvConfig {
 
   /// 環境変数の取得（Web対応・セキュリティ強化）
   static String _getEnvVar(String key, {String defaultValue = ''}) {
-    // Web環境の場合
+    // Web環境でもローカル開発環境でも.envファイルから取得
+    // 本番環境ではdart-defineまたは環境変数から取得
     if (kIsWeb) {
-      // 機密情報は実行時環境変数から取得
+      // 機密情報は実行時環境変数から取得を試行
       if (key == 'FIREBASE_API_KEY') {
-        return const String.fromEnvironment('FIREBASE_API_KEY', defaultValue: '');
+        const envValue = String.fromEnvironment('FIREBASE_API_KEY', defaultValue: '');
+        if (envValue.isNotEmpty) return envValue;
+        // fallbackとして.envファイルから取得
+        return dotenv.env[key] ?? defaultValue;
       }
       if (key == 'TMDB_API_KEY') {
-        return const String.fromEnvironment('TMDB_API_KEY', defaultValue: '');
+        const envValue = String.fromEnvironment('TMDB_API_KEY', defaultValue: '');
+        if (envValue.isNotEmpty) return envValue;
+        // fallbackとして.envファイルから取得
+        return dotenv.env[key] ?? defaultValue;
       }
-      // 公開可能な設定は内蔵値を使用
-      return _webEnvVars[key] ?? defaultValue;
+      // 公開可能な設定は内蔵値を使用、fallbackで.envファイル
+      return _webEnvVars[key] ?? dotenv.env[key] ?? defaultValue;
     }
     
     // ローカル開発環境の場合は.envファイルから取得

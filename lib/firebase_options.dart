@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'core/config/env_config.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -46,30 +47,30 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: String.fromEnvironment('FIREBASE_API_KEY'),
-    appId: '1:519346109803:web:ac06582ded29f1c88c202e',
-    messagingSenderId: '519346109803',
-    projectId: 'movie-recommendation-sys-21b5d',
-    authDomain: 'movie-recommendation-sys-21b5d.firebaseapp.com',
-    storageBucket: 'movie-recommendation-sys-21b5d.firebasestorage.app',
+  static FirebaseOptions get web => FirebaseOptions(
+    apiKey: EnvConfig.firebaseApiKey,
+    appId: EnvConfig.firebaseAppId,
+    messagingSenderId: EnvConfig.firebaseMessagingSenderId,
+    projectId: EnvConfig.firebaseProjectId,
+    authDomain: EnvConfig.firebaseAuthDomain,
+    storageBucket: EnvConfig.firebaseStorageBucket,
     measurementId: 'G-FGBF2J3SQP',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: String.fromEnvironment('FIREBASE_API_KEY'),
-    appId: '1:519346109803:android:571ebca38f49e2eb8c202e',
-    messagingSenderId: '519346109803',
-    projectId: 'movie-recommendation-sys-21b5d',
-    storageBucket: 'movie-recommendation-sys-21b5d.firebasestorage.app',
+  static FirebaseOptions get android => FirebaseOptions(
+    apiKey: EnvConfig.firebaseApiKey,
+    appId: EnvConfig.firebaseAppId,
+    messagingSenderId: EnvConfig.firebaseMessagingSenderId,
+    projectId: EnvConfig.firebaseProjectId,
+    storageBucket: EnvConfig.firebaseStorageBucket,
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: String.fromEnvironment('FIREBASE_API_KEY'),
-    appId: '1:519346109803:ios:68d03e1f293ea7118c202e',
-    messagingSenderId: '519346109803',
-    projectId: 'movie-recommendation-sys-21b5d',
-    storageBucket: 'movie-recommendation-sys-21b5d.firebasestorage.app',
+  static FirebaseOptions get ios => FirebaseOptions(
+    apiKey: EnvConfig.firebaseApiKey,
+    appId: EnvConfig.firebaseAppId,
+    messagingSenderId: EnvConfig.firebaseMessagingSenderId,
+    projectId: EnvConfig.firebaseProjectId,
+    storageBucket: EnvConfig.firebaseStorageBucket,
     iosClientId: '519346109803-ajh8f0l29l3t067rceegqkne7pvcg9ag.apps.googleusercontent.com',
     iosBundleId: 'com.example.movieRecommendApp',
   );
