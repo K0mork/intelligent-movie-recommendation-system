@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/loading_state_widget.dart';
-import '../../../../core/widgets/breadcrumb_widget.dart';
 import '../providers/auth_providers.dart';
 import '../providers/auth_controller.dart';
 import '../widgets/settings_sections.dart';

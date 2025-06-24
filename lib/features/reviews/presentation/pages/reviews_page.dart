@@ -7,7 +7,6 @@ import '../../../movies/presentation/pages/movie_detail_page.dart';
 import 'edit_review_page.dart';
 import '../../../../core/widgets/loading_animations.dart';
 import '../../../../core/widgets/error_widgets.dart';
-import '../../../../core/widgets/animated_widgets.dart';
 
 class ReviewsPage extends ConsumerWidget {
   const ReviewsPage({super.key});
