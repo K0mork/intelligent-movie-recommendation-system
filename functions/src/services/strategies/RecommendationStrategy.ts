@@ -77,7 +77,7 @@ export abstract class BaseRecommendationStrategy implements RecommendationStrate
     const max = Math.max(...scores);
     const min = Math.min(...scores);
     const range = max - min;
-    
+
     if (range === 0) return scores.map(() => 0.5);
     return scores.map(score => (score - min) / range);
   }
@@ -87,9 +87,9 @@ export abstract class BaseRecommendationStrategy implements RecommendationStrate
    */
   protected generateReasons(movie: MovieData, userProfile: UserProfile): string[] {
     const reasons: string[] = [];
-    
+
     // ジャンル一致
-    const matchingGenres = movie.genres.filter(genre => 
+    const matchingGenres = movie.genres.filter(genre =>
       userProfile.preferences.genres[genre] > 0.5
     );
     if (matchingGenres.length > 0) {
@@ -102,7 +102,7 @@ export abstract class BaseRecommendationStrategy implements RecommendationStrate
     }
 
     // 俳優一致
-    const matchingActors = movie.actors.filter(actor => 
+    const matchingActors = movie.actors.filter(actor =>
       userProfile.preferences.actors[actor] > 0.5
     );
     if (matchingActors.length > 0) {

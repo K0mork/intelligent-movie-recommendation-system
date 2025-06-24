@@ -29,10 +29,10 @@ class RecommendationCard extends StatelessWidget {
         children: [
           // 映画ポスター & 基本情報
           _buildMovieHeader(context),
-          
+
           // 推薦理由
           _buildReasonSection(context),
-          
+
           // アクションボタン
           _buildActionSection(context),
         ],
@@ -47,7 +47,7 @@ class RecommendationCard extends StatelessWidget {
         children: [
           // ポスター画像
           _buildPosterImage(),
-          
+
           // 映画情報
           Expanded(
             child: Padding(
@@ -65,16 +65,16 @@ class RecommendationCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
-                  
+
                   // 信頼度スコア
                   _buildConfidenceScore(context),
                   const SizedBox(height: 8),
-                  
+
                   // 推薦カテゴリ
                   _buildReasonCategories(context),
-                  
+
                   const Spacer(),
-                  
+
                   // 詳細表示ボタン
                   TextButton.icon(
                     onPressed: () => _showReasonDialog(context),
@@ -207,7 +207,7 @@ class RecommendationCard extends StatelessWidget {
                 foregroundColor: Colors.white,
               ),
             ),
-          
+
           // フィードバックボタン
           if (onFeedback != null)
             OutlinedButton.icon(
@@ -231,7 +231,7 @@ class RecommendationCard extends StatelessWidget {
 
   void _showFeedbackDialog(BuildContext context) {
     if (onFeedback == null) return;
-    
+
     showDialog(
       context: context,
       builder: (context) => FeedbackDialog(
@@ -243,11 +243,11 @@ class RecommendationCard extends StatelessWidget {
 
   String _getFullPosterUrl() {
     if (recommendation.posterPath == null) return '';
-    
+
     if (recommendation.posterPath!.startsWith('http')) {
       return recommendation.posterPath!;
     }
-    
+
     return 'https://image.tmdb.org/t/p/w500${recommendation.posterPath}';
   }
 }

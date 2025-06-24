@@ -49,7 +49,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<AppUser?> signInWithGoogle() async {
     try {
       GoogleSignInAccount? googleUser;
-      
+
       if (kIsWeb) {
         // Web用の処理: まず silent sign-in を試す
         googleUser = await _googleSignIn.signInSilently();
@@ -61,14 +61,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         // モバイル用の処理
         googleUser = await _googleSignIn.signIn();
       }
-      
+
       if (googleUser == null) {
         // ユーザーがサインインをキャンセル
         return null;
       }
 
       // Google認証情報を取得
-      final GoogleSignInAuthentication googleAuth = 
+      final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
       // Firebase認証クレデンシャルを作成
@@ -78,11 +78,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       // Firebase Authでサインイン
-      final UserCredential userCredential = 
+      final UserCredential userCredential =
           await _firebaseAuth.signInWithCredential(credential);
-      
+
       final User? firebaseUser = userCredential.user;
-      
+
       if (firebaseUser == null) {
         throw AuthException('Firebase sign in failed');
       }
@@ -98,11 +98,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<AppUser?> signInAnonymously() async {
     try {
-      final UserCredential userCredential = 
+      final UserCredential userCredential =
           await _firebaseAuth.signInAnonymously();
-      
+
       final User? firebaseUser = userCredential.user;
-      
+
       if (firebaseUser == null) {
         throw AuthException('Anonymous sign in failed');
       }
@@ -134,7 +134,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (user == null) {
         throw AuthException('No user to delete');
       }
-      
+
       await user.delete();
       await _googleSignIn.signOut();
     } on FirebaseAuthException catch (e) {
@@ -151,7 +151,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (user == null) {
         throw AuthException('No user to update');
       }
-      
+
       await user.updateDisplayName(displayName);
       if (photoURL != null) {
         await user.updatePhotoURL(photoURL);

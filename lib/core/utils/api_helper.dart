@@ -39,15 +39,15 @@ class ApiHelper {
     final params = <String, dynamic>{
       'page': page,
     };
-    
+
     if (limit != null) {
       params['limit'] = limit;
     }
-    
+
     if (additionalParams != null) {
       params.addAll(additionalParams);
     }
-    
+
     return params;
   }
 
@@ -64,7 +64,7 @@ class ApiHelper {
   /// 安全なAPIキーの取得（先頭と末尾のみ表示）
   static String maskApiKey(String apiKey) {
     if (apiKey.length <= 8) return '***';
-    
+
     final start = apiKey.substring(0, 4);
     final end = apiKey.substring(apiKey.length - 4);
     return '$start***$end';

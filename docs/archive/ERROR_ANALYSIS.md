@@ -55,10 +55,10 @@ FilmFlow Debug - Firebase: true, TMDb: true
    ```dart
    // 修正前（危険）
    EnvConfig.firebaseApiKey.substring(0, 10)
-   
+
    // 修正後（安全）
-   EnvConfig.firebaseApiKey.length > 10 ? 
-     '${EnvConfig.firebaseApiKey.substring(0, 10)}...' : 
+   EnvConfig.firebaseApiKey.length > 10 ?
+     '${EnvConfig.firebaseApiKey.substring(0, 10)}...' :
      EnvConfig.firebaseApiKey.isEmpty ? 'empty' : EnvConfig.firebaseApiKey
    ```
 
@@ -115,27 +115,27 @@ flutter run -d chrome --profile \
 static Future<AppInitializationResult> initialize() async {
   try {
     _log('=== INITIALIZATION START ===');
-    
+
     _log('Step 1: Flutter bindings...');
     await _initializeFlutterBindings();
     _log('Step 1: COMPLETED');
-    
+
     _log('Step 2: Web semantics...');
     await _initializeWebSemantics();
     _log('Step 2: COMPLETED');
-    
+
     _log('Step 3: Environment variables...');
     await _loadEnvironmentVariables();
     _log('Step 3: COMPLETED');
-    
+
     _log('Step 4: Environment validation...');
     await _validateEnvironmentVariables();
     _log('Step 4: COMPLETED');
-    
+
     _log('Step 5: Firebase initialization...');
     final firebaseResult = await _initializeFirebase();
     _log('Step 5: COMPLETED - Success: ${firebaseResult.success}');
-    
+
     _log('=== INITIALIZATION SUCCESS ===');
     // ... rest of code
   } catch (error, stackTrace) {
@@ -167,7 +167,7 @@ if (kIsWeb) {
 static Future<AppInitializationResult> initializeMinimal() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
-    
+
     // Firebase初期化をスキップ
     return AppInitializationResult(
       success: true,

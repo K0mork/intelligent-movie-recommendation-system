@@ -8,7 +8,7 @@ import '../../../../core/widgets/loading_state_widget.dart';
 import '../../../../core/widgets/error_widgets.dart';
 
 /// 新規レビュータブのビュー
-/// 
+///
 /// 映画選択とレビュー作成の機能を担当。
 /// integrated_reviews_page.dartから責任を分離。
 class NewReviewTabView extends ConsumerWidget {
@@ -41,7 +41,7 @@ class NewReviewTabView extends ConsumerWidget {
 
   Widget _buildNewReviewContent(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -50,7 +50,7 @@ class NewReviewTabView extends ConsumerWidget {
           // ヘッダー部分
           _buildHeaderSection(theme),
           const SizedBox(height: 24),
-          
+
           // メインコンテンツ
           Expanded(
             child: _buildMainContent(context, theme),
@@ -98,12 +98,12 @@ class NewReviewTabView extends ConsumerWidget {
         // 映画選択カード
         _buildMovieSelectionCard(context, theme),
         const SizedBox(height: 24),
-        
+
         // ガイド情報
         _buildGuideSection(theme),
-        
+
         const Spacer(),
-        
+
         // フッター情報
         _buildFooterInfo(theme),
       ],
@@ -251,4 +251,3 @@ class NewReviewTabView extends ConsumerWidget {
     );
   }
 }
-

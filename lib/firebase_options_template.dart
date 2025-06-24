@@ -13,7 +13,7 @@ import 'package:flutter/foundation.dart'
 /// 4. Enable Firestore Database
 /// 5. Enable Hosting
 /// 6. Run: flutterfire configure
-/// 
+///
 /// This will generate the actual firebase_options.dart file
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {

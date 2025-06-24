@@ -39,7 +39,7 @@ echo -e "${BLUE}📝 API キー検出パターンを追加中...${NC}"
 git secrets --add 'AIzaSy[0-9A-Za-z_-]{33}'
 echo -e "  ✅ Firebase API Key パターン追加"
 
-# TMDb APIキー  
+# TMDb APIキー
 git secrets --add '[0-9a-f]{32}'
 echo -e "  ✅ TMDb API Key パターン追加"
 
@@ -82,7 +82,7 @@ echo -e "${GREEN}今後のコミットでAPIキーが自動検出されます${N
 
 # テスト実行
 echo -e "\n${BLUE}🧪 設定テスト中...${NC}"
-echo "api_key=\"test123456789012345678901234567890\"" > test_secret.tmp
+echo "api_key=\"<TEST_API_KEY_PLACEHOLDER>\"" > test_secret.tmp
 if git secrets --scan test_secret.tmp 2>/dev/null; then
     echo -e "${RED}❌ テスト失敗: 秘密情報が検出されませんでした${NC}"
 else

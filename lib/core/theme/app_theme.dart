@@ -29,8 +29,8 @@ class AppTheme {
 
   /// フォントテーマの構築
   static TextTheme _buildTextTheme(bool isDark) {
-    final baseTextTheme = isDark 
-        ? ThemeData.dark().textTheme 
+    final baseTextTheme = isDark
+        ? ThemeData.dark().textTheme
         : ThemeData.light().textTheme;
 
     return TextTheme(

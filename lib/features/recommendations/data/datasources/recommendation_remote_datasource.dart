@@ -45,7 +45,7 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
 
       // 作成日時でソート
       recommendations.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      
+
       return recommendations;
     } catch (e) {
       throw Exception('推薦結果の取得に失敗しました: $e');
@@ -59,17 +59,17 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
       final result = await functions
           .httpsCallable('generateRecommendations')
           .call({'userId': userId});
-      
+
       final recommendationsData = result.data as Map<String, dynamic>;
       final recommendationsList = recommendationsData['recommendations'] as List;
-      
+
       final recommendations = recommendationsList
           .map((item) => RecommendationModel.fromCloudFunction(
                 item as Map<String, dynamic>,
                 userId,
               ))
           .toList();
-      
+
       // Firestoreに保存（将来的な取得のため）
       try {
         final batch = firestore.batch();
@@ -82,14 +82,14 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
         // Firestore保存エラーは無視（推薦自体は成功）
         debugPrint('Firestore保存エラー: $e');
       }
-      
+
       return recommendations;
     } catch (e) {
       // Cloud Functions呼び出しエラーの場合、フォールバックとしてサンプル推薦を使用
       debugPrint('Cloud Functions推薦エラー、サンプル推薦にフォールバック: $e');
-      
+
       final sampleRecommendations = _generateSampleRecommendations(userId);
-      
+
       // サンプル推薦もFirestoreに保存
       try {
         final batch = firestore.batch();
@@ -102,7 +102,7 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
         // Firestore保存エラーは無視
         debugPrint('サンプル推薦のFirestore保存エラー: $e');
       }
-      
+
       return sampleRecommendations;
     }
   }

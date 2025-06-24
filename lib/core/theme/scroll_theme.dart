@@ -6,7 +6,7 @@ class AppScrollTheme {
   static const double scrollbarThickness = 8.0;
   static const double scrollbarRadius = 4.0;
   static const double minThumbLength = 48.0;
-  
+
   /// ライトテーマ用のスクロールバーテーマデータを取得
   static ScrollbarThemeData get lightTheme => ScrollbarThemeData(
     thickness: WidgetStateProperty.all(scrollbarThickness),

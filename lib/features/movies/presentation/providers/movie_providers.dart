@@ -21,7 +21,7 @@ final dioProvider = Provider<Dio>((ref) {
 
 final movieRemoteDataSourceProvider = Provider<MovieRemoteDataSource>((ref) {
   final dio = ref.read(dioProvider);
-  
+
   if (EnvConfig.isTmdbConfigured) {
     return TMDBRemoteDataSource(dio: dio);
   } else if (EnvConfig.isOmdbConfigured) {
@@ -65,7 +65,7 @@ final movieControllerProvider = StateNotifierProvider<MovieController, MovieStat
   final getPopularMoviesUseCase = ref.read(getPopularMoviesUseCaseProvider);
   final searchMoviesUseCase = ref.read(searchMoviesUseCaseProvider);
   final getMovieDetailsUseCase = ref.read(getMovieDetailsUseCaseProvider);
-  
+
   return MovieController(
     getPopularMoviesUseCase: getPopularMoviesUseCase,
     searchMoviesUseCase: searchMoviesUseCase,
@@ -85,7 +85,7 @@ final searchResultsProvider = FutureProvider<List<Movie>>((ref) async {
   if (searchQuery.trim().isEmpty) {
     return [];
   }
-  
+
   final useCase = ref.read(searchMoviesUseCaseProvider);
   return await useCase.call(searchQuery);
 });

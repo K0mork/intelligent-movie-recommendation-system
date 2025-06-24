@@ -159,8 +159,8 @@ class BreadcrumbHelper {
     if (movieTitle != null) {
       breadcrumbs.add(
         BreadcrumbItem(
-          label: movieTitle.length > 20 
-              ? '${movieTitle.substring(0, 20)}...' 
+          label: movieTitle.length > 20
+              ? '${movieTitle.substring(0, 20)}...'
               : movieTitle,
         ),
       );

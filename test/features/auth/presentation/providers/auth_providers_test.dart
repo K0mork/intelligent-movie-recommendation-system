@@ -139,7 +139,7 @@ void main() {
         // StreamProviderの値が確実に取得できるまで待機
         final authState = await container.read(authStateProvider.future);
         expect(authState, equals(testUser));
-        
+
         // AsyncValueの状態も確認
         final asyncValue = container.read(authStateProvider);
         expect(asyncValue, isA<AsyncValue<AppUser?>>());
@@ -160,7 +160,7 @@ void main() {
         // StreamProviderの値が確実に取得できるまで待機
         final authState = await container.read(authStateProvider.future);
         expect(authState, isNull);
-        
+
         // AsyncValueの状態も確認
         final asyncValue = container.read(authStateProvider);
         expect(asyncValue, isA<AsyncValue<AppUser?>>());
@@ -216,7 +216,7 @@ void main() {
 
         // Wait for the stream to emit the value
         await container.read(authStateProvider.future);
-        
+
         final currentUser = container.read(currentUserProvider);
         expect(currentUser, equals(testUser));
       });
@@ -295,19 +295,19 @@ void main() {
       test('should handle provider disposal correctly', () {
         final provider1 = container.read(authRepositoryProvider);
         final provider2 = container.read(authRepositoryProvider);
-        
+
         // Same instance should be returned (singleton behavior)
         expect(provider1, same(provider2));
-        
+
         container.dispose();
-        
+
         // After disposal, reading should not throw
         final newContainer = ProviderContainer(
           overrides: [
             authRemoteDataSourceProvider.overrideWithValue(mockAuthRemoteDataSource),
           ],
         );
-        
+
         expect(() => newContainer.read(authRepositoryProvider), returnsNormally);
         newContainer.dispose();
       });
@@ -345,7 +345,7 @@ void main() {
           () => containerWithFailure.read(authRepositoryProvider),
           throwsA(isA<Exception>()),
         );
-        
+
         containerWithFailure.dispose();
       });
     });
@@ -354,12 +354,12 @@ void main() {
       test('should not recreate providers unnecessarily', () {
         final auth1 = container.read(firebaseAuthProvider);
         final auth2 = container.read(firebaseAuthProvider);
-        
+
         expect(auth1, same(auth2));
-        
+
         final repo1 = container.read(authRepositoryProvider);
         final repo2 = container.read(authRepositoryProvider);
-        
+
         expect(repo1, same(repo2));
       });
 
@@ -367,9 +367,9 @@ void main() {
         final futures = List.generate(10, (index) async {
           return container.read(authRepositoryProvider);
         });
-        
+
         final results = await Future.wait(futures);
-        
+
         // All should return the same instance
         for (int i = 1; i < results.length; i++) {
           expect(results[i], same(results[0]));

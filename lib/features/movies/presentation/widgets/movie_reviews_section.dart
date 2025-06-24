@@ -38,16 +38,16 @@ class MovieReviewsSection extends ConsumerWidget {
               ),
         ),
         const SizedBox(height: 16),
-        
+
         // レビューボタン
         if (showReviewButton)
           _ReviewButton(
             movie: movie,
             authState: authState,
           ),
-        
+
         const SizedBox(height: 16),
-        
+
         // レビューリスト
         _ReviewsList(
           movie: movie,
@@ -72,7 +72,7 @@ class _ReviewButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return authState.when(
       data: (user) {
         if (user != null) {
@@ -160,13 +160,13 @@ class _ReviewsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    
+
     return reviewsAsync.when(
       data: (reviews) {
         if (reviews.isEmpty) {
           return _EmptyReviewsView(theme: theme);
         }
-        
+
         return _ReviewsListView(
           reviews: reviews,
           authState: authState,
@@ -254,7 +254,7 @@ class _ReviewsListView extends StatelessWidget {
         ...reviews.map((review) {
           final currentUser = authState.value;
           final isOwnReview = currentUser?.uid == review.userId;
-          
+
           return Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: ReviewCard(

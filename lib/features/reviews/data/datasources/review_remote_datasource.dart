@@ -20,19 +20,19 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
   Future<List<ReviewModel>> getReviews({String? userId, String? movieId}) async {
     try {
       Query query = firestore.collection('reviews');
-      
+
       if (userId != null) {
         query = query.where('userId', isEqualTo: userId);
       }
-      
+
       if (movieId != null) {
         query = query.where('movieId', isEqualTo: movieId);
       }
-      
+
       query = query.orderBy('createdAt', descending: true);
-      
+
       final querySnapshot = await query.get();
-      
+
       return querySnapshot.docs
           .map((doc) => ReviewModel.fromFirestore(doc))
           .toList();
@@ -48,11 +48,11 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
           .collection('reviews')
           .doc(reviewId)
           .get();
-      
+
       if (!docSnapshot.exists) {
         throw APIException('Review not found');
       }
-      
+
       return ReviewModel.fromFirestore(docSnapshot);
     } catch (e) {
       throw APIException('Failed to get review: ${e.toString()}');
@@ -64,9 +64,9 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
     try {
       final docRef = firestore.collection('reviews').doc();
       final reviewData = review.toMap();
-      
+
       await docRef.set(reviewData);
-      
+
       return docRef.id;
     } catch (e) {
       throw APIException('Failed to create review: ${e.toString()}');
@@ -105,7 +105,7 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
           .where('userId', isEqualTo: userId)
           .orderBy('createdAt', descending: true)
           .get();
-      
+
       return querySnapshot.docs
           .map((doc) => ReviewModel.fromFirestore(doc))
           .toList();

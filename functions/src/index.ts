@@ -83,7 +83,7 @@ export const analyzeReview = functions.https.onCall(async (data: any, context: a
 
     // Gemini APIを使用してレビューを分析
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-    
+
     const prompt = `
 映画レビューを分析してください：
 
@@ -120,11 +120,11 @@ JSON形式のみで回答してください。
 
   } catch (error) {
     console.error('レビュー分析エラー:', error);
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', 'レビュー分析の処理中にエラーが発生しました。');
   }
 });
@@ -147,11 +147,11 @@ export const getRecommendations = functions.https.onCall(async (data: any, conte
 
   } catch (error) {
     console.error('推薦生成エラー:', error);
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', '推薦生成の処理中にエラーが発生しました。');
   }
 });
@@ -172,7 +172,7 @@ export const healthCheck = functions.https.onRequest((req, res) => {
     architecture: 'Modular',
     services: {
       auth: 'Available',
-      movies: 'Available', 
+      movies: 'Available',
       reviews: 'Available',
       recommendations: 'Available',
       reviewAnalysis: 'Available',
@@ -183,14 +183,14 @@ export const healthCheck = functions.https.onRequest((req, res) => {
     endpoints: {
       auth: [
         'getUserProfile',
-        'updateUserProfile', 
+        'updateUserProfile',
         'exportUserData',
         'deleteUserAccount'
       ],
       movies: [
         'searchMovies',
         'getPopularMovies',
-        'getMoviesByGenre', 
+        'getMoviesByGenre',
         'getMovieDetails',
         'getSimilarMovies',
         'getMovieStats',

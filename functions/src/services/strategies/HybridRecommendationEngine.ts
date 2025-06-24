@@ -49,8 +49,8 @@ export class HybridRecommendationEngine {
     try {
       // 各戦略から推薦を取得
       const strategyResults = await this.executeStrategies(
-        userProfile, 
-        availableMovies, 
+        userProfile,
+        availableMovies,
         config.maxRecommendations * 2 // 候補を多めに取得
       );
 
@@ -58,7 +58,7 @@ export class HybridRecommendationEngine {
       const hybridResults = this.combineResults(strategyResults, config);
 
       // 多様性の向上
-      const diversifiedResults = config.diversityBoost 
+      const diversifiedResults = config.diversityBoost
         ? this.enhanceDiversity(hybridResults, config.maxRecommendations)
         : hybridResults.slice(0, config.maxRecommendations);
 
@@ -94,7 +94,7 @@ export class HybridRecommendationEngine {
     for (const strategy of this.strategies) {
       try {
         logger.info(`Executing strategy: ${strategy.getName()}`);
-        
+
         const startTime = Date.now();
         const results = await strategy.recommend(userProfile, availableMovies, maxResults);
         const executionTime = Date.now() - startTime;
@@ -113,7 +113,7 @@ export class HybridRecommendationEngine {
 
       } catch (error) {
         logger.error(`Error executing strategy ${strategy.getName()}`, { error });
-        
+
         // エラーが発生した戦略は空の結果で継続
         strategyResults.push({
           strategy: strategy.getName(),
@@ -139,10 +139,10 @@ export class HybridRecommendationEngine {
     // 各戦略の結果を重み付きで統合
     for (const strategyResult of strategyResults) {
       const strategyWeight = this.calculateDynamicWeight(strategyResult, config);
-      
+
       for (const result of strategyResult.results) {
         const movieId = result.movieId;
-        
+
         if (!movieScores.has(movieId)) {
           movieScores.set(movieId, {
             movie: result.movie,
@@ -161,7 +161,7 @@ export class HybridRecommendationEngine {
         combined.confidenceSum += result.confidence;
         combined.strategiesUsed.push(strategyResult.strategy);
         combined.recommendationTypes.add(result.recommendationType);
-        
+
         // 理由を統合
         result.reasons.forEach(reason => combined.reasonsSet.add(reason));
       }
@@ -173,7 +173,7 @@ export class HybridRecommendationEngine {
     for (const [movieId, combined] of movieScores.entries()) {
       const normalizedScore = combined.weightSum > 0 ? combined.totalScore / combined.weightSum : 0;
       const averageConfidence = combined.confidenceSum / combined.strategiesUsed.length;
-      
+
       // ハイブリッドボーナス（複数戦略で推薦された場合）
       const hybridBonus = combined.strategiesUsed.length > 1 ? 0.1 : 0;
       const finalScore = Math.min(1.0, normalizedScore + hybridBonus);
@@ -207,7 +207,7 @@ export class HybridRecommendationEngine {
       const avgConfidence = strategyResult.results.reduce(
         (sum, r) => sum + r.confidence, 0
       ) / strategyResult.results.length;
-      
+
       dynamicWeight *= (0.5 + avgConfidence); // 信頼度で重み調整
     }
 
@@ -257,7 +257,7 @@ export class HybridRecommendationEngine {
       // 高スコアまたは多様性がある場合に採用
       if (result.score >= 0.7 || diversityScore > 0.5 || diversified.length < maxResults * 0.6) {
         diversified.push(result);
-        
+
         // 使用済みとしてマーク
         movie.genres.forEach(genre => usedGenres.add(genre));
         usedDirectors.add(movie.director);
@@ -266,10 +266,10 @@ export class HybridRecommendationEngine {
 
     // 不足分を上位から補填
     while (diversified.length < maxResults && diversified.length < results.length) {
-      const remaining = results.filter(r => 
+      const remaining = results.filter(r =>
         !diversified.find(d => d.movieId === r.movieId)
       );
-      
+
       if (remaining.length === 0) break;
       diversified.push(remaining[0]);
     }
@@ -299,7 +299,7 @@ export class HybridRecommendationEngine {
 
     // 位置による調整（後半ほど多様性を重視）
     const positionMultiplier = 1 + (currentCount * 0.1);
-    
+
     return diversityScore * positionMultiplier;
   }
 }

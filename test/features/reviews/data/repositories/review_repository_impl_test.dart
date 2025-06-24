@@ -67,11 +67,11 @@ void main() {
 
         // Assert
         expect(result, equals(expectedReviewId));
-        
+
         // データソースが正しいパラメータで呼ばれることを確認
         final captured = verify(mockDataSource.createReview(captureAny)).captured;
         final capturedReview = captured.first as ReviewModel;
-        
+
         expect(capturedReview.userId, equals('test-user-id'));
         expect(capturedReview.movieId, equals('test-movie-id'));
         expect(capturedReview.movieTitle, equals('Test Movie'));
@@ -100,10 +100,10 @@ void main() {
         // Assert
         final captured = verify(mockDataSource.createReview(captureAny)).captured;
         final capturedReview = captured.first as ReviewModel;
-        
-        expect(capturedReview.createdAt.isAfter(beforeCreate) || 
+
+        expect(capturedReview.createdAt.isAfter(beforeCreate) ||
                capturedReview.createdAt.isAtSameMomentAs(beforeCreate), isTrue);
-        expect(capturedReview.createdAt.isBefore(afterCreate) || 
+        expect(capturedReview.createdAt.isBefore(afterCreate) ||
                capturedReview.createdAt.isAtSameMomentAs(afterCreate), isTrue);
         expect(capturedReview.updatedAt, equals(capturedReview.createdAt));
       });
@@ -254,15 +254,15 @@ void main() {
         // Assert
         final captured = verify(mockDataSource.updateReview(captureAny)).captured;
         final capturedReview = captured.first as ReviewModel;
-        
+
         expect(capturedReview.id, equals(testReview.id));
         expect(capturedReview.userId, equals(testReview.userId));
         expect(capturedReview.createdAt, equals(testReview.createdAt));
-        
+
         // updatedAtが更新されることを確認
-        expect(capturedReview.updatedAt.isAfter(beforeUpdate) || 
+        expect(capturedReview.updatedAt.isAfter(beforeUpdate) ||
                capturedReview.updatedAt.isAtSameMomentAs(beforeUpdate), isTrue);
-        expect(capturedReview.updatedAt.isBefore(afterUpdate) || 
+        expect(capturedReview.updatedAt.isBefore(afterUpdate) ||
                capturedReview.updatedAt.isAtSameMomentAs(afterUpdate), isTrue);
       });
 
@@ -382,7 +382,7 @@ void main() {
         // Assert
         final captured = verify(mockDataSource.updateReview(captureAny)).captured;
         final capturedReview = captured.first as ReviewModel;
-        
+
         expect(capturedReview.id, equals(testReview.id));
         expect(capturedReview.userId, equals(testReview.userId));
         expect(capturedReview.movieId, equals(testReview.movieId));

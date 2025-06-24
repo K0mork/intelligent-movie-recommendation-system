@@ -1,4 +1,4 @@
-# FilmFlow プロジェクトガイド  
+# FilmFlow プロジェクトガイド
 ## Intelligent Movie Recommendation System - Production Release
 
 **🎬 本番稼働中** - https://movie-recommendation-sys-21b5d.web.app
@@ -181,7 +181,7 @@ graph TB
         E --> F[Gemini API<br/>感情・嗜好分析]
         A --> G[TMDb API<br/>映画データ取得]
     end
-    
+
     subgraph "Data Flow"
         H[ユーザーレビュー] --> I[AI分析]
         I --> J[推薦生成]
@@ -343,6 +343,6 @@ FilmFlowは完成したプロダクションアプリケーションとして、
 
 ---
 
-**Last Updated**: 2025年6月24日  
-**Status**: 🟢 Production Ready  
+**Last Updated**: 2025年6月24日
+**Status**: 🟢 Production Ready
 **Next Milestone**: OAuth Setup Completion

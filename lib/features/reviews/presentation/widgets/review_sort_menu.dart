@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// レビューソート用のポップアップメニュー
-/// 
+///
 /// integrated_reviews_page.dartから分離されたソート機能。
 /// 再利用可能な形で設計。
 class ReviewSortMenu extends StatelessWidget {
@@ -30,15 +30,15 @@ class ReviewSortMenu extends StatelessWidget {
       onSelected: onSortChanged,
       itemBuilder: (context) => sortOptions.map((option) {
         final isSelected = currentSort == option.value;
-        
+
         return PopupMenuItem(
           value: option.value,
           child: Row(
             children: [
               Icon(
                 option.icon,
-                color: isSelected 
-                    ? Theme.of(context).colorScheme.primary 
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
                     : null,
               ),
               const SizedBox(width: 8),
@@ -91,7 +91,7 @@ class SortIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final sortText = _getSortText(sortBy);
-    
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -169,7 +169,7 @@ class SortableHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Row(
       children: [
         Icon(
@@ -219,7 +219,7 @@ class ReviewSorter {
     required String Function(T) getTitle,
   }) {
     final sorted = List<T>.from(reviews);
-    
+
     switch (sortBy) {
       case 'newest':
         sorted.sort((a, b) => getCreatedAt(b).compareTo(getCreatedAt(a)));
@@ -237,7 +237,7 @@ class ReviewSorter {
         sorted.sort((a, b) => getTitle(a).compareTo(getTitle(b)));
         break;
     }
-    
+
     return sorted;
   }
 

@@ -4,11 +4,11 @@ import '../providers/auth_controller.dart';
 import '../../domain/entities/app_user.dart';
 
 /// 設定画面のダイアログ表示を管理するサービスクラス
-/// 
+///
 /// settings_page.dartからダイアログロジックを分離し、
 /// 再利用可能で保守しやすい形にする。
 class SettingsDialogService {
-  
+
   /// プロフィール編集ダイアログを表示
   static Future<void> showEditProfileDialog(
     BuildContext context,

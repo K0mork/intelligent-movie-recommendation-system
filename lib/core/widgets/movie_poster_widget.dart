@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 /// 映画ポスター表示の共通ウィジェット
-/// 
+///
 /// プロジェクト内で重複していた映画ポスター表示ロジックを統一し、
 /// 一貫したUI/UXとメンテナンスを容易にする。
 class MoviePosterWidget extends StatelessWidget {
@@ -16,7 +16,7 @@ class MoviePosterWidget extends StatelessWidget {
   final Widget? overlay;
   final bool showPlaceholder;
   final IconData placeholderIcon;
-  
+
   const MoviePosterWidget({
     super.key,
     required this.posterPath,
@@ -77,15 +77,15 @@ class MoviePosterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(8.0);
-    
+
     Widget posterWidget;
-    
+
     if (posterPath != null && posterPath!.isNotEmpty) {
       // TMDb APIのベースURL
       final imageUrl = posterPath!.startsWith('http')
           ? posterPath!
           : 'https://image.tmdb.org/t/p/w500$posterPath';
-      
+
       posterWidget = CachedNetworkImage(
         imageUrl: imageUrl,
         width: width,
@@ -171,7 +171,7 @@ class MoviePosterWidget extends StatelessWidget {
     if (!showPlaceholder) {
       return SizedBox(width: width, height: height);
     }
-    
+
     return Container(
       width: width,
       height: height,
@@ -206,7 +206,7 @@ class MoviePosterGrid extends StatelessWidget {
   final double spacing;
   final EdgeInsets? padding;
   final Function(int index)? onTap;
-  
+
   const MoviePosterGrid({
     super.key,
     required this.posterPaths,

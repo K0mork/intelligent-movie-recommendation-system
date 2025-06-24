@@ -88,16 +88,16 @@ class Movie {
 
   String get fullPosterUrl {
     if (posterPath == null) return '';
-    
+
     if (posterPath!.startsWith('http')) {
       return posterPath!;
     }
-    
+
     return 'https://image.tmdb.org/t/p/w500$posterPath';
   }
 
-  String get fullBackdropUrl => backdropPath != null 
-    ? 'https://image.tmdb.org/t/p/w780$backdropPath' 
+  String get fullBackdropUrl => backdropPath != null
+    ? 'https://image.tmdb.org/t/p/w780$backdropPath'
     : '';
 
   /// MovieEntityへの変換メソッド

@@ -34,8 +34,8 @@ class RecommendationModel extends Recommendation {
       confidenceScore: double.tryParse(json['confidenceScore']?.toString() ?? '0.0') ?? 0.0,
       reason: json['reason'] ?? '',
       reasonCategories: (json['reasonCategories'] as List<dynamic>?)?.cast<String>() ?? [],
-      createdAt: json['createdAt'] != null 
-          ? DateTime.parse(json['createdAt']) 
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
           : DateTime.now(),
       additionalData: json['additionalData'] as Map<String, dynamic>?,
     );
@@ -71,8 +71,8 @@ class RecommendationModel extends Recommendation {
       confidenceScore: double.tryParse(json['confidenceScore']?.toString() ?? '0.0') ?? 0.0,
       reason: json['reason'] ?? '',
       reasonCategories: (json['reasonCategories'] as List<dynamic>?)?.cast<String>() ?? [],
-      createdAt: json['createdAt'] != null 
-          ? DateTime.parse(json['createdAt']) 
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
           : DateTime.now(),
       additionalData: json['additionalData'] as Map<String, dynamic>?,
     );
@@ -95,11 +95,11 @@ class RecommendationModel extends Recommendation {
 
   String get fullPosterUrl {
     if (posterPath == null) return '';
-    
+
     if (posterPath!.startsWith('http')) {
       return posterPath!;
     }
-    
+
     return 'https://image.tmdb.org/t/p/w500$posterPath';
   }
 }

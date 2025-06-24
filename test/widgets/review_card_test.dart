@@ -180,10 +180,10 @@ void main() {
       // Assert - コールバックが提供されている場合は何らかのメニュー要素が存在する
       final popupButtons = find.byType(PopupMenuButton);
       final iconButtons = find.byType(IconButton);
-      
+
       // PopupMenuButtonまたはIconButtonのいずれかが存在することを確認
       expect(popupButtons.evaluate().length + iconButtons.evaluate().length, greaterThan(0));
-      
+
       // もしPopupMenuButtonが存在する場合はそのテストを実行
       if (popupButtons.evaluate().isNotEmpty) {
         await tester.tap(popupButtons);
@@ -248,7 +248,7 @@ void main() {
       // Arrange
       final longComment = 'This is a very long comment that should be truncated when displayed in movie info mode. ' * 5;
       final reviewWithLongComment = testReview.copyWith(comment: longComment);
-      
+
       final widget = TestHelpers.createTestWidget(
         child: ReviewCard(
           review: reviewWithLongComment,
@@ -300,7 +300,7 @@ void main() {
     testWidgets('handles different rating values correctly', (WidgetTester tester) async {
       // Test different rating values
       final testCases = [0.0, 1.5, 3.0, 4.5, 5.0];
-      
+
       for (final rating in testCases) {
         final reviewWithRating = testReview.copyWith(rating: rating);
         final widget = TestHelpers.createTestWidget(
@@ -323,7 +323,7 @@ void main() {
       // Arrange
       final longTitle = 'This is a Very Long Movie Title That Should Be Handled Properly in the UI';
       final reviewWithLongTitle = testReview.copyWith(movieTitle: longTitle);
-      
+
       final widget = TestHelpers.createTestWidget(
         child: ReviewCard(review: reviewWithLongTitle, showMovieInfo: true),
       );

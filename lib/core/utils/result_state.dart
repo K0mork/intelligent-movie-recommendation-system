@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 /// アプリケーション全体で統一されたエラーハンドリングとローディング状態を管理するクラス
-/// 
+///
 /// Success、Loading、Error の3つの状態を明確に区別し、
 /// 型安全な方法で結果を処理できるようにする。
 @immutable
@@ -10,10 +10,10 @@ sealed class ResultState<T> {
 
   /// 成功状態
   const factory ResultState.success(T data) = Success<T>;
-  
+
   /// ローディング状態
   const factory ResultState.loading([String? message]) = Loading<T>;
-  
+
   /// エラー状態
   const factory ResultState.error(String message, [Object? error, StackTrace? stackTrace]) = Error<T>;
 
@@ -30,7 +30,7 @@ sealed class ResultState<T> {
     return switch (this) {
       Success<T>(data: final data) => success(data),
       Loading<T>(message: final message) => loading(message),
-      Error<T>(message: final message, error: final error, stackTrace: final stackTrace) => 
+      Error<T>(message: final message, error: final error, stackTrace: final stackTrace) =>
         onError(message, error, stackTrace),
       Initial<T>() => initial(),
     };
@@ -47,7 +47,7 @@ sealed class ResultState<T> {
     return switch (this) {
       Success<T>(data: final data) when success != null => success(data),
       Loading<T>(message: final message) when loading != null => loading(message),
-      Error<T>(message: final message, error: final error, stackTrace: final stackTrace) when onError != null => 
+      Error<T>(message: final message, error: final error, stackTrace: final stackTrace) when onError != null =>
         onError(message, error, stackTrace),
       Initial<T>() when initial != null => initial(),
       _ => orElse(),
@@ -56,13 +56,13 @@ sealed class ResultState<T> {
 
   /// データが利用可能かどうか
   bool get hasData => this is Success<T>;
-  
+
   /// ローディング中かどうか
   bool get isLoading => this is Loading<T>;
-  
+
   /// エラー状態かどうか
   bool get hasError => this is Error<T>;
-  
+
   /// 初期状態かどうか
   bool get isInitial => this is Initial<T>;
 
@@ -89,7 +89,7 @@ sealed class ResultState<T> {
     return switch (this) {
       Success<T>(data: final data) => ResultState.success(mapper(data)),
       Loading<T>(message: final message) => ResultState.loading(message),
-      Error<T>(message: final message, error: final error, stackTrace: final stackTrace) => 
+      Error<T>(message: final message, error: final error, stackTrace: final stackTrace) =>
         ResultState.error(message, error, stackTrace),
       Initial<T>() => ResultState.initial(),
     };
@@ -100,7 +100,7 @@ sealed class ResultState<T> {
     return switch (this) {
       Success<T>(data: final data) => await _mapAsyncSuccess(mapper, data),
       Loading<T>(message: final message) => ResultState.loading(message),
-      Error<T>(message: final message, error: final error, stackTrace: final stackTrace) => 
+      Error<T>(message: final message, error: final error, stackTrace: final stackTrace) =>
         ResultState.error(message, error, stackTrace),
       Initial<T>() => ResultState.initial(),
     };
@@ -127,7 +127,7 @@ sealed class ResultState<T> {
   T getOrThrow() {
     return switch (this) {
       Success<T>(data: final data) => data,
-      Error<T>(message: final message, error: final error) => 
+      Error<T>(message: final message, error: final error) =>
         throw error ?? Exception(message),
       Loading<T>() => throw Exception('データはまだローディング中です'),
       Initial<T>() => throw Exception('データが初期化されていません'),
@@ -180,8 +180,8 @@ final class Error<T> extends ResultState<T> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Error<T> && 
-      runtimeType == other.runtimeType && 
+      other is Error<T> &&
+      runtimeType == other.runtimeType &&
       message == other.message &&
       error == other.error;
 
@@ -215,15 +215,15 @@ extension ResultStateUtils<T> on ResultState<T> {
       final errorState = states.firstWhere((state) => state.hasError) as Error<T>;
       return ResultState.error(errorState.message, errorState.error, errorState.stackTrace);
     }
-    
+
     if (states.any((state) => state.isLoading)) {
       return const ResultState.loading('読み込み中...');
     }
-    
+
     if (states.any((state) => state.isInitial)) {
       return const ResultState.initial();
     }
-    
+
     final data = states.map((state) => state.dataOrNull!).toList();
     return ResultState.success(data);
   }

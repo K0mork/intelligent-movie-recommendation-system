@@ -183,7 +183,7 @@ class _UserReviewHistoryContent extends ConsumerWidget {
                   child: ReviewStatistics(reviews: reviews),
                 ),
               ),
-              
+
               // レビューリストセクション
               SliverToBoxAdapter(
                 child: Padding(
@@ -215,7 +215,7 @@ class _UserReviewHistoryContent extends ConsumerWidget {
                   ),
                 ),
               ),
-              
+
               const SliverToBoxAdapter(
                 child: SizedBox(height: 16),
               ),
@@ -280,7 +280,7 @@ class _UserReviewHistoryContent extends ConsumerWidget {
                                   builder: (context) => EditReviewPage(review: review),
                                 ),
                               );
-                              
+
                               if (result == true) {
                                 ref.refresh(userReviewsProvider(userId));
                               }

@@ -95,10 +95,10 @@ void main() {
             ),
           ],
         );
-        
+
         final isAuthenticated = testContainer.read(isAuthenticatedProvider);
         expect(isAuthenticated, isFalse);
-        
+
         testContainer.dispose();
       });
     });
@@ -118,7 +118,7 @@ void main() {
         final auth2 = container.read(firebaseAuthProvider);
         expect(auth1, same(auth2));
         expect(auth1, same(mockFirebaseAuth));
-        
+
         final repo1 = container.read(authRepositoryProvider);
         final repo2 = container.read(authRepositoryProvider);
         expect(repo1, same(repo2));
@@ -138,9 +138,9 @@ void main() {
       test('should handle provider disposal correctly', () {
         final provider1 = container.read(authRepositoryProvider);
         expect(provider1, isNotNull);
-        
+
         container.dispose();
-        
+
         // After disposal, creating new container should work
         final newContainer = ProviderContainer(
           overrides: [
@@ -157,9 +157,9 @@ void main() {
         final futures = List.generate(5, (index) async {
           return container.read(authRepositoryProvider);
         });
-        
+
         final results = await Future.wait(futures);
-        
+
         // All should return the same instance
         for (int i = 1; i < results.length; i++) {
           expect(results[i], same(results[0]));
@@ -176,7 +176,7 @@ void main() {
         final signInUseCase = container.read(signInUseCaseProvider);
         final signOutUseCase = container.read(signOutUseCaseProvider);
         final getCurrentUserUseCase = container.read(getCurrentUserUseCaseProvider);
-        
+
         expect(firebaseAuth, isA<FirebaseAuth>());
         expect(firebaseAuth, same(mockFirebaseAuth));
         expect(googleSignIn, isA<GoogleSignIn>());

@@ -1,8 +1,8 @@
 # FilmFlow プロジェクト デプロイ状況報告書
 
-**作成日**: 2025年6月24日  
-**本番URL**: https://movie-recommendation-sys-21b5d.web.app  
-**プロジェクト**: movie-recommendation-sys-21b5d  
+**作成日**: 2025年6月24日
+**本番URL**: https://movie-recommendation-sys-21b5d.web.app
+**プロジェクト**: movie-recommendation-sys-21b5d
 
 ## 📊 現在の状況
 
@@ -165,8 +165,8 @@ flutter build web --dart-define=FIREBASE_API_KEY=xxx --dart-define=TMDB_API_KEY=
 
 ---
 
-**最終更新**: 2025年6月24日 16:30 JST  
-**ステータス**: 🟢 本番環境正常稼働  
+**最終更新**: 2025年6月24日 16:30 JST
+**ステータス**: 🟢 本番環境正常稼働
 **次回作業者へ**: OAuth設定完了後、完全な機能テストを実施してください
 
 ## 📚 追加作成ドキュメント

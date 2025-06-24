@@ -21,7 +21,7 @@ final functionsProvider = Provider<FirebaseFunctions>((ref) {
 final recommendationRemoteDataSourceProvider = Provider<RecommendationRemoteDataSource>((ref) {
   final firestore = ref.read(firestoreProvider);
   final functions = ref.read(functionsProvider);
-  
+
   return RecommendationRemoteDataSourceImpl(
     firestore: firestore,
     functions: functions,
@@ -31,7 +31,7 @@ final recommendationRemoteDataSourceProvider = Provider<RecommendationRemoteData
 // Repository
 final recommendationRepositoryProvider = Provider<RecommendationRepository>((ref) {
   final remoteDataSource = ref.read(recommendationRemoteDataSourceProvider);
-  
+
   return RecommendationRepositoryImpl(
     remoteDataSource: remoteDataSource,
   );
@@ -72,7 +72,7 @@ final submitFeedbackUseCaseProvider = Provider<SubmitFeedbackUseCase>((ref) {
 final recommendationsProvider = StateNotifierProvider<RecommendationsNotifier, AsyncValue<List<Recommendation>>>((ref) {
   final getRecommendationsUseCase = ref.read(getRecommendationsUseCaseProvider);
   final generateRecommendationsUseCase = ref.read(generateRecommendationsUseCaseProvider);
-  
+
   return RecommendationsNotifier(
     getRecommendationsUseCase: getRecommendationsUseCase,
     generateRecommendationsUseCase: generateRecommendationsUseCase,
@@ -83,7 +83,7 @@ final savedRecommendationsProvider = StateNotifierProvider<SavedRecommendationsN
   final getSavedRecommendationsUseCase = ref.read(getSavedRecommendationsUseCaseProvider);
   final saveRecommendationUseCase = ref.read(saveRecommendationUseCaseProvider);
   final deleteRecommendationUseCase = ref.read(deleteRecommendationUseCaseProvider);
-  
+
   return SavedRecommendationsNotifier(
     getSavedRecommendationsUseCase: getSavedRecommendationsUseCase,
     saveRecommendationUseCase: saveRecommendationUseCase,

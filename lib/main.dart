@@ -20,14 +20,14 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/scroll_behavior.dart';
 
 /// アプリケーションのエントリーポイント
-/// 
+///
 /// 初期化ロジックをAppInitializationServiceに分離し、
 /// 責任を明確にして保守性を向上。
 void main() async {
   try {
     // アプリケーション初期化を実行
     final initResult = await AppInitializationService.initialize();
-    
+
     if (initResult.hasError && !initResult.success) {
       // 致命的エラーの場合はエラー画面を表示
       runApp(
@@ -39,14 +39,14 @@ void main() async {
       );
       return;
     }
-    
+
     // 正常に初期化完了した場合はメインアプリを起動
     runApp(
       ProviderScope(
         child: MyApp(firebaseAvailable: initResult.firebaseAvailable),
       ),
     );
-    
+
   } catch (error, stackTrace) {
     // 初期化プロセス自体でキャッチされない例外が発生した場合
     if (kIsWeb) {
@@ -55,7 +55,7 @@ void main() async {
       // ignore: avoid_print
       print('StackTrace: $stackTrace');
     }
-    
+
     // 緊急フォールバック - 最小限のエラー画面を表示
     runApp(
       MaterialApp(

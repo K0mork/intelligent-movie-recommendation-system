@@ -390,7 +390,7 @@ void main() {
 
         // Assert - Basic semantic structure exists
         expect(find.byType(MovieInfoSection), findsOneWidget);
-        
+
         // Verify text elements are readable
         expect(find.text('Test Movie Title'), findsOneWidget);
         expect(find.text('7.8'), findsOneWidget);

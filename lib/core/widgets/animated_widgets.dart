@@ -204,11 +204,11 @@ class StaggeredListAnimation extends StatelessWidget {
       children: children.asMap().entries.map((entry) {
         final index = entry.key;
         final child = entry.value;
-        
+
         return SlideInWidget(
           delay: Duration(milliseconds: index * itemDelay.inMilliseconds),
           duration: itemDuration,
-          begin: direction == Axis.vertical 
+          begin: direction == Axis.vertical
               ? const Offset(0.0, 0.3)
               : const Offset(0.3, 0.0),
           child: FadeInWidget(
@@ -327,10 +327,10 @@ class _ShakeAnimationState extends State<ShakeAnimation>
       animation: _animation,
       child: widget.child,
       builder: (context, child) {
-        final sineValue = 
+        final sineValue =
             (4 * _animation.value * (1 - _animation.value)).clamp(0.0, 1.0);
         return Transform.translate(
-          offset: Offset(widget.offset * sineValue * 
+          offset: Offset(widget.offset * sineValue *
               ((_animation.value * 4).round() % 2 == 0 ? 1 : -1), 0),
           child: child,
         );
@@ -354,11 +354,11 @@ class FloatingActionButtonWithAnimation extends StatefulWidget {
   });
 
   @override
-  State<FloatingActionButtonWithAnimation> createState() => 
+  State<FloatingActionButtonWithAnimation> createState() =>
       _FloatingActionButtonWithAnimationState();
 }
 
-class _FloatingActionButtonWithAnimationState 
+class _FloatingActionButtonWithAnimationState
     extends State<FloatingActionButtonWithAnimation>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;

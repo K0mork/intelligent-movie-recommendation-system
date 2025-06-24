@@ -55,7 +55,7 @@ void main() {
       test('returns full URL when posterPath is not null', () {
         const baseUrl = 'https://image.tmdb.org/t/p/w500';
         final fullUrl = testMovie.getFullPosterUrl(baseUrl);
-        
+
         expect(fullUrl, equals('$baseUrl/test-poster.jpg'));
       });
 
@@ -83,7 +83,7 @@ void main() {
       test('returns full URL when backdropPath is not null', () {
         const baseUrl = 'https://image.tmdb.org/t/p/w1280';
         final fullUrl = testMovie.getFullBackdropUrl(baseUrl);
-        
+
         expect(fullUrl, equals('$baseUrl/test-backdrop.jpg'));
       });
 
@@ -307,7 +307,7 @@ void main() {
 
     test('toString includes id and title', () {
       final toString = testMovie.toString();
-      
+
       expect(toString, contains('123'));
       expect(toString, contains('Test Movie'));
       expect(toString, contains('MovieEntity'));

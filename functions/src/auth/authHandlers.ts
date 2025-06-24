@@ -16,10 +16,10 @@ export const getUserProfile = functions.https.onCall(async (data: any, context: 
     }
 
     const userId = context.auth.uid;
-    
+
     // ユーザードキュメントを取得
     const userDoc = await db.collection('users').doc(userId).get();
-    
+
     if (!userDoc.exists) {
       // ユーザードキュメントが存在しない場合は作成
       const newUserData = {
@@ -33,7 +33,7 @@ export const getUserProfile = functions.https.onCall(async (data: any, context: 
       };
 
       await db.collection('users').doc(userId).set(newUserData);
-      
+
       return {
         success: true,
         profile: newUserData,
@@ -42,7 +42,7 @@ export const getUserProfile = functions.https.onCall(async (data: any, context: 
     }
 
     const userData = userDoc.data();
-    
+
     // 最終サインイン時刻を更新
     await db.collection('users').doc(userId).update({
       lastSignIn: admin.firestore.FieldValue.serverTimestamp(),
@@ -55,15 +55,15 @@ export const getUserProfile = functions.https.onCall(async (data: any, context: 
     };
 
   } catch (error: any) {
-    logger.error('Failed to get user profile', { 
-      userId: context.auth?.uid, 
-      error: error?.message 
+    logger.error('Failed to get user profile', {
+      userId: context.auth?.uid,
+      error: error?.message
     });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `ユーザープロファイル取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -109,15 +109,15 @@ export const updateUserProfile = functions.https.onCall(async (data: any, contex
     };
 
   } catch (error: any) {
-    logger.error('Failed to update user profile', { 
-      userId: context.auth?.uid, 
-      error: error?.message 
+    logger.error('Failed to update user profile', {
+      userId: context.auth?.uid,
+      error: error?.message
     });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `プロファイル更新中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -171,8 +171,8 @@ export const exportUserData = functions.https.onCall(async (data: any, context: 
       version: '1.0.0',
     };
 
-    logger.info('User data export completed successfully', { 
-      userId, 
+    logger.info('User data export completed successfully', {
+      userId,
       reviewCount: reviews.length,
       recommendationCount: recommendations.length,
     });
@@ -187,11 +187,11 @@ export const exportUserData = functions.https.onCall(async (data: any, context: 
     };
 
   } catch (error: any) {
-    logger.error('Failed to export user data', { 
-      userId: context.auth?.uid, 
-      error: error?.message 
+    logger.error('Failed to export user data', {
+      userId: context.auth?.uid,
+      error: error?.message
     });
-    
+
     throw new functions.https.HttpsError('internal', `データエクスポート中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -261,15 +261,15 @@ export const deleteUserAccount = functions.https.onCall(async (data: any, contex
     };
 
   } catch (error: any) {
-    logger.error('Failed to delete user account', { 
-      userId: context.auth?.uid, 
-      error: error?.message 
+    logger.error('Failed to delete user account', {
+      userId: context.auth?.uid,
+      error: error?.message
     });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `アカウント削除中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });

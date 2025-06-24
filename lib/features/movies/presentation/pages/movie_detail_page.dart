@@ -27,7 +27,7 @@ class MovieDetailPage extends ConsumerWidget {
     return Scaffold(
       body: movieAsync.when(
         data: (movie) => _MovieDetailView(
-          movie: movie, 
+          movie: movie,
           showReviewButton: showReviewButton,
         ),
         loading: () => const _LoadingView(),
@@ -46,7 +46,7 @@ class _MovieDetailView extends StatelessWidget {
   final bool showReviewButton;
 
   const _MovieDetailView({
-    required this.movie, 
+    required this.movie,
     this.showReviewButton = false,
   });
 
@@ -56,7 +56,7 @@ class _MovieDetailView extends StatelessWidget {
       slivers: [
         // ヘッダー（背景画像付きSliverAppBar）
         MovieDetailHeader(movie: movie),
-        
+
         // パンくずナビゲーション
         SliverToBoxAdapter(
           child: BreadcrumbWidget(
@@ -66,7 +66,7 @@ class _MovieDetailView extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // メインコンテンツ
         SliverToBoxAdapter(
           child: Padding(
@@ -76,21 +76,21 @@ class _MovieDetailView extends StatelessWidget {
               children: [
                 // 映画情報セクション
                 MovieInfoSection(movie: movie),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // レビューセクション
                 MovieReviewsSection(
                   movie: movie,
                   showReviewButton: showReviewButton,
                 ),
-                
+
                 const SizedBox(height: 32),
               ],
             ),
           ),
         ),
-        
+
         // 関連映画セクション
         SliverToBoxAdapter(
           child: RelatedMoviesSection(
@@ -98,7 +98,7 @@ class _MovieDetailView extends StatelessWidget {
             title: 'この映画に関連する作品',
           ),
         ),
-        
+
         // 下部スペース
         const SliverToBoxAdapter(
           child: SizedBox(height: 32),
@@ -166,4 +166,3 @@ class _ErrorView extends StatelessWidget {
     );
   }
 }
-

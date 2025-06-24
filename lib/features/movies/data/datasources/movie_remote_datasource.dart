@@ -28,7 +28,7 @@ class TMDBRemoteDataSource implements MovieRemoteDataSource {
         _baseUrl = baseUrl ?? EnvConfig.tmdbBaseUrl {
     _dio.options.connectTimeout = AppConstants.connectTimeout;
     _dio.options.receiveTimeout = AppConstants.receiveTimeout;
-    
+
     if (_apiKey.isEmpty) {
       throw Exception('TMDb API key is not configured. Please set TMDB_API_KEY in your environment.');
     }
@@ -66,7 +66,7 @@ class TMDBRemoteDataSource implements MovieRemoteDataSource {
         'query': query,
         'page': page,
       };
-      
+
       // 年が指定された場合、TMDb APIのyearパラメータを追加
       if (year != null) {
         queryParams['year'] = year;
@@ -212,7 +212,7 @@ class OMDBRemoteDataSource implements MovieRemoteDataSource {
         _baseUrl = baseUrl ?? EnvConfig.omdbBaseUrl {
     _dio.options.connectTimeout = AppConstants.connectTimeout;
     _dio.options.receiveTimeout = AppConstants.receiveTimeout;
-    
+
     if (_apiKey.isEmpty) {
       throw Exception('OMDb API key is not configured. Please set OMDB_API_KEY in your environment.');
     }
@@ -235,7 +235,7 @@ class OMDBRemoteDataSource implements MovieRemoteDataSource {
         's': query,
         'page': page,
       };
-      
+
       // 年が指定された場合、OMDb APIのyパラメータを追加
       if (year != null) {
         queryParams['y'] = year;

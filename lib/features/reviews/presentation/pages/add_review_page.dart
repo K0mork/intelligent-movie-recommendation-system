@@ -34,7 +34,7 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('レビューを書く'),
@@ -127,9 +127,9 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Rating Section
                 Text(
                   '評価',
@@ -156,9 +156,9 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Watched Date Section
                 Text(
                   '鑑賞日',
@@ -223,9 +223,9 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Comment Section
                 Text(
                   'レビューコメント',
@@ -250,9 +250,9 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                     return null;
                   },
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Submit Button
                 SizedBox(
                   width: double.infinity,
@@ -320,7 +320,7 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
     } catch (e) {
       if (mounted) {
         String errorMessage = 'レビューの投稿に失敗しました';
-        
+
         if (e.toString().contains('network') || e.toString().contains('internet')) {
           errorMessage = 'ネットワークエラーが発生しました。インターネット接続を確認してください。';
         } else if (e.toString().contains('permission') || e.toString().contains('auth')) {
@@ -328,7 +328,7 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
         } else if (e.toString().contains('validation')) {
           errorMessage = '入力内容に問題があります。再度確認してください。';
         }
-        
+
         SnackBarHelper.showError(
           context,
           errorMessage,

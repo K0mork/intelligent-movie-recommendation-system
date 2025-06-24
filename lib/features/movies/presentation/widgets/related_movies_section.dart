@@ -37,7 +37,7 @@ class RelatedMoviesSection extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
-        
+
         if (showSimilar) ...[
           _RelatedMoviesList(
             movieId: movieId,
@@ -46,7 +46,7 @@ class RelatedMoviesSection extends ConsumerWidget {
           ),
           const SizedBox(height: 20),
         ],
-        
+
         if (showRecommended) ...[
           _RelatedMoviesList(
             movieId: movieId,
@@ -73,7 +73,7 @@ class _RelatedMoviesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final moviesAsync = isSimilar 
+    final moviesAsync = isSimilar
         ? ref.watch(similarMoviesProvider(movieId))
         : ref.watch(recommendedMoviesProvider(movieId));
 
@@ -101,7 +101,7 @@ class _RelatedMoviesList extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 12),
-        
+
         SizedBox(
           height: 200,
           child: moviesAsync.when(
@@ -223,9 +223,9 @@ class _RelatedMovieCard extends StatelessWidget {
                       ),
               ),
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // 映画タイトル
             Text(
               movie.title,
@@ -235,9 +235,9 @@ class _RelatedMovieCard extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            
+
             const SizedBox(height: 4),
-            
+
             // 評価
             if (movie.voteAverage > 0)
               Row(

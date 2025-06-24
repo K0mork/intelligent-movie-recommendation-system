@@ -28,7 +28,7 @@ final googleSignInProvider = Provider<GoogleSignIn>((ref) {
       'https://www.googleapis.com/auth/userinfo.email',
       'https://www.googleapis.com/auth/userinfo.profile',
     ],
-    clientId: kIsWeb 
+    clientId: kIsWeb
       ? '519346109803-b527n0aduaa262qv0sv57uml4f3q7ad6.apps.googleusercontent.com'
       : null, // モバイルではnullを指定（firebase_optionsから取得）
   );
@@ -38,7 +38,7 @@ final googleSignInProvider = Provider<GoogleSignIn>((ref) {
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
   final firebaseAuth = ref.read(firebaseAuthProvider);
   final googleSignIn = ref.read(googleSignInProvider);
-  
+
   return AuthRemoteDataSourceImpl(
     firebaseAuth: firebaseAuth,
     googleSignIn: googleSignIn,
@@ -48,7 +48,7 @@ final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
 // Auth Repository
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final remoteDataSource = ref.read(authRemoteDataSourceProvider);
-  
+
   return AuthRepositoryImpl(
     remoteDataSource: remoteDataSource,
   );

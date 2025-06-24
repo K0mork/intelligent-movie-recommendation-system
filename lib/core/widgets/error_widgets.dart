@@ -22,7 +22,7 @@ class AuthRequiredWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final defaultPadding = padding ?? const EdgeInsets.all(16);
-    
+
     return Container(
       width: double.infinity,
       padding: defaultPadding,
@@ -116,7 +116,7 @@ class ErrorDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return FadeInWidget(
       child: Center(
         child: Padding(
@@ -137,9 +137,9 @@ class ErrorDisplay extends StatelessWidget {
                   color: theme.colorScheme.onErrorContainer,
                 ),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Title
               if (title != null)
                 Text(
@@ -150,9 +150,9 @@ class ErrorDisplay extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-              
+
               if (title != null) const SizedBox(height: 12),
-              
+
               // Message
               Text(
                 message,
@@ -161,7 +161,7 @@ class ErrorDisplay extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              
+
               // Details (expandable)
               if (showDetails && details != null) ...[
                 const SizedBox(height: 16),
@@ -186,7 +186,7 @@ class ErrorDisplay extends StatelessWidget {
                   ],
                 ),
               ],
-              
+
               // Retry Button
               if (onRetry != null) ...[
                 const SizedBox(height: 24),
@@ -293,7 +293,7 @@ class EmptyStateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return FadeInWidget(
       child: Center(
         child: Padding(
@@ -314,9 +314,9 @@ class EmptyStateWidget extends StatelessWidget {
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Title
               Text(
                 title,
@@ -326,9 +326,9 @@ class EmptyStateWidget extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Message
               Text(
                 message,
@@ -337,7 +337,7 @@ class EmptyStateWidget extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              
+
               // Action
               if (action != null) ...[
                 const SizedBox(height: 24),

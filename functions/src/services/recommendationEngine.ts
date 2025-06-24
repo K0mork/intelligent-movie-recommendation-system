@@ -71,7 +71,7 @@ export class RecommendationEngine {
     if (!apiKey) {
       throw new Error('GEMINI_API_KEY environment variable is not set');
     }
-    
+
     this.genAI = new GoogleGenerativeAI(apiKey);
     this.db = getFirestore();
   }
@@ -80,14 +80,14 @@ export class RecommendationEngine {
    * ユーザー向けの個人化映画推薦を生成
    */
   async generateRecommendations(
-    userId: string, 
+    userId: string,
     config: Partial<RecommendationConfig> = {}
   ): Promise<RecommendationResult[]> {
     try {
       logger.info('Starting recommendation generation', { userId });
-      
+
       const finalConfig = { ...this.defaultConfig, ...config };
-      
+
       // ユーザープロファイルを取得
       const userProfile = await this.getUserProfile(userId);
       if (!userProfile) {
@@ -96,10 +96,10 @@ export class RecommendationEngine {
 
       // 映画データベースから候補映画を取得
       const candidateMovies = await this.getCandidateMovies(userProfile);
-      
+
       // コンテンツベース推薦を実行
       const contentBasedRecommendations = await this.generateContentBasedRecommendations(
-        userProfile, 
+        userProfile,
         candidateMovies,
         finalConfig
       );
@@ -133,16 +133,16 @@ export class RecommendationEngine {
       // 推薦結果を保存
       await this.saveRecommendationResults(userId, filteredRecommendations);
 
-      logger.info('Recommendation generation completed', { 
-        userId, 
-        recommendationCount: filteredRecommendations.length 
+      logger.info('Recommendation generation completed', {
+        userId,
+        recommendationCount: filteredRecommendations.length
       });
 
       return filteredRecommendations;
     } catch (error: any) {
-      logger.error('Recommendation generation failed', { 
-        userId, 
-        error: error?.message 
+      logger.error('Recommendation generation failed', {
+        userId,
+        error: error?.message
       });
       throw new Error(`Recommendation generation failed: ${error?.message || 'Unknown error'}`);
     }
@@ -205,9 +205,9 @@ export class RecommendationEngine {
     try {
       // ユーザーが好むジャンルの映画を優先的に取得
       const topGenres = this.getTopPreferences(userProfile.preferences.genres, 5);
-      
+
       const candidateMovies: MovieData[] = [];
-      
+
       // 各ジャンルから映画を取得
       for (const genre of topGenres) {
         const moviesQuery = this.db.collection('movies')
@@ -240,24 +240,24 @@ export class RecommendationEngine {
       // ユーザーが既に評価した映画を除外
       const userReviewsQuery = this.db.collection('reviews')
         .where('userId', '==', userProfile.userId);
-      
+
       const userReviewsSnapshot = await userReviewsQuery.get();
       const reviewedMovieIds = new Set(userReviewsSnapshot.docs.map(doc => doc.data().movieId));
 
-      const filteredCandidates = candidateMovies.filter(movie => 
+      const filteredCandidates = candidateMovies.filter(movie =>
         !reviewedMovieIds.has(movie.id)
       );
 
-      logger.info('Candidate movies retrieved', { 
+      logger.info('Candidate movies retrieved', {
         userId: userProfile.userId,
-        totalCandidates: filteredCandidates.length 
+        totalCandidates: filteredCandidates.length
       });
 
       return filteredCandidates;
     } catch (error: any) {
-      logger.error('Failed to get candidate movies', { 
-        userId: userProfile.userId, 
-        error: error?.message 
+      logger.error('Failed to get candidate movies', {
+        userId: userProfile.userId,
+        error: error?.message
       });
       throw new Error(`Failed to get candidate movies: ${error?.message || 'Unknown error'}`);
     }
@@ -276,7 +276,7 @@ export class RecommendationEngine {
 
       for (const movie of candidateMovies) {
         const score = this.calculateContentBasedScore(userProfile, movie);
-        
+
         if (score >= config.minConfidence) {
           recommendations.push({
             movieId: movie.id,
@@ -310,7 +310,7 @@ export class RecommendationEngine {
     try {
       // 類似ユーザーを見つける
       const similarUsers = await this.findSimilarUsers(userId);
-      
+
       // 類似ユーザーが高評価した映画を取得
       const collaborativeScores = new Map<string, number>();
 
@@ -320,7 +320,7 @@ export class RecommendationEngine {
           .where('rating', '>=', 4); // 高評価のみ
 
         const reviewsSnapshot = await userReviewsQuery.get();
-        
+
         reviewsSnapshot.docs.forEach(doc => {
           const review = doc.data();
           const movieId = review.movieId;
@@ -334,7 +334,7 @@ export class RecommendationEngine {
 
       for (const movie of candidateMovies) {
         const score = collaborativeScores.get(movie.id) || 0;
-        
+
         if (score >= config.minConfidence) {
           recommendations.push({
             movieId: movie.id,
@@ -366,7 +366,7 @@ export class RecommendationEngine {
 
     // ジャンル一致度
     const genreScore = this.calculateMatchScore(
-      userProfile.preferences.genres, 
+      userProfile.preferences.genres,
       movie.genres
     );
     score += genreScore * 0.3;
@@ -475,7 +475,7 @@ export class RecommendationEngine {
 
     categories.forEach(category => {
       const sim = this.calculateCosineSimilarity(
-        prefs1[category as keyof UserProfile['preferences']], 
+        prefs1[category as keyof UserProfile['preferences']],
         prefs2[category as keyof UserProfile['preferences']]
       );
       totalSimilarity += sim;
@@ -501,7 +501,7 @@ export class RecommendationEngine {
     allKeys.forEach(key => {
       const val1 = vec1[key] || 0;
       const val2 = vec2[key] || 0;
-      
+
       dotProduct += val1 * val2;
       norm1 += val1 * val1;
       norm2 += val2 * val2;
@@ -590,7 +590,7 @@ export class RecommendationEngine {
           - あらすじ: ${rec.movie.plot}
 
           推薦理由を3つの短い文で説明してください。ユーザーの好みとの具体的な関連性を明確に示してください。
-          
+
           出力形式: ["理由1", "理由2", "理由3"]
         `;
 
@@ -598,7 +598,7 @@ export class RecommendationEngine {
           const result = await model.generateContent(prompt);
           const response = await result.response;
           const reasonsText = response.text().trim();
-          
+
           // JSON形式の理由を解析
           const reasons = JSON.parse(reasonsText);
           if (Array.isArray(reasons)) {
@@ -627,7 +627,7 @@ export class RecommendationEngine {
       return recommendations;
     } catch (error: any) {
       logger.error('Failed to generate recommendation reasons', { error: error?.message });
-      
+
       // エラー時のフォールバック理由
       recommendations.forEach(rec => {
         rec.reasons = [
@@ -688,12 +688,12 @@ export class RecommendationEngine {
    * 推薦結果を保存
    */
   async saveRecommendationResults(
-    userId: string, 
+    userId: string,
     recommendations: RecommendationResult[]
   ): Promise<void> {
     try {
       const recommendationRef = this.db.collection('userRecommendations').doc(userId);
-      
+
       await recommendationRef.set({
         userId,
         recommendations: recommendations.map(rec => ({
@@ -714,14 +714,14 @@ export class RecommendationEngine {
         algorithm: 'hybrid_v1'
       });
 
-      logger.info('Recommendation results saved', { 
-        userId, 
-        count: recommendations.length 
+      logger.info('Recommendation results saved', {
+        userId,
+        count: recommendations.length
       });
     } catch (error: any) {
-      logger.error('Failed to save recommendation results', { 
-        userId, 
-        error: error?.message 
+      logger.error('Failed to save recommendation results', {
+        userId,
+        error: error?.message
       });
       // 保存失敗は致命的ではないので、エラーログのみ
     }
@@ -742,9 +742,9 @@ export class RecommendationEngine {
       const data = doc.data() as any;
       return data.recommendations || [];
     } catch (error: any) {
-      logger.error('Failed to get saved recommendations', { 
-        userId, 
-        error: error?.message 
+      logger.error('Failed to get saved recommendations', {
+        userId,
+        error: error?.message
       });
       return [];
     }
@@ -770,7 +770,7 @@ export class RecommendationEngine {
   ): Promise<void> {
     try {
       const feedbackRef = this.db.collection('recommendationFeedback').doc();
-      
+
       await feedbackRef.set({
         userId,
         movieId,
@@ -778,17 +778,17 @@ export class RecommendationEngine {
         timestamp: new Date().toISOString()
       });
 
-      logger.info('Recommendation feedback recorded', { 
-        userId, 
-        movieId, 
-        feedback 
+      logger.info('Recommendation feedback recorded', {
+        userId,
+        movieId,
+        feedback
       });
     } catch (error: any) {
-      logger.error('Failed to record recommendation feedback', { 
-        userId, 
-        movieId, 
-        feedback, 
-        error: error?.message 
+      logger.error('Failed to record recommendation feedback', {
+        userId,
+        movieId,
+        feedback,
+        error: error?.message
       });
     }
   }

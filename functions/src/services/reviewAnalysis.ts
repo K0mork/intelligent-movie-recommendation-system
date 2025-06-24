@@ -38,7 +38,7 @@ export class ReviewAnalysisService {
     if (!apiKey) {
       throw new Error('GEMINI_API_KEY environment variable is not set');
     }
-    
+
     this.genAI = new GoogleGenerativeAI(apiKey);
     this.db = getFirestore();
   }
@@ -49,7 +49,7 @@ export class ReviewAnalysisService {
   async analyzeSentiment(reviewText: string): Promise<SentimentAnalysis> {
     try {
       const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
-      
+
       const prompt = `
         以下の映画レビューテキストを分析して、感情を判定してください。
         JSON形式で以下の情報を返してください：
@@ -68,7 +68,7 @@ export class ReviewAnalysisService {
 
       // JSONパースを試行
       const analysis = JSON.parse(text.trim());
-      
+
       // データ検証
       if (!analysis.sentiment || !['positive', 'negative', 'neutral'].includes(analysis.sentiment)) {
         throw new Error('Invalid sentiment value');
@@ -82,9 +82,9 @@ export class ReviewAnalysisService {
         analysis.emotions = [];
       }
 
-      logger.info('Sentiment analysis completed', { 
-        sentiment: analysis.sentiment, 
-        score: analysis.score 
+      logger.info('Sentiment analysis completed', {
+        sentiment: analysis.sentiment,
+        score: analysis.score
       });
 
       return analysis;
@@ -100,7 +100,7 @@ export class ReviewAnalysisService {
   async extractPreferences(reviewText: string, movieTitle: string): Promise<PreferenceAnalysis> {
     try {
       const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
-      
+
       const prompt = `
         以下の映画「${movieTitle}」のレビューテキストを分析して、ユーザーの好みを抽出してください。
         JSON形式で以下の情報を返してください：
@@ -122,7 +122,7 @@ export class ReviewAnalysisService {
 
       // JSONパースを試行
       const preferences = JSON.parse(text.trim());
-      
+
       // データ検証と初期化
       const validPreferences: PreferenceAnalysis = {
         genres: Array.isArray(preferences.genres) ? preferences.genres : [],
@@ -132,7 +132,7 @@ export class ReviewAnalysisService {
         keywords: Array.isArray(preferences.keywords) ? preferences.keywords : []
       };
 
-      logger.info('Preference extraction completed', { 
+      logger.info('Preference extraction completed', {
         genresCount: validPreferences.genres.length,
         themesCount: validPreferences.themes.length,
         actorsCount: validPreferences.actors.length
@@ -156,10 +156,10 @@ export class ReviewAnalysisService {
     movieTitle: string
   ): Promise<ReviewAnalysisResult> {
     try {
-      logger.info('Starting comprehensive review analysis', { 
-        reviewId, 
-        userId, 
-        movieId 
+      logger.info('Starting comprehensive review analysis', {
+        reviewId,
+        userId,
+        movieId
       });
 
       // 並行して感情分析と好み抽出を実行
@@ -181,17 +181,17 @@ export class ReviewAnalysisService {
         confidence
       };
 
-      logger.info('Review analysis completed successfully', { 
-        reviewId, 
+      logger.info('Review analysis completed successfully', {
+        reviewId,
         sentiment: sentiment.sentiment,
-        confidence 
+        confidence
       });
 
       return analysisResult;
     } catch (error: any) {
-      logger.error('Comprehensive review analysis failed', { 
-        reviewId, 
-        error: error?.message 
+      logger.error('Comprehensive review analysis failed', {
+        reviewId,
+        error: error?.message
       });
       throw new Error(`Review analysis failed: ${error?.message || 'Unknown error'}`);
     }
@@ -203,7 +203,7 @@ export class ReviewAnalysisService {
   async saveAnalysisResult(analysisResult: ReviewAnalysisResult): Promise<void> {
     try {
       const analysisRef = this.db.collection('reviewAnalysis').doc(analysisResult.reviewId);
-      
+
       await analysisRef.set({
         ...analysisResult,
         analyzedAt: analysisResult.analyzedAt.toISOString()
@@ -212,13 +212,13 @@ export class ReviewAnalysisService {
       // ユーザーの好み履歴も更新
       await this.updateUserPreferences(analysisResult.userId, analysisResult.preferences);
 
-      logger.info('Analysis result saved successfully', { 
-        reviewId: analysisResult.reviewId 
+      logger.info('Analysis result saved successfully', {
+        reviewId: analysisResult.reviewId
       });
     } catch (error: any) {
-      logger.error('Failed to save analysis result', { 
-        reviewId: analysisResult.reviewId, 
-        error: error?.message 
+      logger.error('Failed to save analysis result', {
+        reviewId: analysisResult.reviewId,
+        error: error?.message
       });
       throw new Error(`Failed to save analysis result: ${error?.message || 'Unknown error'}`);
     }
@@ -234,7 +234,7 @@ export class ReviewAnalysisService {
 
       if (userPrefsDoc.exists) {
         const currentPrefs = userPrefsDoc.data() as any;
-        
+
         // 既存の好みと新しい好みをマージ
         const updatedPrefs = {
           genres: this.mergeAndCount(currentPrefs.genres || {}, newPreferences.genres),
@@ -263,9 +263,9 @@ export class ReviewAnalysisService {
 
       logger.info('User preferences updated', { userId });
     } catch (error: any) {
-      logger.error('Failed to update user preferences', { 
-        userId, 
-        error: error?.message 
+      logger.error('Failed to update user preferences', {
+        userId,
+        error: error?.message
       });
       // ユーザー好み更新の失敗は致命的エラーではないので、ログのみ
     }
@@ -275,8 +275,8 @@ export class ReviewAnalysisService {
    * 信頼度スコアを計算
    */
   private calculateConfidence(
-    sentiment: SentimentAnalysis, 
-    preferences: PreferenceAnalysis, 
+    sentiment: SentimentAnalysis,
+    preferences: PreferenceAnalysis,
     reviewText: string
   ): number {
     let confidence = 0.5; // 基本信頼度
@@ -290,9 +290,9 @@ export class ReviewAnalysisService {
     confidence += Math.abs(sentiment.score) * 0.2;
 
     // 抽出された要素の数による調整
-    const totalElements = preferences.genres.length + 
-                         preferences.themes.length + 
-                         preferences.actors.length + 
+    const totalElements = preferences.genres.length +
+                         preferences.themes.length +
+                         preferences.actors.length +
                          preferences.directors.length;
     confidence += Math.min(totalElements * 0.05, 0.2);
 
@@ -339,9 +339,9 @@ export class ReviewAnalysisService {
         analyzedAt: new Date(data.analyzedAt)
       };
     } catch (error: any) {
-      logger.error('Failed to get analysis result', { 
-        reviewId, 
-        error: error?.message 
+      logger.error('Failed to get analysis result', {
+        reviewId,
+        error: error?.message
       });
       throw new Error(`Failed to get analysis result: ${error?.message || 'Unknown error'}`);
     }
@@ -361,9 +361,9 @@ export class ReviewAnalysisService {
 
       return doc.data();
     } catch (error: any) {
-      logger.error('Failed to get user preferences', { 
-        userId, 
-        error: error?.message 
+      logger.error('Failed to get user preferences', {
+        userId,
+        error: error?.message
       });
       throw new Error(`Failed to get user preferences: ${error?.message || 'Unknown error'}`);
     }

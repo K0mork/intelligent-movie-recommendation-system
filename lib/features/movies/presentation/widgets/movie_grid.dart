@@ -24,11 +24,11 @@ class MovieGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     // レスポンシブなグリッド列数の計算
     int crossAxisCount;
     double childAspectRatio;
-    
+
     if (screenWidth > 1200) {
       crossAxisCount = 4;
       childAspectRatio = 0.75;
@@ -59,7 +59,7 @@ class MovieGrid extends StatelessWidget {
           controller: scrollController,
           padding: EdgeInsets.all(kIsWeb ? AppConstants.webPadding : AppConstants.defaultPadding),
           // Macでのスムーズスクロールのためのphysics
-          physics: kIsWeb 
+          physics: kIsWeb
               ? const ClampingScrollPhysics()
               : const BouncingScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

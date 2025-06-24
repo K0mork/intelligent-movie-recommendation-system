@@ -13,9 +13,9 @@ class RecommendationErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // インデックス関連のエラーを判定
-    final isIndexError = error.contains('index') && 
+    final isIndexError = error.contains('index') &&
                          (error.contains('building') || error.contains('create'));
-    
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -27,7 +27,7 @@ class RecommendationErrorWidget extends StatelessWidget {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: isIndexError 
+                color: isIndexError
                     ? Colors.orange.withValues(alpha: 0.1)
                     : Colors.red.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
@@ -39,7 +39,7 @@ class RecommendationErrorWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            
+
             // エラータイトル
             Text(
               isIndexError ? 'データベース準備中...' : 'エラーが発生しました',
@@ -50,10 +50,10 @@ class RecommendationErrorWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            
+
             // エラーメッセージ
             Text(
-              isIndexError 
+              isIndexError
                   ? 'データベースインデックスを構築中です。数分お待ちください。\nまたは「新しい推薦を生成」ボタンをお試しください。'
                   : error,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -61,7 +61,7 @@ class RecommendationErrorWidget extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             // リトライボタン
             if (onRetry != null) ...[
               const SizedBox(height: 32),

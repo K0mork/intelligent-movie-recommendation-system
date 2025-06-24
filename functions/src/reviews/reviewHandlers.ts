@@ -57,11 +57,11 @@ export const analyzeReviewWithService = functions.https.onCall(async (data: any,
 
   } catch (error: any) {
     logger.error('Review analysis with service failed', { error: error?.message });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `レビュー分析中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -98,11 +98,11 @@ export const getReviewAnalysis = functions.https.onCall(async (data: any, contex
 
   } catch (error: any) {
     logger.error('Failed to get review analysis', { error: error?.message });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `分析結果の取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -127,11 +127,11 @@ export const getUserPreferences = functions.https.onCall(async (data: any, conte
 
   } catch (error: any) {
     logger.error('Failed to get user preferences', { error: error?.message });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `ユーザー好み履歴の取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -157,16 +157,16 @@ export const getUserReviewStats = functions.https.onCall(async (data: any, conte
       .get();
 
     const reviews = reviewsSnapshot.docs.map(doc => doc.data());
-    
+
     // 統計計算
     const totalReviews = reviews.length;
-    const averageRating = totalReviews > 0 
-      ? reviews.reduce((sum, review) => sum + (review.rating || 0), 0) / totalReviews 
+    const averageRating = totalReviews > 0
+      ? reviews.reduce((sum, review) => sum + (review.rating || 0), 0) / totalReviews
       : 0;
-    
+
     // ジャンル別統計
     const genreStats = new Map<string, { count: number; totalRating: number }>();
-    
+
     reviews.forEach(review => {
       if (review.movieGenres && Array.isArray(review.movieGenres)) {
         review.movieGenres.forEach((genre: string) => {
@@ -212,11 +212,11 @@ export const getUserReviewStats = functions.https.onCall(async (data: any, conte
     };
 
   } catch (error: any) {
-    logger.error('Failed to get user review stats', { 
-      userId: context.auth?.uid, 
-      error: error?.message 
+    logger.error('Failed to get user review stats', {
+      userId: context.auth?.uid,
+      error: error?.message
     });
-    
+
     throw new functions.https.HttpsError('internal', `レビュー統計取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -258,12 +258,12 @@ export const addReviewComment = functions.https.onCall(async (data: any, context
     };
 
   } catch (error: any) {
-    logger.error('Failed to add review comment', { 
+    logger.error('Failed to add review comment', {
       reviewId: data?.reviewId,
       error: error?.message,
       userId: context.auth?.uid,
     });
-    
+
     throw new functions.https.HttpsError('internal', `コメント追加中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -306,12 +306,12 @@ export const getReviewComments = functions.https.onCall(async (data: any, contex
     };
 
   } catch (error: any) {
-    logger.error('Failed to get review comments', { 
+    logger.error('Failed to get review comments', {
       reviewId: data?.reviewId,
       error: error?.message,
       userId: context.auth?.uid,
     });
-    
+
     throw new functions.https.HttpsError('internal', `コメント取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -352,9 +352,9 @@ export const onReviewCreated = onDocumentCreated('reviews/{reviewId}', async (ev
     logger.info('Automatic review analysis completed', { reviewId });
 
   } catch (error: any) {
-    logger.error('Automatic review analysis failed', { 
-      reviewId: event.params.reviewId, 
-      error: error?.message 
+    logger.error('Automatic review analysis failed', {
+      reviewId: event.params.reviewId,
+      error: error?.message
     });
     // 自動分析の失敗は致命的ではないため、エラーを投げない
   }
@@ -373,7 +373,7 @@ export const batchUpdateReviewAnalysis = functions.https.onCall(async (data: any
     const userId = context.auth.uid;
     const userDoc = await db.collection('users').doc(userId).get();
     const userData = userDoc.data();
-    
+
     if (!userData?.isAdmin) {
       throw new functions.https.HttpsError('permission-denied', '管理者権限が必要です。');
     }
@@ -417,7 +417,7 @@ export const batchUpdateReviewAnalysis = functions.https.onCall(async (data: any
     const successCount = results.filter(r => r.status === 'fulfilled').length;
     const errorCount = results.filter(r => r.status === 'rejected').length;
 
-    logger.info('Batch review analysis completed', { 
+    logger.info('Batch review analysis completed', {
       total: analysisPromises.length,
       success: successCount,
       errors: errorCount,
@@ -432,15 +432,15 @@ export const batchUpdateReviewAnalysis = functions.https.onCall(async (data: any
     };
 
   } catch (error: any) {
-    logger.error('Failed to batch update review analysis', { 
+    logger.error('Failed to batch update review analysis', {
       error: error?.message,
       userId: context.auth?.uid,
     });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `バッチ分析更新中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });

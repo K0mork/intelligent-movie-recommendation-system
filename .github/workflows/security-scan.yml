@@ -11,17 +11,38 @@ jobs:
   security-scan:
     name: 🔍 API Key Detection Scan
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: 📥 Checkout code
       uses: actions/checkout@v4
       with:
         fetch-depth: 0  # 全履歴取得（過去のコミットもチェック）
-    
+
+    - name: 🐍 Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: 📦 Install pre-commit
+      run: |
+        pip install pre-commit
+
+    - name: 🔧 Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.7.2'
+        channel: 'stable'
+
+    - name: 🔍 Run Pre-commit All Files
+      run: |
+        echo "🔒 Running pre-commit on all files..."
+        pre-commit install
+        pre-commit run --all-files
+
     - name: 🔍 Scan for API Keys and Secrets
       run: |
         echo "🔒 FilmFlow Security Scan: APIキー検出を開始..."
-        
+
         # カラー定義
         RED='\033[0;31m'
         GREEN='\033[0;32m'
@@ -29,7 +50,7 @@ jobs:
         BLUE='\033[0;34m'
         NC='\033[0m'
         BOLD='\033[1m'
-        
+
         # 検出パターン（JSON形式で管理）
         cat > patterns.json << 'EOF'
         {
@@ -40,7 +61,7 @@ jobs:
               "description": "Firebase API キーが検出されました"
             },
             {
-              "name": "TMDb API Key", 
+              "name": "TMDb API Key",
               "regex": "[0-9a-f]{32}",
               "description": "TMDb API キー（32文字hex）が検出されました"
             },
@@ -62,17 +83,17 @@ jobs:
           ]
         }
         EOF
-        
+
         # 除外パターン
         EXCLUDE_DIRS=".git|node_modules|build|.flutter-plugins|.dart_tool|coverage"
         EXCLUDE_FILES="*.log|*.md"
-        
+
         # スキャン実行
         FOUND_SECRETS=0
         SCAN_RESULTS=""
-        
+
         echo -e "${BLUE}📝 スキャン対象ファイルを収集中...${NC}"
-        
+
         # 全ファイルをスキャン（除外パターン適用）
         find . -type f \
           ! -path "*/.git/*" \
@@ -83,21 +104,21 @@ jobs:
           ! -name "*.log" \
           ! -name "security-scan.yml" \
           -print0 | while IFS= read -r -d '' file; do
-          
+
           echo "🔍 Scanning: $file"
-          
+
           # Firebase APIキーチェック
           if grep -Hn "AIzaSy[0-9A-Za-z_-]\{33\}" "$file" 2>/dev/null; then
             echo "🚨 Firebase API Key detected in: $file"
             FOUND_SECRETS=1
           fi
-          
+
           # TMDb APIキーチェック（除外条件付き）
           if grep -Hn "[0-9a-f]\{32\}" "$file" 2>/dev/null | grep -v -E "(YOUR_|PLACEHOLDER|EXAMPLE|TEST|TEMPLATE)" 2>/dev/null; then
             echo "🚨 Potential TMDb API Key detected in: $file"
             FOUND_SECRETS=1
           fi
-          
+
           # 危険な文字列パターン
           DANGEROUS_PATTERNS=(
             "firebase.*api.*key.*="
@@ -105,7 +126,7 @@ jobs:
             "api_key.*=.*['\"][0-9a-zA-Z_-]{20,}['\"]"
             "apiKey.*=.*['\"][0-9a-zA-Z_-]{20,}['\"]"
           )
-          
+
           for pattern in "${DANGEROUS_PATTERNS[@]}"; do
             if grep -Hn -i -E "$pattern" "$file" 2>/dev/null | grep -v -E "(YOUR_|PLACEHOLDER|EXAMPLE|TEST|TEMPLATE)" 2>/dev/null; then
               echo "🚨 Dangerous pattern detected in: $file - $pattern"
@@ -113,23 +134,23 @@ jobs:
             fi
           done
         done
-        
+
         # 特別なGitコミット履歴チェック
         echo -e "${YELLOW}📚 Git履歴をスキャン中...${NC}"
-        
+
         # 最近の10コミットをチェック
         git log --oneline -10 --pretty=format:"%h %s" | while read commit; do
           commit_hash=$(echo "$commit" | cut -d' ' -f1)
-          
+
           # コミットの差分から秘密情報を検索
           if git show "$commit_hash" | grep -E "AIzaSy[0-9A-Za-z_-]{33}|[0-9a-f]{32}" | grep -v -E "(YOUR_|PLACEHOLDER|EXAMPLE|TEST)" 2>/dev/null; then
             echo "⚠️  Potential secrets in commit: $commit"
             echo "   Consider rewriting history if this commit contains real secrets"
           fi
         done
-        
+
         echo -e "\n${GREEN}🔍 スキャン完了${NC}"
-        
+
         # 最終結果
         if [ $FOUND_SECRETS -eq 1 ]; then
           echo -e "\n${RED}${BOLD}🚨 セキュリティアラート: 機密情報が検出されました！${NC}"
@@ -143,13 +164,13 @@ jobs:
           echo -e "\n${GREEN}${BOLD}✅ セキュリティチェック通過${NC}"
           echo -e "${GREEN}🔒 機密情報は検出されませんでした${NC}"
         fi
-    
+
     - name: 📊 Security Report
       if: failure()
       run: |
         echo "::error title=Security Violation::API keys or secrets detected in the codebase"
         echo "::error::Please remove all hardcoded secrets and use environment variables or GitHub Secrets instead"
-    
+
     - name: ✅ Security Check Passed
       if: success()
       run: |

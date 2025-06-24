@@ -43,7 +43,7 @@
       ]
     },
     {
-      "collectionGroup": "reviews", 
+      "collectionGroup": "reviews",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -65,7 +65,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "movieId", 
+          "fieldPath": "movieId",
           "order": "ASCENDING"
         },
         {
@@ -76,7 +76,7 @@
     },
     {
       "collectionGroup": "movies",
-      "queryScope": "COLLECTION", 
+      "queryScope": "COLLECTION",
       "fields": [
         {
           "fieldPath": "genreIds",

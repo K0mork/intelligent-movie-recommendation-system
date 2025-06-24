@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// ローディング状態表示の統一ウィジェット
-/// 
+///
 /// プロジェクト内で重複していたローディング表示を統一し、
 /// 一貫したUI/UXと保守性を向上させる。
 class LoadingStateWidget extends StatelessWidget {
@@ -10,7 +10,7 @@ class LoadingStateWidget extends StatelessWidget {
   final double? size;
   final Color? color;
   final EdgeInsets padding;
-  
+
   const LoadingStateWidget({
     super.key,
     this.message,
@@ -60,7 +60,7 @@ class LoadingStateWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final effectiveColor = color ?? theme.colorScheme.primary;
-    
+
     return Padding(
       padding: padding,
       child: Center(
@@ -95,7 +95,7 @@ class LoadingStateWidget extends StatelessWidget {
             strokeWidth: 2.0,
           ),
         );
-      
+
       case LoadingType.linear:
         return SizedBox(
           width: size ?? 200.0,
@@ -103,7 +103,7 @@ class LoadingStateWidget extends StatelessWidget {
             valueColor: AlwaysStoppedAnimation<Color>(color),
           ),
         );
-      
+
       case LoadingType.pulse:
         return TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.5, end: 1.0),
@@ -123,7 +123,7 @@ class LoadingStateWidget extends StatelessWidget {
             ),
           ),
         );
-      
+
       case LoadingType.fade:
         return TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.3, end: 1.0),
@@ -140,7 +140,7 @@ class LoadingStateWidget extends StatelessWidget {
             ),
           ),
         );
-      
+
       case LoadingType.spin:
         return TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.0, end: 1.0),
@@ -154,7 +154,7 @@ class LoadingStateWidget extends StatelessWidget {
             ),
           ),
         );
-      
+
       case LoadingType.skeleton:
         return TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.3, end: 0.7),
@@ -188,7 +188,7 @@ class LoadingStateList extends StatelessWidget {
   final LoadingType type;
   final double spacing;
   final EdgeInsets padding;
-  
+
   const LoadingStateList({
     super.key,
     required this.itemCount,
@@ -224,7 +224,7 @@ class ConditionalLoadingWidget extends StatelessWidget {
   final Widget? loadingWidget;
   final String? loadingMessage;
   final LoadingType loadingType;
-  
+
   const ConditionalLoadingWidget({
     super.key,
     required this.isLoading,
@@ -253,7 +253,7 @@ class LoadingOverlay extends StatelessWidget {
   final String? message;
   final Color? backgroundColor;
   final LoadingType type;
-  
+
   const LoadingOverlay({
     super.key,
     required this.isLoading,
@@ -271,7 +271,7 @@ class LoadingOverlay extends StatelessWidget {
         if (isLoading)
           Positioned.fill(
             child: Container(
-              color: backgroundColor ?? 
+              color: backgroundColor ??
                   Colors.black.withValues(alpha: 0.5),
               child: LoadingStateWidget(
                 message: message,
@@ -287,9 +287,9 @@ class LoadingOverlay extends StatelessWidget {
 /// ローディング状態管理のためのミックスイン
 mixin LoadingStateMixin<T extends StatefulWidget> on State<T> {
   bool _isLoading = false;
-  
+
   bool get isLoading => _isLoading;
-  
+
   void setLoading(bool loading) {
     if (mounted) {
       setState(() {
@@ -297,7 +297,7 @@ mixin LoadingStateMixin<T extends StatefulWidget> on State<T> {
       });
     }
   }
-  
+
   Future<void> executeWithLoading(Future<void> Function() action) async {
     setLoading(true);
     try {
@@ -306,7 +306,7 @@ mixin LoadingStateMixin<T extends StatefulWidget> on State<T> {
       setLoading(false);
     }
   }
-  
+
   Widget buildWithLoadingState({
     required Widget child,
     String? loadingMessage,

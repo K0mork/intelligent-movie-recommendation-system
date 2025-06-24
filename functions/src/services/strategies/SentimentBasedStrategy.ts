@@ -30,7 +30,7 @@ export class SentimentBasedStrategy extends BaseRecommendationStrategy {
     try {
       // ユーザーの感情プロファイルを分析
       const emotionalProfile = this.analyzeEmotionalProfile(userProfile);
-      
+
       // 映画の感情的特徴を分析して推薦を生成
       const recommendations = await this.generateSentimentRecommendations(
         emotionalProfile,
@@ -55,10 +55,10 @@ export class SentimentBasedStrategy extends BaseRecommendationStrategy {
    */
   private analyzeEmotionalProfile(userProfile: UserProfile): EmotionalProfile {
     const sentimentHistory = userProfile.sentimentHistory;
-    
+
     // 感情傾向の正規化
     const total = sentimentHistory.positive + sentimentHistory.neutral + sentimentHistory.negative;
-    
+
     if (total === 0) {
       // デフォルトプロファイル
       return {
@@ -111,14 +111,14 @@ export class SentimentBasedStrategy extends BaseRecommendationStrategy {
           tones.push('exhilarating', 'joyful');
         }
         break;
-      
+
       case 'negative':
         tones.push('dramatic', 'intense', 'thought-provoking');
         if (intensity > 0.6) {
           tones.push('dark', 'melancholic');
         }
         break;
-      
+
       case 'balanced':
         tones.push('engaging', 'well-rounded', 'nuanced');
         break;
@@ -134,10 +134,10 @@ export class SentimentBasedStrategy extends BaseRecommendationStrategy {
     switch (emotion) {
       case 'positive':
         return ['depressing', 'bleak', 'nihilistic'];
-      
+
       case 'negative':
         return ['overly-cheerful', 'simplistic'];
-      
+
       case 'balanced':
         return ['extreme'];
     }
@@ -155,11 +155,11 @@ export class SentimentBasedStrategy extends BaseRecommendationStrategy {
 
     for (const movie of availableMovies) {
       const sentimentScore = await this.calculateSentimentScore(movie, emotionalProfile);
-      
+
       if (sentimentScore > 0.3) {
         const reasons = this.generateSentimentReasons(movie, emotionalProfile);
         const confidence = this.calculateConfidence(sentimentScore, reasons);
-        
+
         recommendations.push({
           movieId: movie.id,
           movie,
@@ -183,18 +183,18 @@ export class SentimentBasedStrategy extends BaseRecommendationStrategy {
     try {
       // 映画の感情的特徴を分析
       const movieSentiment = await this.analyzeMovieSentiment(movie);
-      
+
       // プロファイルとの適合度を計算
       let score = 0;
 
       // 好まれるトーンとの一致度
-      const toneMatches = profile.preferredTones.filter(tone => 
+      const toneMatches = profile.preferredTones.filter(tone =>
         movieSentiment.tones.includes(tone)
       ).length;
       score += (toneMatches / profile.preferredTones.length) * 0.6;
 
       // 避けられるトーンの確認
-      const avoidedMatches = profile.avoidedTones.filter(tone => 
+      const avoidedMatches = profile.avoidedTones.filter(tone =>
         movieSentiment.tones.includes(tone)
       ).length;
       score -= (avoidedMatches / Math.max(profile.avoidedTones.length, 1)) * 0.4;
@@ -221,9 +221,9 @@ export class SentimentBasedStrategy extends BaseRecommendationStrategy {
    */
   private async analyzeMovieSentiment(movie: MovieData): Promise<MovieSentiment> {
     // キャッシュチェック（実装簡略化のため省略）
-    
+
     const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
-    
+
     const prompt = `
 映画の感情的特徴を分析してください。
 
@@ -247,10 +247,10 @@ export class SentimentBasedStrategy extends BaseRecommendationStrategy {
     try {
       const result = await model.generateContent(prompt);
       const response = result.response.text();
-      
+
       // JSON解析を試行
       const analysisResult = JSON.parse(response);
-      
+
       return {
         dominantEmotion: analysisResult.dominantEmotion || 'balanced',
         intensity: Math.max(0, Math.min(1, analysisResult.intensity || 0.5)),
@@ -260,7 +260,7 @@ export class SentimentBasedStrategy extends BaseRecommendationStrategy {
 
     } catch (error) {
       logger.warn('Failed to parse sentiment analysis result', { error });
-      
+
       // フォールバック: ジャンルベースの簡易分析
       return this.getFallbackSentiment(movie);
     }
@@ -272,10 +272,10 @@ export class SentimentBasedStrategy extends BaseRecommendationStrategy {
   private getFallbackSentiment(movie: MovieData): MovieSentiment {
     const positiveGenres = ['Comedy', 'Romance', 'Family', 'Animation'];
     const negativeGenres = ['Horror', 'Thriller', 'Drama'];
-    
+
     const hasPositiveGenre = movie.genres.some(genre => positiveGenres.includes(genre));
     const hasNegativeGenre = movie.genres.some(genre => negativeGenres.includes(genre));
-    
+
     let dominantEmotion: EmotionalType = 'balanced';
     let intensity = 0.5;
     let tones: string[] = ['engaging'];

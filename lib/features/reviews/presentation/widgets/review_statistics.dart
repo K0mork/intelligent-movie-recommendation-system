@@ -13,14 +13,14 @@ class ReviewStatistics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     if (reviews.isEmpty) {
       return const SizedBox.shrink();
     }
 
     final totalReviews = reviews.length;
     final averageRating = reviews.map((r) => r.rating).reduce((a, b) => a + b) / totalReviews;
-    
+
     // Use fold instead of reduce to avoid type issues
     Review mostRecentReview = reviews.first;
     for (final review in reviews) {
@@ -28,14 +28,14 @@ class ReviewStatistics extends StatelessWidget {
         mostRecentReview = review;
       }
     }
-    
+
     Review oldestReview = reviews.first;
     for (final review in reviews) {
       if (review.createdAt.isBefore(oldestReview.createdAt)) {
         oldestReview = review;
       }
     }
-    
+
     // 評価分布を計算
     final ratingDistribution = <int, int>{};
     for (int i = 1; i <= 5; i++) {
@@ -72,7 +72,7 @@ class ReviewStatistics extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // 基本統計
             Row(
               children: [
@@ -95,9 +95,9 @@ class ReviewStatistics extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // 期間情報
             Row(
               children: [
@@ -122,9 +122,9 @@ class ReviewStatistics extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // 評価分布
             Text(
               '評価分布',
@@ -133,10 +133,10 @@ class ReviewStatistics extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            
+
             Column(
               children: [
-                for (int rating = 5; rating >= 1; rating--) 
+                for (int rating = 5; rating >= 1; rating--)
                   _RatingDistributionBar(
                     rating: rating,
                     count: ratingDistribution[rating] ?? 0,
@@ -169,7 +169,7 @@ class _StatisticCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: EdgeInsets.all(isCompact ? 12.0 : 16.0),
       decoration: BoxDecoration(
@@ -232,7 +232,7 @@ class _RatingDistributionBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final percentage = totalCount > 0 ? (count / totalCount) : 0.0;
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Row(
@@ -257,7 +257,7 @@ class _RatingDistributionBar extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // プログレスバー
           Expanded(
             child: Container(
@@ -273,7 +273,7 @@ class _RatingDistributionBar extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // 件数表示
           SizedBox(
             width: 40,

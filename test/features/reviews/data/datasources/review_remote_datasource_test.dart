@@ -63,7 +63,7 @@ void main() {
       mockQuerySnapshot = MockQuerySnapshot<Map<String, dynamic>>();
       mockQueryDocumentSnapshot = MockQueryDocumentSnapshot<Map<String, dynamic>>();
       mockQuery = MockQuery<Map<String, dynamic>>();
-      
+
       dataSource = ReviewRemoteDataSourceImpl(firestore: mockFirestore);
 
       // Firestoreコレクション参照の設定
@@ -137,7 +137,7 @@ void main() {
       test('全てのレビューが正常に取得される', () async {
         // Arrange
         final mockQueryDocumentSnapshots = [mockQueryDocumentSnapshot];
-        
+
         when(mockCollection.orderBy('createdAt', descending: true))
             .thenReturn(mockQuery);
         when(mockQuery.get()).thenAnswer((_) => Future.value(mockQuerySnapshot));
@@ -158,7 +158,7 @@ void main() {
       test('ユーザーIDでフィルタリングされたレビューが取得される', () async {
         // Arrange
         final mockQueryDocumentSnapshots = [mockQueryDocumentSnapshot];
-        
+
         when(mockCollection.where('userId', isEqualTo: 'test-user-id'))
             .thenReturn(mockQuery);
         when(mockQuery.orderBy('createdAt', descending: true))
@@ -180,7 +180,7 @@ void main() {
       test('映画IDでフィルタリングされたレビューが取得される', () async {
         // Arrange
         final mockQueryDocumentSnapshots = [mockQueryDocumentSnapshot];
-        
+
         when(mockCollection.where('movieId', isEqualTo: 'test-movie-id'))
             .thenReturn(mockQuery);
         when(mockQuery.orderBy('createdAt', descending: true))
@@ -258,7 +258,7 @@ void main() {
       test('特定ユーザーのレビューが正常に取得される', () async {
         // Arrange
         final mockQueryDocumentSnapshots = [mockQueryDocumentSnapshot];
-        
+
         when(mockCollection.where('userId', isEqualTo: 'test-user-id'))
             .thenReturn(mockQuery);
         when(mockQuery.orderBy('createdAt', descending: true))

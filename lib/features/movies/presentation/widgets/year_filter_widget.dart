@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// 年代フィルター機能を提供するウィジェット
-/// 
+///
 /// MovieSearchDelegateから複雑な年代選択ロジックを分離し、
 /// 再利用可能で保守しやすい形にする。
 class YearFilterWidget extends StatelessWidget {
@@ -21,13 +21,13 @@ class YearFilterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       child: PopupMenuButton<String>(
         icon: Icon(
           Icons.date_range,
-          color: selectedYear != null 
+          color: selectedYear != null
               ? (iconColor ?? theme.colorScheme.primary)
               : null,
         ),
@@ -43,11 +43,11 @@ class YearFilterWidget extends StatelessWidget {
   List<PopupMenuEntry<String>> _buildYearMenuItems(BuildContext context) {
     final theme = Theme.of(context);
     final yearOptions = YearFilterOptions.getYearOptions();
-    
+
     return yearOptions.map((yearOption) {
-      final isSelected = selectedYear == yearOption.value || 
+      final isSelected = selectedYear == yearOption.value ||
           (selectedYear == null && yearOption.value == YearFilterOptions.allYears);
-      
+
       return PopupMenuItem<String>(
         value: yearOption.value,
         child: Row(
@@ -89,7 +89,7 @@ class YearFilterOption {
 /// 年代フィルターのオプション管理クラス
 class YearFilterOptions {
   static const String allYears = 'all';
-  
+
   /// 年代フィルターの選択肢を生成
   static List<YearFilterOption> getYearOptions() {
     final currentYear = DateTime.now().year;
@@ -100,7 +100,7 @@ class YearFilterOptions {
         icon: Icons.clear,
       ),
     ];
-    
+
     // 現在の年から1900年まで5年間隔で生成
     for (int year = currentYear; year >= 1900; year -= 5) {
       options.add(
@@ -111,42 +111,42 @@ class YearFilterOptions {
         ),
       );
     }
-    
+
     return options;
   }
-  
+
   /// 選択された年から範囲の開始年と終了年を取得
   static YearRange? getYearRange(String? selectedYear) {
     if (selectedYear == null || selectedYear == allYears) {
       return null;
     }
-    
+
     final year = int.tryParse(selectedYear);
     if (year == null) {
       return null;
     }
-    
+
     return YearRange(
       start: year,
       end: year + 4, // 5年間隔なので+4
     );
   }
-  
+
   /// 映画の公開年が選択された年代範囲に含まれるかチェック
   static bool isInYearRange(String? movieReleaseDate, String? selectedYear) {
     if (selectedYear == null || selectedYear == allYears) {
       return true;
     }
-    
+
     if (movieReleaseDate?.isEmpty != false) {
       return false;
     }
-    
+
     final yearRange = getYearRange(selectedYear);
     if (yearRange == null) {
       return false;
     }
-    
+
     try {
       final movieYear = int.parse(movieReleaseDate!.substring(0, 4));
       return movieYear >= yearRange.start && movieYear <= yearRange.end;
@@ -165,14 +165,14 @@ class YearRange {
     required this.start,
     required this.end,
   });
-  
+
   bool contains(int year) {
     return year >= start && year <= end;
   }
-  
+
   @override
   String toString() => '$start年-$end年';
-  
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -205,7 +205,7 @@ class YearFilterIndicator extends StatelessWidget {
     }
 
     final theme = Theme.of(context);
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
@@ -254,21 +254,21 @@ class YearFilterIndicator extends StatelessWidget {
 /// 年代フィルターのミックスイン
 mixin YearFilterMixin {
   String? _selectedYear;
-  
+
   String? get selectedYear => _selectedYear;
-  
+
   void setSelectedYear(String? year) {
     _selectedYear = year;
   }
-  
+
   void clearYearFilter() {
     _selectedYear = null;
   }
-  
+
   bool isMovieInYearRange(String? movieReleaseDate) {
     return YearFilterOptions.isInYearRange(movieReleaseDate, _selectedYear);
   }
-  
+
   List<T> filterMoviesByYear<T>(
     List<T> movies,
     String? Function(T movie) getReleaseDateFunc,
@@ -276,7 +276,7 @@ mixin YearFilterMixin {
     if (_selectedYear == null) {
       return movies;
     }
-    
+
     return movies.where((movie) {
       final releaseDate = getReleaseDateFunc(movie);
       return YearFilterOptions.isInYearRange(releaseDate, _selectedYear);

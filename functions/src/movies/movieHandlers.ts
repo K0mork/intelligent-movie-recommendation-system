@@ -26,8 +26,8 @@ export const searchMovies = functions.https.onCall(async (data: any, context: an
 
     const movies = await movieDataUtils.searchMovies(query, limit, { year, genre });
 
-    logger.info('Movie search completed', { 
-      query, 
+    logger.info('Movie search completed', {
+      query,
       resultCount: movies.length,
       userId: context.auth.uid,
     });
@@ -41,16 +41,16 @@ export const searchMovies = functions.https.onCall(async (data: any, context: an
     };
 
   } catch (error: any) {
-    logger.error('Failed to search movies', { 
+    logger.error('Failed to search movies', {
       query: data?.query,
       error: error?.message,
       userId: context.auth?.uid,
     });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `映画検索中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -80,11 +80,11 @@ export const getPopularMovies = functions.https.onCall(async (data: any, context
     };
 
   } catch (error: any) {
-    logger.error('Failed to get popular movies', { 
+    logger.error('Failed to get popular movies', {
       error: error?.message,
       userId: context.auth?.uid,
     });
-    
+
     throw new functions.https.HttpsError('internal', `人気映画取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -119,12 +119,12 @@ export const getMoviesByGenre = functions.https.onCall(async (data: any, context
     };
 
   } catch (error: any) {
-    logger.error('Failed to get movies by genre', { 
+    logger.error('Failed to get movies by genre', {
       genre: data?.genre,
       error: error?.message,
       userId: context.auth?.uid,
     });
-    
+
     throw new functions.https.HttpsError('internal', `ジャンル別映画取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -159,16 +159,16 @@ export const getMovieDetails = functions.https.onCall(async (data: any, context:
     };
 
   } catch (error: any) {
-    logger.error('Failed to get movie details', { 
+    logger.error('Failed to get movie details', {
       movieId: data?.movieId,
       error: error?.message,
       userId: context.auth?.uid,
     });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `映画詳細取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -201,12 +201,12 @@ export const getSimilarMovies = functions.https.onCall(async (data: any, context
     };
 
   } catch (error: any) {
-    logger.error('Failed to get similar movies', { 
+    logger.error('Failed to get similar movies', {
       movieId: data?.movieId,
       error: error?.message,
       userId: context.auth?.uid,
     });
-    
+
     throw new functions.https.HttpsError('internal', `類似映画取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -231,11 +231,11 @@ export const getMovieStats = functions.https.onCall(async (data: any, context: a
     };
 
   } catch (error: any) {
-    logger.error('Failed to get movie stats', { 
+    logger.error('Failed to get movie stats', {
       error: error?.message,
       userId: context.auth?.uid,
     });
-    
+
     throw new functions.https.HttpsError('internal', `映画統計取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -260,15 +260,15 @@ export const initializeSampleMovies = functions.https.onCall(async (data: any, c
     };
 
   } catch (error: any) {
-    logger.error('Failed to initialize sample movies', { 
+    logger.error('Failed to initialize sample movies', {
       error: error?.message,
       userId: context.auth?.uid,
     });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `サンプルデータ初期化中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -301,11 +301,11 @@ export const getMovieTrends = functions.https.onCall(async (data: any, context: 
     };
 
   } catch (error: any) {
-    logger.error('Failed to get movie trends', { 
+    logger.error('Failed to get movie trends', {
       error: error?.message,
       userId: context.auth?.uid,
     });
-    
+
     throw new functions.https.HttpsError('internal', `映画トレンド取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -334,11 +334,11 @@ export const getNewReleases = functions.https.onCall(async (data: any, context: 
     };
 
   } catch (error: any) {
-    logger.error('Failed to get new releases', { 
+    logger.error('Failed to get new releases', {
       error: error?.message,
       userId: context.auth?.uid,
     });
-    
+
     throw new functions.https.HttpsError('internal', `新作映画取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });

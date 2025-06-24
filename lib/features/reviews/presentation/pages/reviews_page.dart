@@ -113,7 +113,7 @@ class _MyReviewsTab extends ConsumerWidget {
                     builder: (context) => EditReviewPage(review: review),
                   ),
                 );
-                
+
                 if (result == true) {
                   ref.refresh(userReviewsProvider(userId));
                 }

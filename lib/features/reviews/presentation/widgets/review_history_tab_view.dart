@@ -11,7 +11,7 @@ import '../../../../core/widgets/error_widgets.dart';
 import '../../../../core/widgets/breadcrumb_widget.dart';
 
 /// レビュー履歴タブのビュー
-/// 
+///
 /// ユーザーの過去のレビュー表示とソート機能を担当。
 /// integrated_reviews_page.dartから責任を分離。
 class ReviewHistoryTabView extends ConsumerWidget {
@@ -166,7 +166,7 @@ class ReviewHistoryTabView extends ConsumerWidget {
 
   Widget _buildSortIndicator(ThemeData theme) {
     final sortText = _getSortText();
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -238,7 +238,7 @@ class ReviewHistoryTabView extends ConsumerWidget {
 
   List<dynamic> _sortReviews(List<dynamic> reviews) {
     final sorted = List.from(reviews);
-    
+
     switch (sortBy) {
       case 'newest':
         sorted.sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -256,7 +256,7 @@ class ReviewHistoryTabView extends ConsumerWidget {
         sorted.sort((a, b) => a.movieTitle.compareTo(b.movieTitle));
         break;
     }
-    
+
     return sorted;
   }
 
@@ -345,7 +345,7 @@ class _DeleteConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return AlertDialog(
       title: const Text('レビューを削除'),
       content: Column(
@@ -378,4 +378,3 @@ class _DeleteConfirmationDialog extends StatelessWidget {
     );
   }
 }
-

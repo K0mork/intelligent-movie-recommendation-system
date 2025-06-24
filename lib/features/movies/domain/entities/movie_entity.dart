@@ -15,7 +15,7 @@ class MovieEntity {
   final String originalTitle;
   final double popularity;
   final bool video;
-  
+
   // ジャンル名のリスト（UI表示用）
   final List<String>? genres;
 

@@ -5,7 +5,7 @@ import 'loading_state_widget.dart';
 import 'error_widgets.dart';
 
 /// ResultState に基づいてUIを構築するウィジェット
-/// 
+///
 /// 統一されたエラーハンドリングとローディング状態の表示により、
 /// 一貫したユーザーエクスペリエンスを提供する。
 class ResultStateWidget<T> extends StatelessWidget {
@@ -251,7 +251,7 @@ class PaginatedResultStateWidget<T> extends StatelessWidget {
         if (data.isEmpty) {
           return emptyWidget ?? _buildDefaultEmpty();
         }
-        
+
         return Column(
           children: [
             Expanded(child: builder(data)),

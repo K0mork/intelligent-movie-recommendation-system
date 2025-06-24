@@ -113,7 +113,7 @@ void main() {
       test('authLoadingProvider should reset to false', () {
         container.read(authLoadingProvider.notifier).state = true;
         expect(container.read(authLoadingProvider), isTrue);
-        
+
         container.read(authLoadingProvider.notifier).state = false;
         expect(container.read(authLoadingProvider), isFalse);
       });
@@ -154,7 +154,7 @@ void main() {
 
         // Wait for async stream to resolve
         await container.read(authStateProvider.future);
-        
+
         final currentUser = container.read(currentUserProvider);
         expect(currentUser, equals(testUser));
         expect(currentUser?.uid, equals('test-uid'));
@@ -231,10 +231,10 @@ void main() {
     group('Mock Interaction Tests', () {
       test('should interact with mocked repository', () {
         when(mockAuthRepository.getCurrentUser()).thenReturn(null);
-        
+
         final useCase = container.read(getCurrentUserUseCaseProvider);
         final result = useCase.getCurrentUser();
-        
+
         expect(result, isNull);
         verify(mockAuthRepository.getCurrentUser()).called(1);
       });
@@ -281,7 +281,7 @@ void main() {
         );
 
         final authState = container.read(authStateProvider);
-        
+
         expect(authState, isA<AsyncValue<AppUser?>>());
         // Stream error handling is tested through actual usage
       });
@@ -291,7 +291,7 @@ void main() {
             .thenThrow(Exception('Repository error'));
 
         final useCase = container.read(getCurrentUserUseCaseProvider);
-        
+
         expect(
           () => useCase.getCurrentUser(),
           throwsA(isA<Exception>()),
@@ -314,7 +314,7 @@ void main() {
 
       test('should track authentication state changes', () {
         var callCount = 0;
-        
+
         container.listen(isAuthenticatedProvider, (previous, next) {
           callCount++;
         });

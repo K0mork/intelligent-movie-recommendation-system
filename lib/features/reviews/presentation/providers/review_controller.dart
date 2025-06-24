@@ -37,7 +37,7 @@ class ReviewController extends StateNotifier<ReviewState> {
 
   Future<void> loadReviews({String? userId, String? movieId}) async {
     state = state.copyWith(isLoading: true, error: null);
-    
+
     try {
       final reviews = await repository.getReviews(
         userId: userId,
@@ -65,7 +65,7 @@ class ReviewController extends StateNotifier<ReviewState> {
     DateTime? watchedDate,
   }) async {
     state = state.copyWith(isSubmitting: true, error: null);
-    
+
     try {
       final reviewId = await repository.createReview(
         userId: userId,
@@ -76,12 +76,12 @@ class ReviewController extends StateNotifier<ReviewState> {
         comment: comment,
         watchedDate: watchedDate,
       );
-      
+
       state = state.copyWith(isSubmitting: false);
-      
+
       // Refresh reviews after submission
       await loadReviews();
-      
+
       return reviewId;
     } catch (e) {
       state = state.copyWith(
@@ -94,11 +94,11 @@ class ReviewController extends StateNotifier<ReviewState> {
 
   Future<void> updateReview(Review review) async {
     state = state.copyWith(isSubmitting: true, error: null);
-    
+
     try {
       await repository.updateReview(review);
       state = state.copyWith(isSubmitting: false);
-      
+
       // Refresh reviews after update
       await loadReviews();
     } catch (e) {
@@ -111,11 +111,11 @@ class ReviewController extends StateNotifier<ReviewState> {
 
   Future<void> deleteReview(String reviewId) async {
     state = state.copyWith(isSubmitting: true, error: null);
-    
+
     try {
       await repository.deleteReview(reviewId);
       state = state.copyWith(isSubmitting: false);
-      
+
       // Refresh reviews after deletion
       await loadReviews();
     } catch (e) {
@@ -128,7 +128,7 @@ class ReviewController extends StateNotifier<ReviewState> {
 
   Future<void> loadUserReviews(String userId) async {
     state = state.copyWith(isLoading: true, error: null);
-    
+
     try {
       final reviews = await repository.getUserReviews(userId);
       state = state.copyWith(

@@ -23,7 +23,7 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    
+
     // 初回データ読み込み
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadInitialData();

@@ -5,7 +5,7 @@ class DateHelper {
     if (dateString == null || dateString.isEmpty) {
       return '不明';
     }
-    
+
     try {
       final date = DateTime.parse(dateString);
       return '${date.year}年${date.month}月${date.day}日';
@@ -17,7 +17,7 @@ class DateHelper {
   /// 日付文字列から年を抽出
   static int? extractYear(String? dateString) {
     if (dateString == null || dateString.isEmpty) return null;
-    
+
     try {
       return DateTime.parse(dateString).year;
     } catch (e) {
@@ -33,8 +33,8 @@ class DateHelper {
   /// 日付が今日かどうかを判定
   static bool isToday(DateTime date) {
     final now = DateTime.now();
-    return date.year == now.year && 
-           date.month == now.month && 
+    return date.year == now.year &&
+           date.month == now.month &&
            date.day == now.day;
   }
 

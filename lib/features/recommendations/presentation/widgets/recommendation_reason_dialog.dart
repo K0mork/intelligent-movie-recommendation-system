@@ -22,7 +22,7 @@ class RecommendationReasonDialog extends StatelessWidget {
           children: [
             // ヘッダー
             _buildHeader(context),
-            
+
             // コンテンツ
             Flexible(
               child: SingleChildScrollView(
@@ -33,14 +33,14 @@ class RecommendationReasonDialog extends StatelessWidget {
                     // 信頼度スコア
                     _buildConfidenceSection(context),
                     const SizedBox(height: 24),
-                    
+
                     // 推薦カテゴリ
                     _buildCategoriesSection(context),
                     const SizedBox(height: 24),
-                    
+
                     // 詳細理由
                     _buildDetailedReasonSection(context),
-                    
+
                     // 追加データ
                     if (recommendation.additionalData != null)
                       _buildAdditionalDataSection(context),
@@ -48,7 +48,7 @@ class RecommendationReasonDialog extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // フッター
             _buildFooter(context),
           ],
@@ -260,7 +260,7 @@ class RecommendationReasonDialog extends StatelessWidget {
   List<Widget> _buildAdditionalDataItems(BuildContext context) {
     final items = <Widget>[];
     final additionalData = recommendation.additionalData!;
-    
+
     additionalData.forEach((key, value) {
       if (value != null) {
         items.add(
@@ -287,7 +287,7 @@ class RecommendationReasonDialog extends StatelessWidget {
         );
       }
     });
-    
+
     return items;
   }
 

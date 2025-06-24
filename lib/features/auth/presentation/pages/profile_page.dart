@@ -114,7 +114,7 @@ class _ProfileContent extends ConsumerWidget {
                     showBorder: true,
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // ユーザー名
                   Text(
                     user.displayName ?? 'ユーザー',
@@ -123,7 +123,7 @@ class _ProfileContent extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  
+
                   // メールアドレス
                   if (user.email != null)
                     Text(
@@ -132,9 +132,9 @@ class _ProfileContent extends ConsumerWidget {
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   // メンバーステータス
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -154,9 +154,9 @@ class _ProfileContent extends ConsumerWidget {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // レビュー統計
           userReviewsAsync.when(
             data: (reviews) => Card(
@@ -183,7 +183,7 @@ class _ProfileContent extends ConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    
+
                     Row(
                       children: [
                         Expanded(
@@ -199,7 +199,7 @@ class _ProfileContent extends ConsumerWidget {
                           child: _StatCard(
                             icon: Icons.star,
                             label: '平均評価',
-                            value: reviews.isEmpty 
+                            value: reviews.isEmpty
                               ? '0.0'
                               : (reviews.map((r) => r.rating).reduce((a, b) => a + b) / reviews.length).toStringAsFixed(1),
                             color: theme.colorScheme.secondary,
@@ -224,9 +224,9 @@ class _ProfileContent extends ConsumerWidget {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // アクション
           Text(
             'アクション',
@@ -235,7 +235,7 @@ class _ProfileContent extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 12),
-          
+
           // レビュー履歴
           Card(
             elevation: 1,
@@ -263,9 +263,9 @@ class _ProfileContent extends ConsumerWidget {
               },
             ),
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           // 設定
           Card(
             elevation: 1,
@@ -289,9 +289,9 @@ class _ProfileContent extends ConsumerWidget {
               },
             ),
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // サインアウト
           SizedBox(
             width: double.infinity,
@@ -317,7 +317,7 @@ class _ProfileContent extends ConsumerWidget {
                     ],
                   ),
                 );
-                
+
                 if (shouldSignOut == true) {
                   await ref.read(authControllerProvider.notifier).signOut();
                   if (context.mounted) {
@@ -336,7 +336,7 @@ class _ProfileContent extends ConsumerWidget {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 20),
         ],
       ),
@@ -360,7 +360,7 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(

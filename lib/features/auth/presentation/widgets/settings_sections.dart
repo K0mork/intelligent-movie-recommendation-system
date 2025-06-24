@@ -4,7 +4,7 @@ import 'user_avatar.dart';
 import '../../../../core/utils/snack_bar_helper.dart';
 
 /// 設定画面のセクション別ウィジェット群
-/// 
+///
 /// settings_page.dartから責任を分離し、
 /// セクションごとに独立したウィジェットとして管理。
 
@@ -56,7 +56,7 @@ class ProfileSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -191,7 +191,7 @@ class NotificationSettingsSection extends StatelessWidget {
                 title: const Text('新作映画通知'),
                 subtitle: const Text('新しい映画が追加されたときに通知'),
                 value: newMovieNotifications,
-                onChanged: onNewMovieNotificationChanged ?? 
+                onChanged: onNewMovieNotificationChanged ??
                     (_) => _showComingSoonMessage(context),
               ),
               SwitchListTile(
@@ -199,7 +199,7 @@ class NotificationSettingsSection extends StatelessWidget {
                 title: const Text('おすすめ通知'),
                 subtitle: const Text('新しいおすすめ映画が利用可能になったときに通知'),
                 value: recommendationNotifications,
-                onChanged: onRecommendationNotificationChanged ?? 
+                onChanged: onRecommendationNotificationChanged ??
                     (_) => _showComingSoonMessage(context),
               ),
             ],
@@ -334,12 +334,12 @@ class LogoutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: isLoading ? null : onLogout,
-        icon: isLoading 
+        icon: isLoading
             ? const SizedBox(
                 width: 16,
                 height: 16,
@@ -373,7 +373,7 @@ class SettingsPageLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -391,16 +391,16 @@ class SettingsPageLayout extends StatelessWidget {
 
   List<Widget> _buildSectionsWithSpacing() {
     final spacedSections = <Widget>[];
-    
+
     for (int i = 0; i < sections.length; i++) {
       spacedSections.add(sections[i]);
-      
+
       // 最後の要素以外にスペースを追加
       if (i < sections.length - 1) {
         spacedSections.add(const SizedBox(height: 24));
       }
     }
-    
+
     return spacedSections;
   }
 }
@@ -411,7 +411,7 @@ class SettingsDefaults {
   static const double itemSpacing = 16.0;
   static const EdgeInsets padding = EdgeInsets.all(16.0);
   static const EdgeInsets cardPadding = EdgeInsets.all(16.0);
-  
+
   static void showComingSoonSnackBar(BuildContext context, String feature) {
     SnackBarHelper.showInfo(
       context,

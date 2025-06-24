@@ -35,7 +35,7 @@ class RecommendationEmptyState extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            
+
             // メッセージ
             Text(
               message,
@@ -45,7 +45,7 @@ class RecommendationEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            
+
             // 説明文
             Text(
               'あなたの映画レビューを基に、\nAIが最適な映画を推薦します',
@@ -54,7 +54,7 @@ class RecommendationEmptyState extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             // アクションボタン
             if (actionText.isNotEmpty && onAction != null) ...[
               const SizedBox(height: 32),

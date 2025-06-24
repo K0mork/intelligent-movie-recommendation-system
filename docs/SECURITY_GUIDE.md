@@ -95,7 +95,7 @@ brew install git-secrets
 2. **ドキュメントへの実キー記載**
    ```markdown
    <!-- ❌ 絶対にやってはいけない -->
-   flutter run --dart-define=FIREBASE_API_KEY=AIzaSyBZez...
+   flutter run --dart-define=FIREBASE_API_KEY=<FIREBASE_API_KEY_PLACEHOLDER>...
    ```
 
 3. **セキュリティツールの無効化**
@@ -139,8 +139,8 @@ rg -i "AIzaSy|api.*key.*=" --type-not md
 ### ローカル開発
 ```bash
 # .envファイル（.gitignoreで除外済み）
-FIREBASE_API_KEY="your_actual_firebase_key"
-TMDB_API_KEY="your_actual_tmdb_key"
+FIREBASE_API_KEY="<FIREBASE_API_KEY_PLACEHOLDER>"
+TMDB_API_KEY="<TMDB_API_KEY_PLACEHOLDER>"
 ```
 
 ### Firebase Hosting
@@ -265,6 +265,6 @@ git check-ignore .env
 
 **🔒 セキュリティは全員の責任です。このガイドラインを必ず守ってください。**
 
-**最終更新**: 2025年6月24日  
-**バージョン**: 1.0  
+**最終更新**: 2025年6月24日
+**バージョン**: 1.0
 **ステータス**: 🟢 アクティブ

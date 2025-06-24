@@ -13,7 +13,7 @@ class EnvConfig {
     'FIREBASE_STORAGE_BUCKET': 'movie-recommendation-sys-21b5d.firebasestorage.app',
     'FIREBASE_MESSAGING_SENDER_ID': '519346109803',
     'FIREBASE_APP_ID': '1:519346109803:web:ac06582ded29f1c88c202e',
-    
+
     // API設定（Base URLのみ）
     'TMDB_BASE_URL': 'https://api.themoviedb.org/3',
     'OMDB_BASE_URL': 'https://www.omdbapi.com',
@@ -41,7 +41,7 @@ class EnvConfig {
       // 公開可能な設定は内蔵値を使用、fallbackで.envファイル
       return _webEnvVars[key] ?? dotenv.env[key] ?? defaultValue;
     }
-    
+
     // ローカル開発環境の場合は.envファイルから取得
     return dotenv.env[key] ?? defaultValue;
   }
@@ -79,7 +79,7 @@ class EnvConfig {
   /// 起動時に必須環境変数をチェックし、不足があれば例外を投げる
   static void validateRequiredVariables() {
     final ValidationResult result = _performValidation();
-    
+
     if (!result.isValid) {
       throw EnvironmentValidationException(
         missingVariables: result.missingRequired,
@@ -120,7 +120,7 @@ class EnvConfig {
 
     // Google Cloud設定（AI推薦機能用）
     if (googleCloudProjectId.isEmpty) missingOptionals.add('GOOGLE_CLOUD_PROJECT_ID');
-    
+
     // OMDB API設定（補助的な映画情報用）
     if (omdbApiKey.isEmpty) missingOptionals.add('OMDB_API_KEY');
 
@@ -185,7 +185,7 @@ class ValidationResult {
     final buffer = StringBuffer();
     buffer.writeln('🚨 アプリケーションの起動に必要な環境変数が不足しています');
     buffer.writeln();
-    
+
     if (missingRequired.isNotEmpty) {
       buffer.writeln('❌ 必須の環境変数:');
       for (final variable in missingRequired) {
@@ -193,14 +193,14 @@ class ValidationResult {
       }
       buffer.writeln();
     }
-    
+
     buffer.writeln('📋 対処方法:');
     buffer.writeln('1. プロジェクトルートに .env ファイルを作成');
     buffer.writeln('2. 必要な環境変数を設定');
     buffer.writeln('3. アプリケーションを再起動');
     buffer.writeln();
     buffer.writeln('詳細については README.md を参照してください。');
-    
+
     return buffer.toString();
   }
 
@@ -211,7 +211,7 @@ class ValidationResult {
           ? '✅ すべての設定が完了しています'
           : '⚠️ 基本設定は完了していますが、$optionalCount個のオプション機能が無効です';
     }
-    
+
     return '❌ ${missingRequired.length}個の必須設定が不足しています';
   }
 }

@@ -67,7 +67,7 @@ class MovieController extends StateNotifier<MovieState> {
 
     try {
       final movies = await _getPopularMoviesUseCase.call(page: page);
-      
+
       if (page == 1) {
         state = state.copyWith(
           popularMovies: movies,
@@ -108,7 +108,7 @@ class MovieController extends StateNotifier<MovieState> {
 
     try {
       final movies = await _searchMoviesUseCase.call(query, page: page, year: year);
-      
+
       if (page == 1) {
         state = state.copyWith(
           searchResults: movies,

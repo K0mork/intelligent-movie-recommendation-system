@@ -8,7 +8,7 @@ import 'year_filter_widget.dart';
 import 'package:filmflow/features/movies/data/models/movie.dart' as movie_model;
 
 /// 映画検索結果表示ウィジェット
-/// 
+///
 /// MovieSearchDelegateから検索結果表示ロジックを分離し、
 /// 再利用可能で保守しやすい形にする。
 class MovieSearchResultsWidget extends ConsumerWidget {
@@ -92,7 +92,7 @@ class MovieSearchResultsWidget extends ConsumerWidget {
   Widget _buildEmptyResults(BuildContext context) {
     return EmptyStateWidget(
       title: '検索結果が見つかりませんでした',
-      message: selectedYear != null 
+      message: selectedYear != null
           ? '$selectedYear年代の「$query」に該当する映画が見つかりませんでした'
           : '「$query」に該当する映画が見つかりませんでした',
       icon: Icons.movie_outlined,
@@ -164,7 +164,7 @@ class MovieSearchResultItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return ListTile(
       leading: MoviePosterWidget.small(
         posterPath: movie.posterPath,
@@ -187,7 +187,7 @@ class MovieSearchResultItem extends StatelessWidget {
 
   Widget _buildSubtitle(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -259,7 +259,7 @@ class MovieSearchInitialState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -303,7 +303,7 @@ class MovieSearchHints extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -346,7 +346,7 @@ class MovieSearchHints extends StatelessWidget {
     required String description,
   }) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(

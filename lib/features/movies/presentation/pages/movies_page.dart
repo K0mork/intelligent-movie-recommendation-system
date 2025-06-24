@@ -28,7 +28,7 @@ class _MoviesPageState extends ConsumerState<MoviesPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(movieControllerProvider.notifier).loadPopularMovies();
     });
@@ -258,7 +258,7 @@ class _SearchMoviesTab extends StatelessWidget {
                     for (int year = currentYear; year >= 1900; year -= 5) {
                       years.add(year.toString());
                     }
-                    
+
                     return years.map((year) {
                       return PopupMenuItem<String>(
                         value: year,
@@ -422,7 +422,7 @@ class _SearchMoviesTab extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              selectedYear != null 
+              selectedYear != null
                 ? '$selectedYear年代の検索結果が見つかりませんでした'
                 : '検索結果が見つかりませんでした',
               style: const TextStyle(

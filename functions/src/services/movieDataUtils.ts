@@ -123,7 +123,7 @@ export class MovieDataUtils {
 
       // 映画データをFirestoreに保存
       const batch = this.db.batch();
-      
+
       for (const movie of sampleMovies) {
         const movieRef = this.db.collection('movies').doc();
         batch.set(movieRef, movie);
@@ -189,7 +189,7 @@ export class MovieDataUtils {
         .limit(limit);
 
       const snapshot = await moviesQuery.get();
-      
+
       return snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -212,7 +212,7 @@ export class MovieDataUtils {
         .limit(limit);
 
       const snapshot = await moviesQuery.get();
-      
+
       return snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -230,7 +230,7 @@ export class MovieDataUtils {
   async getMovie(movieId: string): Promise<MovieData | null> {
     try {
       const movieDoc = await this.db.collection('movies').doc(movieId).get();
-      
+
       if (!movieDoc.exists) {
         return null;
       }

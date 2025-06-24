@@ -138,7 +138,7 @@ class ReviewCard extends StatelessWidget {
                     ),
                 ],
               ),
-              
+
               // Comment Section
               if (review.comment != null && review.comment!.isNotEmpty) ...[
                 const SizedBox(height: 12),
@@ -149,7 +149,7 @@ class ReviewCard extends StatelessWidget {
                   overflow: showMovieInfo ? TextOverflow.ellipsis : null,
                 ),
               ],
-              
+
               // Footer
               const SizedBox(height: 12),
               Column(
@@ -202,17 +202,17 @@ class ReviewCard extends StatelessWidget {
   String _buildSemanticLabel(DateFormat dateFormat) {
     String label = '映画: ${review.movieTitle}';
     label += ', 評価: ${AccessibilityHelper.formatRatingForScreenReader(review.rating, 5.0)}';
-    
+
     if (review.comment != null && review.comment!.isNotEmpty) {
       label += ', コメント: ${review.comment}';
     }
-    
+
     if (review.watchedDate != null) {
       label += ', 鑑賞日: ${AccessibilityHelper.formatDateForScreenReader(review.watchedDate!)}';
     }
-    
+
     label += ', 投稿日: ${AccessibilityHelper.formatDateForScreenReader(review.createdAt)}';
-    
+
     return label;
   }
 }

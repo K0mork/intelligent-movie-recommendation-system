@@ -111,7 +111,7 @@ class UserAvatar extends ConsumerWidget {
   String _getInitials(dynamic user) {
     final displayName = user is AppUser ? user.displayName : user.displayName;
     final email = user is AppUser ? user.email : user.email;
-    
+
     if (displayName != null && displayName.isNotEmpty) {
       final nameParts = displayName.trim().split(' ');
       if (nameParts.length >= 2) {
@@ -120,11 +120,11 @@ class UserAvatar extends ConsumerWidget {
         return nameParts[0][0].toUpperCase();
       }
     }
-    
+
     if (email != null && email.isNotEmpty) {
       return email[0].toUpperCase();
     }
-    
+
     return '?';
   }
 }

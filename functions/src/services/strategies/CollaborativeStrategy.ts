@@ -28,7 +28,7 @@ export class CollaborativeStrategy extends BaseRecommendationStrategy {
     try {
       // 類似ユーザーを発見
       const similarUsers = await this.findSimilarUsers(userProfile);
-      
+
       if (similarUsers.length === 0) {
         logger.warn('No similar users found for collaborative filtering');
         return [];
@@ -66,11 +66,11 @@ export class CollaborativeStrategy extends BaseRecommendationStrategy {
 
     for (const doc of usersSnapshot.docs) {
       const userData = doc.data() as UserProfile;
-      
+
       if (userData.userId === targetUser.userId) continue;
 
       const similarity = this.calculateUserSimilarity(targetUser, userData);
-      
+
       if (similarity > 0.3) { // 類似度閾値
         similarUsers.push({
           profile: userData,
@@ -133,7 +133,7 @@ export class CollaborativeStrategy extends BaseRecommendationStrategy {
     prefs2: Record<string, number>
   ): number {
     const allKeys = new Set([...Object.keys(prefs1), ...Object.keys(prefs2)]);
-    
+
     if (allKeys.size === 0) return 0;
 
     const vector1: number[] = [];
@@ -183,11 +183,11 @@ export class CollaborativeStrategy extends BaseRecommendationStrategy {
     // 類似ユーザーの評価データを取得
     for (const similarUser of similarUsers) {
       const userReviews = await this.getUserReviews(similarUser.profile.userId);
-      
+
       for (const review of userReviews) {
         const movieId = review.movieId;
         const rating = review.rating;
-        
+
         // 類似ユーザーの評価を重み付きで加算
         const weightedScore = (rating / 5) * similarUser.similarity;
         movieScores.set(movieId, (movieScores.get(movieId) || 0) + weightedScore);
@@ -201,11 +201,11 @@ export class CollaborativeStrategy extends BaseRecommendationStrategy {
     for (const movie of availableMovies) {
       const score = movieScores.get(movie.id) || 0;
       const reasonCount = movieReasonCounts.get(movie.id) || 0;
-      
+
       if (score > 0.3 && reasonCount >= 2) { // 最小スコアと最小推薦者数
         const reasons = this.generateCollaborativeReasons(reasonCount, score);
         const confidence = this.calculateConfidence(score, reasons);
-        
+
         recommendations.push({
           movieId: movie.id,
           movie,
@@ -248,7 +248,7 @@ export class CollaborativeStrategy extends BaseRecommendationStrategy {
    */
   private generateCollaborativeReasons(reasonCount: number, score: number): string[] {
     const reasons: string[] = [];
-    
+
     if (reasonCount >= 5) {
       reasons.push(`${reasonCount}人の類似ユーザーが高評価`);
     } else if (reasonCount >= 3) {

@@ -7,7 +7,7 @@ import '../config/env_config.dart';
 import '../../firebase_options.dart';
 
 /// アプリケーション初期化を担当するサービスクラス
-/// 
+///
 /// main.dart の巨大な初期化ロジックを責任ごとに分離し、
 /// テスタブルで保守しやすい構造にする。
 class AppInitializationService {
@@ -16,45 +16,45 @@ class AppInitializationService {
   /// アプリケーション全体の初期化を実行
   static Future<AppInitializationResult> initialize() async {
     _log('=== INITIALIZATION PROCESS START ===');
-    
+
     try {
       // 1. Flutter バインディング初期化
       _log('Step 1/5: Flutter bindings initialization...');
       await _initializeFlutterBindings();
       _log('Step 1/5: ✅ COMPLETED');
-      
+
       // 2. Webセマンティクス有効化
       _log('Step 2/5: Web semantics initialization...');
       await _initializeWebSemantics();
       _log('Step 2/5: ✅ COMPLETED');
-      
+
       // 3. 環境変数読み込み
       _log('Step 3/5: Environment variables loading...');
       await _loadEnvironmentVariables();
       _log('Step 3/5: ✅ COMPLETED');
-      
+
       // 4. 環境変数検証
       _log('Step 4/5: Environment variables validation...');
       await _validateEnvironmentVariables();
       _log('Step 4/5: ✅ COMPLETED');
-      
+
       // 5. Firebase初期化
       _log('Step 5/5: Firebase initialization...');
       final firebaseResult = await _initializeFirebase();
       _log('Step 5/5: ✅ COMPLETED - Firebase available: ${firebaseResult.success}');
-      
+
       _log('=== INITIALIZATION PROCESS SUCCESS ===');
-      
+
       return AppInitializationResult(
         success: true,
         firebaseAvailable: firebaseResult.success,
         errorMessage: null,
       );
-      
+
     } catch (error, stackTrace) {
       _log('=== INITIALIZATION PROCESS FAILED ===');
       _logError('❌ Fatal error during initialization', error, stackTrace);
-      
+
       return AppInitializationResult(
         success: false,
         firebaseAvailable: false,
@@ -85,13 +85,13 @@ class AppInitializationService {
   /// 環境変数ファイルの読み込み
   static Future<void> _loadEnvironmentVariables() async {
     _log('Loading environment variables...');
-    
+
     // Web環境では内蔵設定を使用するため、.envファイルの読み込みをスキップ
     if (kIsWeb) {
       _log('✅ Web environment detected, using built-in configuration');
       return;
     }
-    
+
     try {
       await dotenv.load(fileName: ".env");
       _log('✅ Environment variables loaded successfully');
@@ -103,7 +103,7 @@ class AppInitializationService {
   /// 環境変数の検証
   static Future<void> _validateEnvironmentVariables() async {
     _log('Validating environment variables...');
-    
+
     // Web環境での事前チェック
     if (kIsWeb) {
       _log('🌐 Web environment detected');
@@ -114,17 +114,17 @@ class AppInitializationService {
       // ignore: avoid_print
       print('TMDb API Key available: ${EnvConfig.tmdbApiKey.isNotEmpty}');
     }
-    
+
     try {
       _log('🔍 Calling EnvConfig.validateEnvironment()...');
-      
+
       // 完全な環境変数バリデーションを実行
       final validationResult = EnvConfig.validateEnvironment();
-      
+
       _log('🔍 EnvConfig.validateEnvironment() completed');
       _log('🔍 ValidationResult - isFatal: ${validationResult.isFatal}');
       _log('🔍 ValidationResult - hasWarnings: ${validationResult.hasWarnings}');
-      
+
       if (validationResult.isFatal) {
         // Web環境では内蔵設定を使用するため、追加ログを出力
         if (kIsWeb) {
@@ -132,29 +132,29 @@ class AppInitializationService {
           _log('Firebase API Key: ${EnvConfig.firebaseApiKey.isNotEmpty ? "✅" : "❌"}');
           _log('TMDb API Key: ${EnvConfig.tmdbApiKey.isNotEmpty ? "✅" : "❌"}');
         }
-        
+
         throw InitializationError(
           type: InitializationErrorType.environmentVariables,
           message: validationResult.userFriendlyMessage,
         );
       }
-      
+
       _log('✅ Required environment variables validated');
-      
+
       // 警告がある場合はログに出力
       if (validationResult.hasWarnings) {
         _log('⚠️ ${validationResult.userFriendlyMessage}');
         _log('Missing optional variables: ${validationResult.missingOptional.join(', ')}');
       }
-      
+
       // デバッグ時は詳細な環境変数状態を表示
       if (kDebugMode) {
         _log('\n${validationResult.debugMessage}');
       }
-      
+
     } catch (error) {
       _logError('❌ Environment variable validation failed', error);
-      
+
       // Web環境では詳細なデバッグ情報を出力
       if (kIsWeb) {
         _log('Web Environment Debug Info:');
@@ -168,7 +168,7 @@ class AppInitializationService {
         // ignore: avoid_print
         print('FilmFlow Debug - Firebase: ${EnvConfig.isFirebaseConfigured}, TMDb: ${EnvConfig.isTmdbConfigured}');
       }
-      
+
       // Web本番環境では最小限の設定で継続を試行
       if (kIsWeb && kReleaseMode) {
         // Firebase/TMDbのAPIキーが存在すれば継続
@@ -180,12 +180,12 @@ class AppInitializationService {
           rethrow;
         }
       }
-      
+
       // ローカル開発環境では致命的エラーとして扱わない
       if (!kReleaseMode) {
         return;
       }
-      
+
       rethrow;
     }
   }
@@ -193,7 +193,7 @@ class AppInitializationService {
   /// Firebase の初期化
   static Future<FirebaseInitializationResult> _initializeFirebase() async {
     _log('Attempting Firebase initialization...');
-    
+
     try {
       // Web環境でのFirebase設定の事前チェック
       if (kIsWeb) {
@@ -205,14 +205,14 @@ class AppInitializationService {
         _log('  - Auth Domain: ${EnvConfig.firebaseAuthDomain.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}');
         _log('  - Storage Bucket: ${EnvConfig.firebaseStorageBucket.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}');
         _log('  - Messaging Sender ID: ${EnvConfig.firebaseMessagingSenderId.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}');
-        
+
         if (EnvConfig.firebaseApiKey.isEmpty) {
           throw InitializationError(
             type: InitializationErrorType.firebase,
             message: 'Firebase API Key is required for web deployment',
           );
         }
-        
+
         if (EnvConfig.firebaseProjectId.isEmpty) {
           throw InitializationError(
             type: InitializationErrorType.firebase,
@@ -220,40 +220,40 @@ class AppInitializationService {
           );
         }
       }
-      
+
       _log('🔧 Calling Firebase.initializeApp()...');
       _log('🔧 Platform options: ${DefaultFirebaseOptions.currentPlatform}');
-      
+
       // Firebase初期化を実行
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      
+
       _log('🔧 Firebase.initializeApp() completed successfully');
-      
+
       _log('✅ Firebase initialized successfully');
-      
+
       // Performance監視を有効化
       if (kIsWeb) {
         _log('🔄 Firebase Performance monitoring enabled for Web');
       }
-      
+
       return const FirebaseInitializationResult(
         success: true,
         errorMessage: null,
       );
-      
+
     } catch (error, stackTrace) {
       _logError('❌ Firebase initialization failed', error, stackTrace);
-      
+
       // Web本番環境ではFirebaseエラーを重篤に扱う
       if (kIsWeb && kReleaseMode) {
         _log('🚨 Web本番環境でFirebase初期化に失敗しました');
         rethrow;
       }
-      
+
       _log('🔄 Application will run in demo mode without Firebase');
-      
+
       return FirebaseInitializationResult(
         success: false,
         errorMessage: error.toString(),

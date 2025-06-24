@@ -7,7 +7,7 @@ void main() {
     test('creates instance with required properties', () {
       final createdAt = DateTime.now();
       final lastSignInAt = DateTime.now();
-      
+
       final user = AppUser(
         uid: 'uid123',
         email: 'user@test.com',

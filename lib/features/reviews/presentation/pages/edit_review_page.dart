@@ -42,7 +42,7 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('レビューを編集'),
@@ -129,9 +129,9 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Rating Section
                 Text(
                   '評価',
@@ -158,9 +158,9 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Watched Date Section
                 Text(
                   '鑑賞日',
@@ -225,9 +225,9 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Comment Section
                 Text(
                   'レビューコメント',
@@ -252,9 +252,9 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                     return null;
                   },
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Submit Button
                 SizedBox(
                   width: double.infinity,
@@ -275,9 +275,9 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                         : const Text('レビューを更新'),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Cancel Button
                 SizedBox(
                   width: double.infinity,
@@ -349,7 +349,7 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
     } catch (e) {
       if (mounted) {
         String errorMessage = 'レビューの更新に失敗しました';
-        
+
         if (e.toString().contains('network') || e.toString().contains('internet')) {
           errorMessage = 'ネットワークエラーが発生しました。インターネット接続を確認してください。';
         } else if (e.toString().contains('permission') || e.toString().contains('auth')) {
@@ -357,7 +357,7 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
         } else if (e.toString().contains('validation')) {
           errorMessage = '入力内容に問題があります。再度確認してください。';
         }
-        
+
         SnackBarHelper.showError(
           context,
           errorMessage,

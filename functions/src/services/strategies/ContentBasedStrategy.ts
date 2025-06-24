@@ -26,11 +26,11 @@ export class ContentBasedStrategy extends BaseRecommendationStrategy {
 
     for (const movie of availableMovies) {
       const score = this.calculateContentScore(movie, userProfile);
-      
+
       if (score > 0.1) { // 最小スコア閾値
         const reasons = this.generateReasons(movie, userProfile);
         const confidence = this.calculateConfidence(score, reasons);
-        
+
         recommendations.push({
           movieId: movie.id,
           movie,
@@ -95,7 +95,7 @@ export class ContentBasedStrategy extends BaseRecommendationStrategy {
   private calculateGenreScore(movie: MovieData, userProfile: UserProfile): number {
     if (movie.genres.length === 0) return 0;
 
-    const genreScores = movie.genres.map(genre => 
+    const genreScores = movie.genres.map(genre =>
       userProfile.preferences.genres[genre] || 0
     );
 
@@ -115,7 +115,7 @@ export class ContentBasedStrategy extends BaseRecommendationStrategy {
   private calculateActorScore(movie: MovieData, userProfile: UserProfile): number {
     if (movie.actors.length === 0) return 0;
 
-    const actorScores = movie.actors.map(actor => 
+    const actorScores = movie.actors.map(actor =>
       userProfile.preferences.actors[actor] || 0
     );
 
@@ -128,7 +128,7 @@ export class ContentBasedStrategy extends BaseRecommendationStrategy {
   private calculateKeywordScore(movie: MovieData, userProfile: UserProfile): number {
     if (movie.keywords.length === 0) return 0;
 
-    const keywordScores = movie.keywords.map(keyword => 
+    const keywordScores = movie.keywords.map(keyword =>
       userProfile.preferences.keywords[keyword] || 0
     );
 
@@ -148,21 +148,21 @@ export class ContentBasedStrategy extends BaseRecommendationStrategy {
    */
   private generateUserFeatureVector(userProfile: UserProfile): number[] {
     const features: number[] = [];
-    
+
     // 上位ジャンルの好み度
     const topGenres = this.getTopPreferences(userProfile.preferences.genres, 5);
     features.push(...topGenres);
-    
+
     // 感情分析結果
     features.push(
       userProfile.sentimentHistory.positive || 0,
       userProfile.sentimentHistory.neutral || 0,
       userProfile.sentimentHistory.negative || 0
     );
-    
+
     // 評価傾向
     features.push(userProfile.averageRating || 0);
-    
+
     return features;
   }
 
@@ -171,18 +171,18 @@ export class ContentBasedStrategy extends BaseRecommendationStrategy {
    */
   private generateMovieFeatureVector(movie: MovieData, allGenres: string[]): number[] {
     const features: number[] = [];
-    
+
     // ジャンルワンホットエンコーディング
     for (const genre of allGenres.slice(0, 5)) {
       features.push(movie.genres.includes(genre) ? 1 : 0);
     }
-    
+
     // 評価
     features.push(movie.rating / 10);
-    
+
     // 年代 (正規化)
     features.push((movie.year - 1900) / 124); // 1900-2024の範囲で正規化
-    
+
     return features;
   }
 
@@ -193,14 +193,14 @@ export class ContentBasedStrategy extends BaseRecommendationStrategy {
     const sorted = Object.entries(preferences)
       .sort(([, a], [, b]) => b - a)
       .slice(0, count);
-    
+
     const values = sorted.map(([, value]) => value);
-    
+
     // 不足分を0で埋める
     while (values.length < count) {
       values.push(0);
     }
-    
+
     return values;
   }
 }

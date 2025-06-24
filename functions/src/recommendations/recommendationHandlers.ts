@@ -16,10 +16,10 @@ export const generatePersonalizedRecommendations = functions.https.onCall(async 
     }
 
     const userId = context.auth.uid;
-    const { 
-      maxRecommendations = 10, 
-      contentWeight = 0.7, 
-      collaborativeWeight = 0.3, 
+    const {
+      maxRecommendations = 10,
+      contentWeight = 0.7,
+      collaborativeWeight = 0.3,
       diversityBoost = true,
       minConfidence = 0.3,
       excludeWatched = true,
@@ -40,9 +40,9 @@ export const generatePersonalizedRecommendations = functions.https.onCall(async 
     // 推薦エンジンを使用して推薦を生成
     const recommendations = await recommendationEngine.generateRecommendations(userId, config);
 
-    logger.info('Personalized recommendations generated successfully', { 
-      userId, 
-      recommendationCount: recommendations.length 
+    logger.info('Personalized recommendations generated successfully', {
+      userId,
+      recommendationCount: recommendations.length
     });
 
     return {
@@ -60,15 +60,15 @@ export const generatePersonalizedRecommendations = functions.https.onCall(async 
     };
 
   } catch (error: any) {
-    logger.error('Personalized recommendation generation failed', { 
-      userId: context.auth?.uid, 
-      error: error?.message 
+    logger.error('Personalized recommendation generation failed', {
+      userId: context.auth?.uid,
+      error: error?.message
     });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `推薦生成中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -89,7 +89,7 @@ export const getSavedRecommendations = functions.https.onCall(async (data: any, 
     logger.info('Getting saved recommendations', { userId, includeExpired, limit });
 
     const savedRecommendations = await recommendationEngine.getSavedRecommendations(
-      userId, 
+      userId,
       { includeExpired, limit }
     );
 
@@ -100,11 +100,11 @@ export const getSavedRecommendations = functions.https.onCall(async (data: any, 
     };
 
   } catch (error: any) {
-    logger.error('Failed to get saved recommendations', { 
-      userId: context.auth?.uid, 
-      error: error?.message 
+    logger.error('Failed to get saved recommendations', {
+      userId: context.auth?.uid,
+      error: error?.message
     });
-    
+
     throw new functions.https.HttpsError('internal', `保存された推薦の取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -133,9 +133,9 @@ export const recordRecommendationFeedback = functions.https.onCall(async (data: 
     logger.info('Recording recommendation feedback', { userId, movieId, feedback });
 
     await recommendationEngine.recordRecommendationFeedback(
-      userId, 
-      movieId, 
-      feedback, 
+      userId,
+      movieId,
+      feedback,
       { recommendationId, reason }
     );
 
@@ -145,15 +145,15 @@ export const recordRecommendationFeedback = functions.https.onCall(async (data: 
     };
 
   } catch (error: any) {
-    logger.error('Failed to record recommendation feedback', { 
-      userId: context.auth?.uid, 
-      error: error?.message 
+    logger.error('Failed to record recommendation feedback', {
+      userId: context.auth?.uid,
+      error: error?.message
     });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `フィードバック記録中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -169,10 +169,10 @@ export const updateRecommendationSettings = functions.https.onCall(async (data: 
     }
 
     const userId = context.auth.uid;
-    const { 
-      preferredGenres, 
-      excludedGenres, 
-      preferredYearRange, 
+    const {
+      preferredGenres,
+      excludedGenres,
+      preferredYearRange,
       diversityPreference,
       noveltyPreference,
       notificationSettings,
@@ -203,11 +203,11 @@ export const updateRecommendationSettings = functions.https.onCall(async (data: 
     };
 
   } catch (error: any) {
-    logger.error('Failed to update recommendation settings', { 
-      userId: context.auth?.uid, 
-      error: error?.message 
+    logger.error('Failed to update recommendation settings', {
+      userId: context.auth?.uid,
+      error: error?.message
     });
-    
+
     throw new functions.https.HttpsError('internal', `推薦設定更新中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -232,8 +232,8 @@ export const getRecommendationExplanation = functions.https.onCall(async (data: 
     logger.info('Getting recommendation explanation', { userId, movieId });
 
     const explanation = await recommendationEngine.getRecommendationExplanation(
-      userId, 
-      movieId, 
+      userId,
+      movieId,
       recommendationId
     );
 
@@ -243,12 +243,12 @@ export const getRecommendationExplanation = functions.https.onCall(async (data: 
     };
 
   } catch (error: any) {
-    logger.error('Failed to get recommendation explanation', { 
+    logger.error('Failed to get recommendation explanation', {
       userId: context.auth?.uid,
       movieId: data?.movieId,
-      error: error?.message 
+      error: error?.message
     });
-    
+
     throw new functions.https.HttpsError('internal', `推薦説明取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -269,7 +269,7 @@ export const getSimilarUserRecommendations = functions.https.onCall(async (data:
     logger.info('Getting similar user recommendations', { userId, limit, minSimilarity });
 
     const recommendations = await recommendationEngine.getSimilarUserRecommendations(
-      userId, 
+      userId,
       { limit, minSimilarity }
     );
 
@@ -280,11 +280,11 @@ export const getSimilarUserRecommendations = functions.https.onCall(async (data:
     };
 
   } catch (error: any) {
-    logger.error('Failed to get similar user recommendations', { 
-      userId: context.auth?.uid, 
-      error: error?.message 
+    logger.error('Failed to get similar user recommendations', {
+      userId: context.auth?.uid,
+      error: error?.message
     });
-    
+
     throw new functions.https.HttpsError('internal', `類似ユーザー推薦取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -317,11 +317,11 @@ export const getTrendingRecommendations = functions.https.onCall(async (data: an
     };
 
   } catch (error: any) {
-    logger.error('Failed to get trending recommendations', { 
-      userId: context.auth?.uid, 
-      error: error?.message 
+    logger.error('Failed to get trending recommendations', {
+      userId: context.auth?.uid,
+      error: error?.message
     });
-    
+
     throw new functions.https.HttpsError('internal', `トレンド推薦取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -340,7 +340,7 @@ export const getRecommendationStats = functions.https.onCall(async (data: any, c
     const userId = context.auth.uid;
     const userDoc = await recommendationEngine.db.collection('users').doc(userId).get();
     const userData = userDoc.data();
-    
+
     if (!userData?.isAdmin) {
       throw new functions.https.HttpsError('permission-denied', '管理者権限が必要です。');
     }
@@ -355,15 +355,15 @@ export const getRecommendationStats = functions.https.onCall(async (data: any, c
     };
 
   } catch (error: any) {
-    logger.error('Failed to get recommendation stats', { 
-      userId: context.auth?.uid, 
-      error: error?.message 
+    logger.error('Failed to get recommendation stats', {
+      userId: context.auth?.uid,
+      error: error?.message
     });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `統計情報取得中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });
@@ -382,7 +382,7 @@ export const retrainRecommendationModel = functions.https.onCall(async (data: an
     const userId = context.auth.uid;
     const userDoc = await recommendationEngine.db.collection('users').doc(userId).get();
     const userData = userDoc.data();
-    
+
     if (!userData?.isAdmin) {
       throw new functions.https.HttpsError('permission-denied', '管理者権限が必要です。');
     }
@@ -402,15 +402,15 @@ export const retrainRecommendationModel = functions.https.onCall(async (data: an
     };
 
   } catch (error: any) {
-    logger.error('Failed to retrain recommendation model', { 
-      userId: context.auth?.uid, 
-      error: error?.message 
+    logger.error('Failed to retrain recommendation model', {
+      userId: context.auth?.uid,
+      error: error?.message
     });
-    
+
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    
+
     throw new functions.https.HttpsError('internal', `モデル再訓練中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
   }
 });

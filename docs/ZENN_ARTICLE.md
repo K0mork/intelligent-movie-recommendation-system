@@ -263,7 +263,7 @@ lib/features/reviews/presentation/widgets/
 ├── 📄 review_history_tab_view.dart  (312行)
 └── 📄 review_sort_menu.dart         (203行)
 
-lib/features/movies/presentation/widgets/  
+lib/features/movies/presentation/widgets/
 ├── 📄 movie_detail_header.dart      (246行)
 ├── 📄 movie_info_section.dart       (187行)
 └── 📄 movie_reviews_section.dart    (284行)
@@ -287,7 +287,7 @@ functions/src/services/strategies/
 testWidgets('should initialize successfully', (WidgetTester tester) async {
   await tester.pumpWidget(MyApp());
   await tester.pumpAndSettle(); // これが異常に時間がかかっていた
-  
+
   // Firebase初期化が実際に実行されていた
   expect(FirebaseAuth.instance, isNotNull);
 });
@@ -311,7 +311,7 @@ test('should validate environment variables correctly', () {
   // Act & Assert
   expect(EnvConfig.isFirebaseConfigured, isTrue);
   expect(() => EnvConfig.validateRequiredVariables(), returnsNormally);
-  
+
   // No Firebase initialization = 95% faster
 });
 ```
@@ -358,7 +358,7 @@ class MovieSearchPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final movieSearchState = ref.watch(movieSearchProvider);
-    
+
     return movieSearchState.when(
       data: (movies) => MovieListView(movies: movies),
       loading: () => const LoadingWidget(),
@@ -444,11 +444,11 @@ class SentimentBasedStrategy implements RecommendationStrategy {
 
   async analyzeReviewSentiment(reviewText: string): Promise<SentimentAnalysis> {
     const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
-    
+
     const prompt = `
       以下の映画レビューを分析して、感情スコアと好みのジャンルを抽出してください：
       "${reviewText}"
-      
+
       JSON形式で回答してください：
       {
         "sentiment": "positive|negative|neutral",
@@ -613,7 +613,7 @@ group('Movie Search Integration Tests', () {
         child: MaterialApp(home: MovieSearchPage()),
       ),
     );
-    
+
     await tester.enterText(find.byType(TextField), 'test');
     await tester.testTextInput.receiveAction(TextInputAction.search);
     await tester.pump();
@@ -637,15 +637,15 @@ service cloud.firestore {
     // レビューは認証されたユーザーのみ
     match /reviews/{reviewId} {
       allow read: if true;
-      allow write: if request.auth != null 
+      allow write: if request.auth != null
                   && request.auth.uid == resource.data.userId;
-      allow create: if request.auth != null 
+      allow create: if request.auth != null
                    && request.auth.uid == request.resource.data.userId;
     }
-    
+
     // ユーザープロファイルは本人のみアクセス可能
     match /users/{userId} {
-      allow read, write: if request.auth != null 
+      allow read, write: if request.auth != null
                         && request.auth.uid == userId;
     }
   }
@@ -660,21 +660,21 @@ class ReviewValidation {
     if (text == null || text.trim().isEmpty) {
       return 'レビューテキストを入力してください';
     }
-    
+
     if (text.trim().length < 10) {
       return 'レビューは10文字以上で入力してください';
     }
-    
+
     if (text.trim().length > 1000) {
       return 'レビューは1000文字以内で入力してください';
     }
-    
+
     // XSS対策: HTMLタグの除去
     final cleanText = text.replaceAll(RegExp(r'<[^>]*>'), '');
     if (cleanText != text) {
       return 'HTMLタグは使用できません';
     }
-    
+
     return null;
   }
 }

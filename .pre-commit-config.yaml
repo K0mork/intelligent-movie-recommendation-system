@@ -1,0 +1,75 @@
+minimum_pre_commit_version: "3.5.0"
+
+repos:
+  # ────────── ローカルフック ──────────
+  - repo: local
+    hooks:
+      # APIキー漏洩検出（commit と push 両方で実行）
+      - id: api-key-check
+        name: "🔍 API Key Detection"
+        description: "FilmFlow APIキー漏洩検出"
+        entry: .githooks/pre-commit
+        language: script
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit, pre-push]
+
+      # Flutter フォーマッタ
+      - id: flutter-format
+        name: "🎨 Flutter Format"
+        description: "Dartコードフォーマット"
+        entry: flutter format --set-exit-if-changed
+        language: system
+        files: "\\.dart$"
+        exclude: "\\.g\\.dart$|\\.freezed\\.dart$"
+        pass_filenames: true
+        stages: [pre-commit, pre-push]
+
+      # Flutter 静的解析
+      - id: flutter-analyze
+        name: "🔍 Flutter Analyze"
+        description: "Dart静的解析"
+        entry: flutter analyze
+        language: system
+        files: "\\.dart$"
+        pass_filenames: false
+        stages: [pre-commit, pre-push]
+
+  # ────────── 共通ユーティリティ ──────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    # 安定運用のためタグではなく特定コミットに固定しても可
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace    # 末尾スペース除去
+      - id: end-of-file-fixer      # EOF 改行整備
+      - id: check-yaml             # YAML 構文チェック
+      - id: check-json             # JSON 構文チェック
+      - id: check-merge-conflict   # コンフリクトマーカー検出
+      - id: detect-private-key     # SSH 秘密鍵検出
+
+  # ────────── 高レベル秘密検出 ──────────
+  # detect-secretsは一時的に無効化（オプション）
+  # - repo: https://github.com/Yelp/detect-secrets
+  #   rev: v1.5.0
+  #   hooks:
+  #     - id: detect-secrets
+  #       name: "🔐 Detect secrets"
+  #       args:
+  #         - "--baseline"
+  #         - ".secrets.baseline"
+  #         - "--exclude"
+  #         - "\\\\.secrets\\\\.baseline$"
+  #       stages: [pre-commit, pre-push]
+
+# ────────── pre-commit.ci 設定 ──────────
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ""
+  autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
+  autoupdate_schedule: weekly
+  skip: []
+  submodules: false

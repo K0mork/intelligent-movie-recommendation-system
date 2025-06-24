@@ -211,7 +211,7 @@ class TestHelpers {
     bool? expectedEnabled,
   }) {
     final semantics = tester.getSemantics(finder);
-    
+
     if (expectedLabel != null) {
       expect(
         semantics.label,
@@ -219,7 +219,7 @@ class TestHelpers {
         reason: 'Expected semantic label to contain "$expectedLabel"',
       );
     }
-    
+
     if (expectedHint != null) {
       expect(
         semantics.hint,
@@ -227,7 +227,7 @@ class TestHelpers {
         reason: 'Expected semantic hint to contain "$expectedHint"',
       );
     }
-    
+
     if (expectedButton != null) {
       // セマンティクスのアクション確認（簡素化）
       expect(
@@ -236,7 +236,7 @@ class TestHelpers {
         reason: 'Expected button behavior: $expectedButton',
       );
     }
-    
+
     if (expectedEnabled != null) {
       // セマンティクスの有効状態確認（簡素化）
       expect(
@@ -254,7 +254,7 @@ class TestHelpers {
   ) {
     final BuildContext context = tester.element(find.byType(MaterialApp));
     final ThemeData actualTheme = Theme.of(context);
-    
+
     expect(actualTheme.colorScheme.primary, expectedTheme.colorScheme.primary);
     expect(actualTheme.brightness, expectedTheme.brightness);
   }
@@ -284,7 +284,7 @@ class TestHelpers {
     String? expectedErrorMessage,
   }) {
     expect(find.byIcon(Icons.error), findsAtLeastNWidgets(1));
-    
+
     if (expectedErrorMessage != null) {
       expect(find.text(expectedErrorMessage), findsOneWidget);
     }
@@ -299,7 +299,7 @@ class TestHelpers {
       find.text('データがありません'),
       find.text('レビューがありません'),
     ];
-    
+
     bool foundEmptyIndicator = false;
     for (final indicator in emptyIndicators) {
       if (tester.any(indicator)) {
@@ -307,7 +307,7 @@ class TestHelpers {
         break;
       }
     }
-    
+
     expect(foundEmptyIndicator, true, reason: 'Expected to find an empty state indicator');
   }
 }
@@ -340,9 +340,9 @@ class CustomMatchers {
 
 class _HasTextMatcher extends Matcher {
   final String expectedText;
-  
+
   _HasTextMatcher(this.expectedText);
-  
+
   @override
   bool matches(item, Map matchState) {
     if (item is Widget) {
@@ -351,7 +351,7 @@ class _HasTextMatcher extends Matcher {
     }
     return false;
   }
-  
+
   @override
   Description describe(Description description) {
     return description.add('has text "$expectedText"');
@@ -364,7 +364,7 @@ class _IsEnabledMatcher extends Matcher {
     // Implementation would check if widget is enabled
     return true; // Simplified
   }
-  
+
   @override
   Description describe(Description description) {
     return description.add('is enabled');
@@ -377,7 +377,7 @@ class _IsVisibleMatcher extends Matcher {
     // Implementation would check if widget is visible
     return true; // Simplified
   }
-  
+
   @override
   Description describe(Description description) {
     return description.add('is visible');

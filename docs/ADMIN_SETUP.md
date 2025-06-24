@@ -77,7 +77,7 @@ async function setAdminUser(uid, userData) {
       isAdmin: true,
       role: 'admin'
     }, { merge: true });
-    
+
     console.log(`✅ 管理者権限を付与しました: ${uid}`);
   } catch (error) {
     console.error('❌ エラー:', error);
@@ -123,10 +123,10 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // 管理者チェック関数
     function isAdmin() {
-      return request.auth != null && 
+      return request.auth != null &&
              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
     }
-    
+
     // 管理者のみアクセス可能なパス
     match /admin/{document=**} {
       allow read, write: if isAdmin();
@@ -149,11 +149,11 @@ export const adminFunction = functions.https.onCall(async (data, context) => {
   const userId = context.auth.uid;
   const userDoc = await db.collection('users').doc(userId).get();
   const userData = userDoc.data();
-  
+
   if (!userData?.isAdmin) {
     throw new functions.https.HttpsError('permission-denied', '管理者権限が必要です。');
   }
-  
+
   // 管理者機能の実行
   // ...
 });
@@ -169,7 +169,7 @@ Future<bool> checkAdminStatus(String uid) async {
       .collection('users')
       .doc(uid)
       .get();
-  
+
   return userDoc.data()?['isAdmin'] == true;
 }
 ```
@@ -261,6 +261,6 @@ adminUntil: "2024-12-31T23:59:59Z"
 
 ---
 
-**最終更新**: 2024年12月  
-**対象バージョン**: v1.0.0+  
+**最終更新**: 2024年12月
+**対象バージョン**: v1.0.0+
 **担当**: 開発チーム

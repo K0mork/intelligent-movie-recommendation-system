@@ -66,7 +66,7 @@ graph TD
     B --> E[Cloud Functions]
     E --> F[Gemini API]
     A --> G[TMDb API]
-    
+
     subgraph "Production Environment"
         B
         C

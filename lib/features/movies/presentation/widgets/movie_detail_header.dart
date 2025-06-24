@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmflow/features/movies/data/models/movie.dart';
 
 /// 映画詳細ヘッダーウィジェット
-/// 
+///
 /// 映画のポスター、タイトル、基本情報を表示。
 /// movie_detail_page.dartから分離。
 class MovieDetailHeader extends StatelessWidget {
@@ -21,7 +21,7 @@ class MovieDetailHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       height: 400,
       decoration: _buildBackgroundDecoration(),
@@ -29,10 +29,10 @@ class MovieDetailHeader extends StatelessWidget {
         children: [
           // 背景画像（グラデーション付き）
           _buildBackgroundImage(),
-          
+
           // グラデーションオーバーレイ
           _buildGradientOverlay(),
-          
+
           // メインコンテンツ
           _buildMainContent(context, theme),
         ],
@@ -59,7 +59,7 @@ class MovieDetailHeader extends StatelessWidget {
     if (movie.backdropPath == null) {
       return const SizedBox.expand();
     }
-    
+
     return SizedBox.expand(
       child: CachedNetworkImage(
         imageUrl: movie.fullBackdropUrl,
@@ -107,18 +107,18 @@ class MovieDetailHeader extends StatelessWidget {
           children: [
             // ナビゲーションバー
             _buildNavigationBar(context),
-            
+
             const Spacer(),
-            
+
             // 映画情報
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 // ポスター
                 _buildPosterImage(),
-                
+
                 const SizedBox(width: 16),
-                
+
                 // 映画詳細
                 Expanded(
                   child: _buildMovieInfo(theme),
@@ -210,9 +210,9 @@ class MovieDetailHeader extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        
+
         const SizedBox(height: 8),
-        
+
         // 公開年
         if (movie.releaseDate != null) ...[
           Text(
@@ -223,7 +223,7 @@ class MovieDetailHeader extends StatelessWidget {
           ),
           const SizedBox(height: 12),
         ],
-        
+
         // 評価
         if (movie.voteAverage > 0) ...[
           Row(
@@ -280,7 +280,7 @@ class MovieInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12.0),

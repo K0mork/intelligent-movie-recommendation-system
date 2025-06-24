@@ -12,7 +12,7 @@ class CustomMovieSearchPage extends ConsumerStatefulWidget {
 class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
   final TextEditingController _searchController = TextEditingController();
   String? selectedYear;
-  
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -42,7 +42,7 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
     for (int year = currentYear; year >= 1900; year -= 5) {
       years.add(year.toString());
     }
-    
+
     return years.map((year) {
       return PopupMenuItem<String>(
         value: year,
@@ -142,7 +142,7 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
                 onSubmitted: _onSearch,
               ),
             ),
-            
+
             // 年フィルター表示
             if (selectedYear != null)
               Container(
@@ -172,9 +172,9 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
                   ],
                 ),
               ),
-            
+
             const SizedBox(height: 8),
-            
+
             // 検索結果
             Expanded(
               child: _buildSearchResults(context, movieState),
@@ -187,7 +187,7 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
 
   Widget _buildSearchResults(BuildContext context, dynamic movieState) {
     final theme = Theme.of(context);
-    
+
     if (_searchController.text.isEmpty) {
       return Center(
         child: Column(
@@ -293,7 +293,7 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
             ),
             const SizedBox(height: 16),
             Text(
-              selectedYear != null 
+              selectedYear != null
                 ? '$selectedYear年代の検索結果が見つかりませんでした'
                 : '検索結果が見つかりませんでした',
               style: const TextStyle(
@@ -332,7 +332,7 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
               ),
             ),
           ),
-        
+
         Expanded(
           child: ListView.builder(
             itemCount: movies.length,

@@ -18,7 +18,7 @@ class RecommendationController {
 
     final notifier = ref.read(recommendationsProvider.notifier);
     await notifier.loadRecommendations(user.uid);
-    
+
     // 推薦結果が空の場合、自動的に生成を試行
     final currentRecommendations = ref.read(recommendationsProvider);
     final shouldGenerateRecommendations = currentRecommendations.when(
@@ -26,7 +26,7 @@ class RecommendationController {
       loading: () => false,
       error: (_, __) => false,
     );
-    
+
     if (shouldGenerateRecommendations) {
       try {
         await generateRecommendations();

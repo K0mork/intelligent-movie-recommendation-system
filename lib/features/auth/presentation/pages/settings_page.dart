@@ -7,7 +7,7 @@ import '../widgets/settings_sections.dart';
 import '../services/settings_dialog_service.dart';
 
 /// 設定画面（リファクタリング版）
-/// 
+///
 /// 責任を分離し、セクション別ウィジェットとサービスクラスを使用して
 /// 保守性と再利用性を向上。
 class SettingsPage extends ConsumerWidget {
@@ -19,7 +19,7 @@ class SettingsPage extends ConsumerWidget {
     final authController = ref.watch(authControllerProvider);
 
     return authState.when(
-      data: (user) => user != null 
+      data: (user) => user != null
           ? _buildSettingsContent(context, ref, user, authController)
           : _buildLoginRequired(context),
       loading: () => _buildLoadingState(),

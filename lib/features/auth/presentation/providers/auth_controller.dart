@@ -17,7 +17,7 @@ class AuthController extends StateNotifier<AsyncValue<AppUser?>> {
     try {
       final signInUseCase = _ref.read(signInUseCaseProvider);
       final user = await signInUseCase.signInWithGoogle();
-      
+
       state = AsyncValue.data(user);
     } on AuthException catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
@@ -39,7 +39,7 @@ class AuthController extends StateNotifier<AsyncValue<AppUser?>> {
     try {
       final signInUseCase = _ref.read(signInUseCaseProvider);
       final user = await signInUseCase.signInAnonymously();
-      
+
       state = AsyncValue.data(user);
     } on AuthException catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
@@ -61,7 +61,7 @@ class AuthController extends StateNotifier<AsyncValue<AppUser?>> {
     try {
       final signOutUseCase = _ref.read(signOutUseCaseProvider);
       await signOutUseCase.signOut();
-      
+
       state = const AsyncValue.data(null);
     } on AuthException catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
@@ -85,7 +85,7 @@ class AuthController extends StateNotifier<AsyncValue<AppUser?>> {
 }
 
 // Auth Controller Provider
-final authControllerProvider = 
+final authControllerProvider =
     StateNotifierProvider<AuthController, AsyncValue<AppUser?>>((ref) {
   return AuthController(ref);
 });

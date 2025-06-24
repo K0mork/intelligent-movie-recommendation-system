@@ -6,7 +6,7 @@ import '../widgets/review_sort_menu.dart';
 import '../../../../core/widgets/breadcrumb_widget.dart';
 
 /// 統合レビューページ
-/// 
+///
 /// 新規レビュー作成とレビュー履歴表示を統合したタブ形式のページ。
 /// 責任分離により各タブは独立したウィジェットとして実装。
 class IntegratedReviewsPage extends ConsumerStatefulWidget {
@@ -95,7 +95,7 @@ class _IntegratedReviewsPageState extends ConsumerState<IntegratedReviewsPage>
             context: context,
           ),
         ),
-        
+
         // タブビュー
         Expanded(
           child: TabBarView(

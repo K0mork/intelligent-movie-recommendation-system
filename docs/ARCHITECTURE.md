@@ -16,13 +16,13 @@ graph TB
         E --> F[Gemini API<br/>✅ AI分析]
         A --> G[TMDb API<br/>✅ 映画データ]
     end
-    
+
     subgraph "Data Flow"
         H[ユーザーレビュー] --> I[AI感情分析]
         I --> J[推薦生成]
         J --> K[パーソナライズ表示]
     end
-    
+
     style A fill:#e1f5fe
     style B fill:#e8f5e8
     style C fill:#e8f5e8
@@ -211,17 +211,17 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // ユーザーは自分のデータのみアクセス可能
     match /users/{userId} {
-      allow read, write: if request.auth != null 
+      allow read, write: if request.auth != null
                          && request.auth.uid == userId;
     }
-    
+
     // レビューは認証ユーザーのみ作成・編集可能
     match /reviews/{reviewId} {
       allow read: if true;  // 全ユーザー読み取り可能
-      allow create, update, delete: if request.auth != null 
+      allow create, update, delete: if request.auth != null
                                    && request.auth.uid == resource.data.userId;
     }
-    
+
     // 映画データは読み取り専用
     match /movies/{movieId} {
       allow read: if true;
@@ -237,13 +237,13 @@ service cloud.firestore {
 // 環境変数管理（本番実装済み）
 export class EnvConfig {
   // Firebase設定（dart-define経由）
-  static get firebaseApiKey(): string => 
+  static get firebaseApiKey(): string =>
     const String.fromEnvironment('FIREBASE_API_KEY');
-  
+
   // TMDb API設定
-  static get tmdbApiKey(): string => 
+  static get tmdbApiKey(): string =>
     const String.fromEnvironment('TMDB_API_KEY');
-  
+
   // セキュリティ検証
   static ValidationResult validateEnvironment() {
     // 必須環境変数の検証
@@ -262,17 +262,17 @@ export class EnvConfig {
 class MovieCacheManager {
   // メモリキャッシュ
   static final Map<String, Movie> _memoryCache = {};
-  
+
   // ローカルストレージキャッシュ
   static final SharedPreferences _prefs = await SharedPreferences.getInstance();
-  
+
   // 階層キャッシュ実装
   Future<Movie?> getMovie(String id) async {
     // 1. メモリキャッシュ確認
     if (_memoryCache.containsKey(id)) {
       return _memoryCache[id];
     }
-    
+
     // 2. ローカルストレージ確認
     final localData = _prefs.getString('movie_$id');
     if (localData != null) {
@@ -280,7 +280,7 @@ class MovieCacheManager {
       _memoryCache[id] = movie;  // メモリにも保存
       return movie;
     }
-    
+
     // 3. API呼び出し
     return null;  // Repository層でAPI実行
   }
@@ -293,7 +293,7 @@ class MovieCacheManager {
 // Firestore リアルタイム更新
 class ReviewStreamProvider extends StateNotifier<AsyncValue<List<Review>>> {
   StreamSubscription<QuerySnapshot>? _subscription;
-  
+
   void startListening() {
     _subscription = FirebaseFirestore.instance
         .collection('reviews')
@@ -335,7 +335,7 @@ class AnalyticsService {
       parameters: parameters,
     );
   }
-  
+
   // 使用例
   static Future<void> logMovieSearch(String query, int results) {
     return logEvent('movie_search', {
@@ -412,12 +412,12 @@ class L10n {
 
 ## 📊 アーキテクチャサマリー
 
-**🏗️ アーキテクチャパターン**: Clean Architecture + MVVM  
-**🚀 デプロイ**: Firebase Hosting（本番稼働）  
-**🔒 セキュリティ**: Firebase Security Rules適用  
-**⚡ パフォーマンス**: 全要件達成  
-**🔧 保守性**: 高（Clean Architecture）  
-**📈 拡張性**: 高（マイクロサービス対応）  
+**🏗️ アーキテクチャパターン**: Clean Architecture + MVVM
+**🚀 デプロイ**: Firebase Hosting（本番稼働）
+**🔒 セキュリティ**: Firebase Security Rules適用
+**⚡ パフォーマンス**: 全要件達成
+**🔧 保守性**: 高（Clean Architecture）
+**📈 拡張性**: 高（マイクロサービス対応）
 
 FilmFlowは堅牢で拡張可能なアーキテクチャを持つ本番品質のアプリケーションです。
 

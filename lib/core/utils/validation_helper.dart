@@ -39,10 +39,10 @@ class ValidationHelper {
   /// 画像URLの有効性をチェック
   static bool isValidImageUrl(String url) {
     if (!isValidUrl(url)) return false;
-    
+
     final supportedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
     final lowercaseUrl = url.toLowerCase();
-    
+
     return supportedExtensions.any((ext) => lowercaseUrl.contains(ext));
   }
 
@@ -82,12 +82,12 @@ class ValidationHelper {
         .replaceAll(RegExp(r'DELETE', caseSensitive: false), '')
         .replaceAll(RegExp(r'UNION', caseSensitive: false), '')
         .replaceAll(RegExp(r'SELECT', caseSensitive: false), '');
-    
+
     // 長さ制限
     if (sanitized.length > 1000) {
       sanitized = sanitized.substring(0, 1000);
     }
-    
+
     return sanitized.trim();
   }
 
@@ -97,22 +97,22 @@ class ValidationHelper {
       'password', '123456', 'qwerty', 'admin', 'password123',
       '111111', 'abc123', 'letmein', 'welcome', 'monkey'
     ];
-    
+
     // 弱いパスワードリストにある場合
     if (weakPasswords.contains(password.toLowerCase())) {
       return true;
     }
-    
+
     // 短すぎる場合
     if (password.length < 8) {
       return true;
     }
-    
+
     // 同じ文字の繰り返しが多い場合
     if (RegExp(r'(.)\1{3,}').hasMatch(password)) {
       return true;
     }
-    
+
     return false;
   }
 
@@ -120,18 +120,18 @@ class ValidationHelper {
   static bool isSafeUrl(String url) {
     try {
       final uri = Uri.parse(url);
-      
+
       // 危険なスキームをチェック
       final dangerousSchemes = ['javascript', 'data', 'file', 'ftp'];
       if (dangerousSchemes.contains(uri.scheme?.toLowerCase())) {
         return false;
       }
-      
+
       // HTTPSのみ許可（HTTP は開発環境を除いて危険）
       if (uri.scheme?.toLowerCase() != 'https') {
         return false;
       }
-      
+
       // ローカルホストや内部IPアドレスをチェック
       final host = uri.host.toLowerCase();
       if (host.contains('localhost') ||
@@ -141,12 +141,12 @@ class ValidationHelper {
           host.startsWith('172.')) {
         return false;
       }
-      
+
       // パストラバーサル攻撃のチェック
       if (url.contains('../') || url.contains('..\\')) {
         return false;
       }
-      
+
       return true;
     } catch (e) {
       return false;

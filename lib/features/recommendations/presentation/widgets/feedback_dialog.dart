@@ -38,7 +38,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
           children: [
             // ヘッダー
             _buildHeader(context),
-            
+
             // コンテンツ
             Flexible(
               child: SingleChildScrollView(
@@ -51,7 +51,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
                       // 評価質問
                       _buildHelpfulnessSection(context),
                       const SizedBox(height: 24),
-                      
+
                       // コメント欄
                       _buildCommentSection(context),
                     ],
@@ -59,7 +59,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
                 ),
               ),
             ),
-            
+
             // フッター
             _buildFooter(context),
           ],
@@ -173,7 +173,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
     required Color color,
   }) {
     final isSelected = _isHelpful == isHelpful;
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -271,13 +271,13 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
 
   void _submitFeedback() {
     if (_isHelpful == null) return;
-    
+
     final feedback = _feedbackController.text.trim();
     widget.onSubmit(
       _isHelpful!,
       feedback.isEmpty ? null : feedback,
     );
-    
+
     Navigator.of(context).pop();
   }
 }

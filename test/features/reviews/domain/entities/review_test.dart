@@ -4,7 +4,7 @@ import 'package:filmflow/features/reviews/domain/entities/review.dart';
 void main() {
   group('Review', () {
     final testDateTime = DateTime(2023, 1, 1, 12, 0, 0);
-    
+
     final testReview = Review(
       id: 'test-id',
       userId: 'user-123',
@@ -110,7 +110,7 @@ void main() {
 
     test('toString includes all important properties', () {
       final toString = testReview.toString();
-      
+
       expect(toString, contains('test-id'));
       expect(toString, contains('user-123'));
       expect(toString, contains('movie-456'));
@@ -121,7 +121,7 @@ void main() {
 
     test('rating validation - accepts valid range', () {
       final validRatings = [0.0, 0.5, 1.0, 2.5, 5.0];
-      
+
       for (final rating in validRatings) {
         final review = testReview.copyWith(rating: rating);
         expect(review.rating, rating);
@@ -131,14 +131,14 @@ void main() {
     test('handles edge cases for optional fields', () {
       final reviewWithEmptyComment = testReview.copyWith(comment: '');
       expect(reviewWithEmptyComment.comment, '');
-      
+
       final reviewWithEmptyPosterUrl = testReview.copyWith(moviePosterUrl: '');
       expect(reviewWithEmptyPosterUrl.moviePosterUrl, '');
     });
 
     test('copyWith preserves original values when no parameters provided', () {
       final copiedReview = testReview.copyWith();
-      
+
       expect(copiedReview, equals(testReview));
       expect(copiedReview.hashCode, equals(testReview.hashCode));
     });

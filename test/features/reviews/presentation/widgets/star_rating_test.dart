@@ -55,7 +55,7 @@ void main() {
 
     testWidgets('calls onRatingChanged when star is tapped', (tester) async {
       double? tappedRating;
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -112,7 +112,7 @@ void main() {
       );
 
       final starIcons = tester.widgetList<Icon>(find.byType(Icon));
-      
+
       // Check that filled stars have the active color
       final filledStars = starIcons.where((icon) => icon.icon == Icons.star);
       for (final star in filledStars) {
@@ -128,7 +128,7 @@ void main() {
 
     testWidgets('uses custom size when provided', (tester) async {
       const customSize = 32.0;
-      
+
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -193,7 +193,7 @@ void main() {
 
     testWidgets('updates rating when star is tapped', (tester) async {
       double? receivedRating;
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -244,7 +244,7 @@ void main() {
 
     testWidgets('uses custom size and colors', (tester) async {
       const customSize = 40.0;
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -260,7 +260,7 @@ void main() {
       );
 
       final starIcons = tester.widgetList<Icon>(find.byType(Icon));
-      
+
       // Check size
       for (final star in starIcons) {
         expect(star.size, equals(customSize));

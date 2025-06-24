@@ -38,7 +38,7 @@ OMDB_API_KEY=test_omdb_key
         expect(EnvConfig.isFirebaseConfigured, isTrue);
         expect(EnvConfig.isTmdbConfigured, isTrue);
         expect(EnvConfig.isOmdbConfigured, isTrue);
-        
+
         // Verify validation passes
         expect(() => EnvConfig.validateRequiredVariables(), returnsNormally);
       });
@@ -50,7 +50,7 @@ OMDB_API_KEY=test_omdb_key
         // Verify configuration state
         expect(EnvConfig.isFirebaseConfigured, isFalse);
         expect(EnvConfig.isTmdbConfigured, isFalse);
-        
+
         // Verify validation fails
         expect(
           () => EnvConfig.validateRequiredVariables(),
@@ -65,7 +65,7 @@ OMDB_API_KEY=test_omdb_key
         // Verify configuration state
         expect(EnvConfig.isFirebaseConfigured, isFalse);
         expect(EnvConfig.isTmdbConfigured, isTrue);
-        
+
         // Verify validation fails with specific error
         expect(
           () => EnvConfig.validateRequiredVariables(),
@@ -92,7 +92,7 @@ FIREBASE_APP_ID=1:123456789:web:abcdef
         // Verify configuration state
         expect(EnvConfig.isFirebaseConfigured, isTrue);
         expect(EnvConfig.isTmdbConfigured, isFalse);
-        
+
         // Verify validation fails with TMDb error
         expect(
           () => EnvConfig.validateRequiredVariables(),

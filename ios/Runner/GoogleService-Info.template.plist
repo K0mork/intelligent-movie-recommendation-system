@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>YOUR_CLIENT_ID.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.YOUR_CLIENT_ID</string>
+	<key>API_KEY</key>
+	<string><FIREBASE_API_KEY_PLACEHOLDER></string>
+	<key>GCM_SENDER_ID</key>
+	<string>YOUR_GCM_SENDER_ID</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.movieRecommendApp</string>
+	<key>PROJECT_ID</key>
+	<string>your-firebase-project-id</string>
+	<key>STORAGE_BUCKET</key>
+	<string>your-firebase-project-id.firebasestorage.app</string>
+	<key>DATABASE_URL</key>
+	<string>https://your-firebase-project-id-default-rtdb.firebaseio.com</string>
+	<key>GOOGLE_APP_ID</key>
+	<string>YOUR_GOOGLE_APP_ID</string>
+</dict>
+</plist>
+<!-- このファイルはテンプレートです。実際のFirebaseプロジェクトからダウンロードしたGoogleService-Info.plistに置き換えてください。 -->
