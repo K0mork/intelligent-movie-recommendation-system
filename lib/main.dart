@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -23,27 +24,47 @@ import 'core/theme/scroll_behavior.dart';
 /// 初期化ロジックをAppInitializationServiceに分離し、
 /// 責任を明確にして保守性を向上。
 void main() async {
-  // アプリケーション初期化を実行
-  final initResult = await AppInitializationService.initialize();
-  
-  if (initResult.hasError && !initResult.success) {
-    // 致命的エラーの場合はエラー画面を表示
+  try {
+    // アプリケーション初期化を実行
+    final initResult = await AppInitializationService.initialize();
+    
+    if (initResult.hasError && !initResult.success) {
+      // 致命的エラーの場合はエラー画面を表示
+      runApp(
+        MaterialApp(
+          home: AppInitializationErrorPage(
+            errorMessage: initResult.errorMessage ?? '不明なエラーが発生しました',
+          ),
+        ),
+      );
+      return;
+    }
+    
+    // 正常に初期化完了した場合はメインアプリを起動
+    runApp(
+      ProviderScope(
+        child: MyApp(firebaseAvailable: initResult.firebaseAvailable),
+      ),
+    );
+    
+  } catch (error, stackTrace) {
+    // 初期化プロセス自体でキャッチされない例外が発生した場合
+    if (kIsWeb) {
+      // ignore: avoid_print
+      print('FATAL ERROR in main(): $error');
+      // ignore: avoid_print
+      print('StackTrace: $stackTrace');
+    }
+    
+    // 緊急フォールバック - 最小限のエラー画面を表示
     runApp(
       MaterialApp(
         home: AppInitializationErrorPage(
-          errorMessage: initResult.errorMessage ?? '不明なエラーが発生しました',
+          errorMessage: 'アプリケーション初期化中に致命的エラーが発生しました: ${error.toString()}',
         ),
       ),
     );
-    return;
   }
-  
-  // 正常に初期化完了した場合はメインアプリを起動
-  runApp(
-    ProviderScope(
-      child: MyApp(firebaseAvailable: initResult.firebaseAvailable),
-    ),
-  );
 }
 
 class MyApp extends StatelessWidget {
@@ -289,9 +310,12 @@ class AppInitializationErrorPage extends StatelessWidget {
               const SizedBox(height: 24),
               ElevatedButton.icon(
                 onPressed: () {
-                  // アプリケーションを再起動
-                  // 実際の実装では、main()を再実行するか、
-                  // ネイティブの再起動機能を使用
+                  // ページを再読み込み（Web環境）
+                  if (kIsWeb) {
+                    // ignore: avoid_web_libraries_in_flutter
+                    // html.window.location.reload();
+                  }
+                  // ネイティブ環境では何もしない（将来的に実装）
                 },
                 icon: const Icon(Icons.refresh),
                 label: const Text('再試行'),
