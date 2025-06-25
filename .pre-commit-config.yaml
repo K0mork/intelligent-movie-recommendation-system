@@ -14,16 +14,16 @@ repos:
         always_run: true
         stages: [pre-commit, pre-push]
 
-      # Dart フォーマッタ（自動修正、非ブロッキング）
-      - id: flutter-format
-        name: "🎨 Dart Format"
-        description: "Dartコードフォーマット（自動修正）"
-        entry: dart format --output=none
-        language: system
-        files: "\\.dart$"
-        exclude: "\\.g\\.dart$|\\.freezed\\.dart$"
-        pass_filenames: true
-        stages: [pre-commit, pre-push]
+      # Dart フォーマッタ（一時的に無効化 - CI環境での互換性問題回避）
+      # - id: flutter-format
+      #   name: "🎨 Dart Format"
+      #   description: "Dartコードフォーマット（自動修正）"
+      #   entry: dart format --output=none
+      #   language: system
+      #   files: "\\.dart$"
+      #   exclude: "\\.g\\.dart$|\\.freezed\\.dart$"
+      #   pass_filenames: true
+      #   stages: [pre-commit, pre-push]
 
       # Flutter 静的解析（警告以上を無視）
       - id: flutter-analyze
