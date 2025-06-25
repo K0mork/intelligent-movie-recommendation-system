@@ -71,7 +71,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: EnvConfig.firebaseMessagingSenderId,
     projectId: EnvConfig.firebaseProjectId,
     storageBucket: EnvConfig.firebaseStorageBucket,
-    iosClientId: '519346109803-ajh8f0l29l3t067rceegqkne7pvcg9ag.apps.googleusercontent.com',
+    iosClientId:
+        '519346109803-ajh8f0l29l3t067rceegqkne7pvcg9ag.apps.googleusercontent.com',
     iosBundleId: 'com.example.movieRecommendApp',
   );
 }

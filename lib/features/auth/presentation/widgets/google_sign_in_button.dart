@@ -8,11 +8,7 @@ class GoogleSignInButton extends ConsumerWidget {
   final VoidCallback? onPressed;
   final bool isLoading;
 
-  const GoogleSignInButton({
-    super.key,
-    this.onPressed,
-    this.isLoading = false,
-  });
+  const GoogleSignInButton({super.key, this.onPressed, this.isLoading = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,9 +19,10 @@ class GoogleSignInButton extends ConsumerWidget {
       width: double.infinity,
       height: 56,
       child: ElevatedButton.icon(
-        onPressed: isLoading
-            ? null
-            : onPressed ?? () => authController.signInWithGoogle(),
+        onPressed:
+            isLoading
+                ? null
+                : onPressed ?? () => authController.signInWithGoogle(),
         style: ElevatedButton.styleFrom(
           backgroundColor: theme.colorScheme.surface,
           foregroundColor: theme.colorScheme.onSurface,
@@ -35,17 +32,14 @@ class GoogleSignInButton extends ConsumerWidget {
             side: BorderSide(color: theme.colorScheme.outline),
           ),
         ),
-        icon: isLoading
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: LoadingStateWidget.inline(),
-              )
-            : Icon(
-                Icons.login,
-                size: 20,
-                color: theme.colorScheme.primary,
-              ),
+        icon:
+            isLoading
+                ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: LoadingStateWidget.inline(),
+                )
+                : Icon(Icons.login, size: 20, color: theme.colorScheme.primary),
         label: Text(
           'Googleでサインイン',
           style: theme.textTheme.titleMedium?.copyWith(

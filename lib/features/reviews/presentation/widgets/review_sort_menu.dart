@@ -28,41 +28,45 @@ class ReviewSortMenu extends StatelessWidget {
       icon: const Icon(Icons.sort),
       tooltip: 'ソート',
       onSelected: onSortChanged,
-      itemBuilder: (context) => sortOptions.map((option) {
-        final isSelected = currentSort == option.value;
+      itemBuilder:
+          (context) =>
+              sortOptions.map((option) {
+                final isSelected = currentSort == option.value;
 
-        return PopupMenuItem(
-          value: option.value,
-          child: Row(
-            children: [
-              Icon(
-                option.icon,
-                color: isSelected
-                    ? Theme.of(context).colorScheme.primary
-                    : null,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                option.label,
-                style: isSelected
-                    ? TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      )
-                    : null,
-              ),
-              if (isSelected) ...[
-                const Spacer(),
-                Icon(
-                  Icons.check,
-                  size: 18,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ],
-            ],
-          ),
-        );
-      }).toList(),
+                return PopupMenuItem(
+                  value: option.value,
+                  child: Row(
+                    children: [
+                      Icon(
+                        option.icon,
+                        color:
+                            isSelected
+                                ? Theme.of(context).colorScheme.primary
+                                : null,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        option.label,
+                        style:
+                            isSelected
+                                ? TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                )
+                                : null,
+                      ),
+                      if (isSelected) ...[
+                        const Spacer(),
+                        Icon(
+                          Icons.check,
+                          size: 18,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ],
+                    ],
+                  ),
+                );
+              }).toList(),
     );
   }
 }
@@ -81,11 +85,7 @@ class SortIndicator extends StatelessWidget {
   final String sortBy;
   final VoidCallback? onTap;
 
-  const SortIndicator({
-    super.key,
-    required this.sortBy,
-    this.onTap,
-  });
+  const SortIndicator({super.key, required this.sortBy, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -172,11 +172,7 @@ class SortableHeader extends StatelessWidget {
 
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 28,
-          color: theme.colorScheme.primary,
-        ),
+        Icon(icon, size: 28, color: theme.colorScheme.primary),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -199,10 +195,7 @@ class SortableHeader extends StatelessWidget {
             ],
           ),
         ),
-        ReviewSortMenu(
-          currentSort: sortBy,
-          onSortChanged: onSortChanged,
-        ),
+        ReviewSortMenu(currentSort: sortBy, onSortChanged: onSortChanged),
       ],
     );
   }

@@ -13,10 +13,10 @@ class SlidePageRoute<T> extends PageRouteBuilder<T> {
     this.duration = const Duration(milliseconds: 300),
     RouteSettings? settings,
   }) : super(
-          settings: settings,
-          transitionDuration: duration,
-          pageBuilder: (context, animation, secondaryAnimation) => child,
-        );
+         settings: settings,
+         transitionDuration: duration,
+         pageBuilder: (context, animation, secondaryAnimation) => child,
+       );
 
   @override
   Widget buildTransitions(
@@ -29,10 +29,7 @@ class SlidePageRoute<T> extends PageRouteBuilder<T> {
       position: Tween<Offset>(
         begin: begin,
         end: end,
-      ).animate(CurvedAnimation(
-        parent: animation,
-        curve: Curves.easeInOut,
-      )),
+      ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOut)),
       child: child,
     );
   }
@@ -47,10 +44,10 @@ class FadePageRoute<T> extends PageRouteBuilder<T> {
     this.duration = const Duration(milliseconds: 300),
     RouteSettings? settings,
   }) : super(
-          settings: settings,
-          transitionDuration: duration,
-          pageBuilder: (context, animation, secondaryAnimation) => child,
-        );
+         settings: settings,
+         transitionDuration: duration,
+         pageBuilder: (context, animation, secondaryAnimation) => child,
+       );
 
   @override
   Widget buildTransitions(
@@ -59,10 +56,7 @@ class FadePageRoute<T> extends PageRouteBuilder<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    return FadeTransition(
-      opacity: animation,
-      child: child,
-    );
+    return FadeTransition(opacity: animation, child: child);
   }
 }
 
@@ -75,10 +69,10 @@ class ScalePageRoute<T> extends PageRouteBuilder<T> {
     this.duration = const Duration(milliseconds: 300),
     RouteSettings? settings,
   }) : super(
-          settings: settings,
-          transitionDuration: duration,
-          pageBuilder: (context, animation, secondaryAnimation) => child,
-        );
+         settings: settings,
+         transitionDuration: duration,
+         pageBuilder: (context, animation, secondaryAnimation) => child,
+       );
 
   @override
   Widget buildTransitions(
@@ -91,10 +85,7 @@ class ScalePageRoute<T> extends PageRouteBuilder<T> {
       scale: Tween<double>(
         begin: 0.0,
         end: 1.0,
-      ).animate(CurvedAnimation(
-        parent: animation,
-        curve: Curves.elasticOut,
-      )),
+      ).animate(CurvedAnimation(parent: animation, curve: Curves.elasticOut)),
       child: child,
     );
   }
@@ -113,10 +104,10 @@ class SlideFadePageRoute<T> extends PageRouteBuilder<T> {
     this.duration = const Duration(milliseconds: 400),
     RouteSettings? settings,
   }) : super(
-          settings: settings,
-          transitionDuration: duration,
-          pageBuilder: (context, animation, secondaryAnimation) => child,
-        );
+         settings: settings,
+         transitionDuration: duration,
+         pageBuilder: (context, animation, secondaryAnimation) => child,
+       );
 
   @override
   Widget buildTransitions(
@@ -125,14 +116,8 @@ class SlideFadePageRoute<T> extends PageRouteBuilder<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    final slideTween = Tween<Offset>(
-      begin: begin,
-      end: end,
-    );
-    final fadeTween = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    );
+    final slideTween = Tween<Offset>(begin: begin, end: end);
+    final fadeTween = Tween<double>(begin: 0.0, end: 1.0);
 
     final curvedAnimation = CurvedAnimation(
       parent: animation,
@@ -183,20 +168,17 @@ class PageTransitionHelper {
   }
 
   static Route<T> fade<T>(Widget page, {RouteSettings? settings}) {
-    return FadePageRoute<T>(
-      child: page,
-      settings: settings,
-    );
+    return FadePageRoute<T>(child: page, settings: settings);
   }
 
   static Route<T> scale<T>(Widget page, {RouteSettings? settings}) {
-    return ScalePageRoute<T>(
-      child: page,
-      settings: settings,
-    );
+    return ScalePageRoute<T>(child: page, settings: settings);
   }
 
-  static Route<T> slideFadeFromBottom<T>(Widget page, {RouteSettings? settings}) {
+  static Route<T> slideFadeFromBottom<T>(
+    Widget page, {
+    RouteSettings? settings,
+  }) {
     return SlideFadePageRoute<T>(
       child: page,
       begin: const Offset(0.0, 0.3),

@@ -69,14 +69,16 @@ void main() {
     group('Configuration Validation', () {
       test('should return true when all Firebase variables are configured', () {
         // Setup
-        dotenv.testLoad(fileInput: '''
+        dotenv.testLoad(
+          fileInput: '''
 FIREBASE_API_KEY=test_key
 FIREBASE_AUTH_DOMAIN=test.firebaseapp.com
 FIREBASE_PROJECT_ID=test-project
 FIREBASE_STORAGE_BUCKET=test-project.appspot.com
 FIREBASE_MESSAGING_SENDER_ID=123456789
 FIREBASE_APP_ID=1:123456789:web:abcdef
-''');
+''',
+        );
 
         // Execute & Verify
         expect(EnvConfig.isFirebaseConfigured, isTrue);
@@ -150,7 +152,8 @@ FIREBASE_APP_ID=1:123456789:web:abcdef
     group('Required Variables Validation', () {
       test('should pass validation when all required variables are set', () {
         // Setup
-        dotenv.testLoad(fileInput: '''
+        dotenv.testLoad(
+          fileInput: '''
 FIREBASE_API_KEY=test_key
 FIREBASE_AUTH_DOMAIN=test.firebaseapp.com
 FIREBASE_PROJECT_ID=test-project
@@ -158,7 +161,8 @@ FIREBASE_STORAGE_BUCKET=test-project.appspot.com
 FIREBASE_MESSAGING_SENDER_ID=123456789
 FIREBASE_APP_ID=1:123456789:web:abcdef
 TMDB_API_KEY=test_tmdb_key
-''');
+''',
+        );
 
         // Execute & Verify
         expect(() => EnvConfig.validateRequiredVariables(), returnsNormally);
@@ -175,40 +179,46 @@ TMDB_API_KEY=test_tmdb_key
         );
       });
 
-      test('should throw exception with detailed message when Firebase variables are missing', () {
-        // Setup
-        dotenv.testLoad(fileInput: 'TMDB_API_KEY=test_tmdb_key');
+      test(
+        'should throw exception with detailed message when Firebase variables are missing',
+        () {
+          // Setup
+          dotenv.testLoad(fileInput: 'TMDB_API_KEY=test_tmdb_key');
 
-        // Execute & Verify
-        expect(
-          () => EnvConfig.validateRequiredVariables(),
-          throwsA(
-            predicate<EnvironmentValidationException>((e) =>
-              e.missingVariables.contains('FIREBASE_API_KEY') &&
-              e.missingVariables.contains('FIREBASE_AUTH_DOMAIN')
-            )
-          ),
-        );
-      });
+          // Execute & Verify
+          expect(
+            () => EnvConfig.validateRequiredVariables(),
+            throwsA(
+              predicate<EnvironmentValidationException>(
+                (e) =>
+                    e.missingVariables.contains('FIREBASE_API_KEY') &&
+                    e.missingVariables.contains('FIREBASE_AUTH_DOMAIN'),
+              ),
+            ),
+          );
+        },
+      );
 
       test('should throw exception when TMDb API key is missing', () {
         // Setup
-        dotenv.testLoad(fileInput: '''
+        dotenv.testLoad(
+          fileInput: '''
 FIREBASE_API_KEY=test_key
 FIREBASE_AUTH_DOMAIN=test.firebaseapp.com
 FIREBASE_PROJECT_ID=test-project
 FIREBASE_STORAGE_BUCKET=test-project.appspot.com
 FIREBASE_MESSAGING_SENDER_ID=123456789
 FIREBASE_APP_ID=1:123456789:web:abcdef
-''');
+''',
+        );
 
         // Execute & Verify
         expect(
           () => EnvConfig.validateRequiredVariables(),
           throwsA(
-            predicate<EnvironmentValidationException>((e) =>
-              e.missingVariables.contains('TMDB_API_KEY')
-            )
+            predicate<EnvironmentValidationException>(
+              (e) => e.missingVariables.contains('TMDB_API_KEY'),
+            ),
           ),
         );
       });
@@ -217,10 +227,12 @@ FIREBASE_APP_ID=1:123456789:web:abcdef
     group('Optional Variables Check', () {
       test('should return empty list when all optional variables are set', () {
         // Setup
-        dotenv.testLoad(fileInput: '''
+        dotenv.testLoad(
+          fileInput: '''
 GOOGLE_CLOUD_PROJECT_ID=test-project
 OMDB_API_KEY=test_omdb_key
-''');
+''',
+        );
 
         // Execute & Verify
         final missing = EnvConfig.checkOptionalVariables();
@@ -251,7 +263,8 @@ OMDB_API_KEY=test_omdb_key
     group('Configuration Status', () {
       test('should generate detailed configuration status', () {
         // Setup
-        dotenv.testLoad(fileInput: '''
+        dotenv.testLoad(
+          fileInput: '''
 FIREBASE_API_KEY=test_key
 FIREBASE_AUTH_DOMAIN=test.firebaseapp.com
 FIREBASE_PROJECT_ID=test-project
@@ -259,7 +272,8 @@ FIREBASE_STORAGE_BUCKET=test-project.appspot.com
 FIREBASE_MESSAGING_SENDER_ID=123456789
 FIREBASE_APP_ID=1:123456789:web:abcdef
 TMDB_API_KEY=test_tmdb_key
-''');
+''',
+        );
 
         // Execute
         final status = EnvConfig.getConfigurationStatus();
@@ -285,9 +299,12 @@ TMDB_API_KEY=test_tmdb_key
     });
 
     group('Environment Validation Result', () {
-      test('should return valid result when all required variables are set', () {
-        // Setup
-        dotenv.testLoad(fileInput: '''
+      test(
+        'should return valid result when all required variables are set',
+        () {
+          // Setup
+          dotenv.testLoad(
+            fileInput: '''
 FIREBASE_API_KEY=test_key
 FIREBASE_AUTH_DOMAIN=test.firebaseapp.com
 FIREBASE_PROJECT_ID=test-project
@@ -297,37 +314,45 @@ FIREBASE_APP_ID=1:123456789:web:abcdef
 TMDB_API_KEY=test_tmdb_key
 GOOGLE_CLOUD_PROJECT_ID=test-project
 OMDB_API_KEY=test_omdb_key
-''');
+''',
+          );
 
-        // Execute
-        final result = EnvConfig.validateEnvironment();
+          // Execute
+          final result = EnvConfig.validateEnvironment();
 
-        // Verify
-        expect(result.isValid, isTrue);
-        expect(result.missingRequired, isEmpty);
-        expect(result.missingOptional, isEmpty);
-        expect(result.userFriendlyMessage, contains('すべての設定が完了'));
-        expect(result.isFatal, isFalse);
-        expect(result.hasWarnings, isFalse);
-      });
+          // Verify
+          expect(result.isValid, isTrue);
+          expect(result.missingRequired, isEmpty);
+          expect(result.missingOptional, isEmpty);
+          expect(result.userFriendlyMessage, contains('すべての設定が完了'));
+          expect(result.isFatal, isFalse);
+          expect(result.hasWarnings, isFalse);
+        },
+      );
 
-      test('should return invalid result when required variables are missing', () {
-        // Setup
-        dotenv.testLoad(fileInput: '');
+      test(
+        'should return invalid result when required variables are missing',
+        () {
+          // Setup
+          dotenv.testLoad(fileInput: '');
 
-        // Execute
-        final result = EnvConfig.validateEnvironment();
+          // Execute
+          final result = EnvConfig.validateEnvironment();
 
-        // Verify
-        expect(result.isValid, isFalse);
-        expect(result.missingRequired, isNotEmpty);
-        expect(result.userFriendlyMessage, contains('必須設定が不足'));
-        expect(result.isFatal, isTrue);
-      });
+          // Verify
+          expect(result.isValid, isFalse);
+          expect(result.missingRequired, isNotEmpty);
+          expect(result.userFriendlyMessage, contains('必須設定が不足'));
+          expect(result.isFatal, isTrue);
+        },
+      );
 
-      test('should return valid result with warnings when optional variables are missing', () {
-        // Setup
-        dotenv.testLoad(fileInput: '''
+      test(
+        'should return valid result with warnings when optional variables are missing',
+        () {
+          // Setup
+          dotenv.testLoad(
+            fileInput: '''
 FIREBASE_API_KEY=test_key
 FIREBASE_AUTH_DOMAIN=test.firebaseapp.com
 FIREBASE_PROJECT_ID=test-project
@@ -335,19 +360,21 @@ FIREBASE_STORAGE_BUCKET=test-project.appspot.com
 FIREBASE_MESSAGING_SENDER_ID=123456789
 FIREBASE_APP_ID=1:123456789:web:abcdef
 TMDB_API_KEY=test_tmdb_key
-''');
+''',
+          );
 
-        // Execute
-        final result = EnvConfig.validateEnvironment();
+          // Execute
+          final result = EnvConfig.validateEnvironment();
 
-        // Verify
-        expect(result.isValid, isTrue);
-        expect(result.missingRequired, isEmpty);
-        expect(result.missingOptional, isNotEmpty);
-        expect(result.userFriendlyMessage, contains('オプション機能が無効'));
-        expect(result.isFatal, isFalse);
-        expect(result.hasWarnings, isTrue);
-      });
+          // Verify
+          expect(result.isValid, isTrue);
+          expect(result.missingRequired, isEmpty);
+          expect(result.missingOptional, isNotEmpty);
+          expect(result.userFriendlyMessage, contains('オプション機能が無効'));
+          expect(result.isFatal, isFalse);
+          expect(result.hasWarnings, isTrue);
+        },
+      );
     });
 
     group('Validation Result Classes', () {
@@ -421,17 +448,22 @@ TMDB_API_KEY=test_tmdb_key
         // Verify
         expect(exception.missingVariables, equals(['FIREBASE_API_KEY']));
         expect(exception.message, equals('Test error message'));
-        expect(exception.toString(), contains('EnvironmentValidationException'));
+        expect(
+          exception.toString(),
+          contains('EnvironmentValidationException'),
+        );
       });
     });
 
     group('Edge Cases', () {
       test('should handle empty string values correctly', () {
         // Setup
-        dotenv.testLoad(fileInput: '''
+        dotenv.testLoad(
+          fileInput: '''
 FIREBASE_API_KEY=
 TMDB_API_KEY=
-''');
+''',
+        );
 
         // Verify
         expect(EnvConfig.firebaseApiKey, equals(''));
@@ -442,10 +474,12 @@ TMDB_API_KEY=
 
       test('should handle whitespace values correctly', () {
         // Setup
-        dotenv.testLoad(fileInput: '''
+        dotenv.testLoad(
+          fileInput: '''
 FIREBASE_API_KEY=
 TMDB_API_KEY=
-''');
+''',
+        );
 
         // Verify - dotenv typically trims whitespace
         expect(EnvConfig.firebaseApiKey.trim(), equals(''));

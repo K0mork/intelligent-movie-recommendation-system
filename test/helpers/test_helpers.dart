@@ -248,10 +248,7 @@ class TestHelpers {
   }
 
   /// Verifies theme consistency
-  static void verifyTheme(
-    WidgetTester tester,
-    ThemeData expectedTheme,
-  ) {
+  static void verifyTheme(WidgetTester tester, ThemeData expectedTheme) {
     final BuildContext context = tester.element(find.byType(MaterialApp));
     final ThemeData actualTheme = Theme.of(context);
 
@@ -260,12 +257,11 @@ class TestHelpers {
   }
 
   /// Creates a test provider override (簡素化版)
-  static Override createProviderOverride<T>(
-    ProviderBase<T> provider,
-    T value,
-  ) {
+  static Override createProviderOverride<T>(ProviderBase<T> provider, T value) {
     // 実際の実装では適切なオーバーライドメソッドを使用
-    throw UnimplementedError('Provider override not implemented in test helper');
+    throw UnimplementedError(
+      'Provider override not implemented in test helper',
+    );
   }
 
   /// Simulates network delay
@@ -308,16 +304,18 @@ class TestHelpers {
       }
     }
 
-    expect(foundEmptyIndicator, true, reason: 'Expected to find an empty state indicator');
+    expect(
+      foundEmptyIndicator,
+      true,
+      reason: 'Expected to find an empty state indicator',
+    );
   }
 }
 
 /// Mock function class for testing callbacks
 class MockFunction<T> extends Mock {
-  T call() => super.noSuchMethod(
-    Invocation.method(#call, []),
-    returnValue: null as T,
-  );
+  T call() =>
+      super.noSuchMethod(Invocation.method(#call, []), returnValue: null as T);
 }
 
 /// Custom matchers for widget testing

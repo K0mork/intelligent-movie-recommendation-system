@@ -28,7 +28,8 @@ void main() {
     late MockDocumentReference<Map<String, dynamic>> mockDocumentRef;
     late MockDocumentSnapshot<Map<String, dynamic>> mockDocumentSnapshot;
     late MockQuerySnapshot<Map<String, dynamic>> mockQuerySnapshot;
-    late MockQueryDocumentSnapshot<Map<String, dynamic>> mockQueryDocumentSnapshot;
+    late MockQueryDocumentSnapshot<Map<String, dynamic>>
+    mockQueryDocumentSnapshot;
     late MockQuery<Map<String, dynamic>> mockQuery;
 
     // テストデータ
@@ -61,7 +62,8 @@ void main() {
       mockDocumentRef = MockDocumentReference<Map<String, dynamic>>();
       mockDocumentSnapshot = MockDocumentSnapshot<Map<String, dynamic>>();
       mockQuerySnapshot = MockQuerySnapshot<Map<String, dynamic>>();
-      mockQueryDocumentSnapshot = MockQueryDocumentSnapshot<Map<String, dynamic>>();
+      mockQueryDocumentSnapshot =
+          MockQueryDocumentSnapshot<Map<String, dynamic>>();
       mockQuery = MockQuery<Map<String, dynamic>>();
 
       dataSource = ReviewRemoteDataSourceImpl(firestore: mockFirestore);
@@ -103,7 +105,9 @@ void main() {
       test('レビューが正常に取得される', () async {
         // Arrange
         when(mockCollection.doc('test-review-id')).thenReturn(mockDocumentRef);
-        when(mockDocumentRef.get()).thenAnswer((_) => Future.value(mockDocumentSnapshot));
+        when(
+          mockDocumentRef.get(),
+        ).thenAnswer((_) => Future.value(mockDocumentSnapshot));
         when(mockDocumentSnapshot.exists).thenReturn(true);
         when(mockDocumentSnapshot.id).thenReturn('test-review-id');
         when(mockDocumentSnapshot.data()).thenReturn(testReviewData);
@@ -122,7 +126,9 @@ void main() {
       test('存在しないレビューIDの場合、APIExceptionがスローされる', () async {
         // Arrange
         when(mockCollection.doc('non-existent-id')).thenReturn(mockDocumentRef);
-        when(mockDocumentRef.get()).thenAnswer((_) => Future.value(mockDocumentSnapshot));
+        when(
+          mockDocumentRef.get(),
+        ).thenAnswer((_) => Future.value(mockDocumentSnapshot));
         when(mockDocumentSnapshot.exists).thenReturn(false);
 
         // Act & Assert
@@ -138,9 +144,12 @@ void main() {
         // Arrange
         final mockQueryDocumentSnapshots = [mockQueryDocumentSnapshot];
 
-        when(mockCollection.orderBy('createdAt', descending: true))
-            .thenReturn(mockQuery);
-        when(mockQuery.get()).thenAnswer((_) => Future.value(mockQuerySnapshot));
+        when(
+          mockCollection.orderBy('createdAt', descending: true),
+        ).thenReturn(mockQuery);
+        when(
+          mockQuery.get(),
+        ).thenAnswer((_) => Future.value(mockQuerySnapshot));
         when(mockQuerySnapshot.docs).thenReturn(mockQueryDocumentSnapshots);
         when(mockQueryDocumentSnapshot.id).thenReturn('test-review-id');
         when(mockQueryDocumentSnapshot.data()).thenReturn(testReviewData);
@@ -159,11 +168,15 @@ void main() {
         // Arrange
         final mockQueryDocumentSnapshots = [mockQueryDocumentSnapshot];
 
-        when(mockCollection.where('userId', isEqualTo: 'test-user-id'))
-            .thenReturn(mockQuery);
-        when(mockQuery.orderBy('createdAt', descending: true))
-            .thenReturn(mockQuery);
-        when(mockQuery.get()).thenAnswer((_) => Future.value(mockQuerySnapshot));
+        when(
+          mockCollection.where('userId', isEqualTo: 'test-user-id'),
+        ).thenReturn(mockQuery);
+        when(
+          mockQuery.orderBy('createdAt', descending: true),
+        ).thenReturn(mockQuery);
+        when(
+          mockQuery.get(),
+        ).thenAnswer((_) => Future.value(mockQuerySnapshot));
         when(mockQuerySnapshot.docs).thenReturn(mockQueryDocumentSnapshots);
         when(mockQueryDocumentSnapshot.id).thenReturn('test-review-id');
         when(mockQueryDocumentSnapshot.data()).thenReturn(testReviewData);
@@ -174,18 +187,24 @@ void main() {
         // Assert
         expect(result, hasLength(1));
         expect(result.first.userId, equals('test-user-id'));
-        verify(mockCollection.where('userId', isEqualTo: 'test-user-id')).called(1);
+        verify(
+          mockCollection.where('userId', isEqualTo: 'test-user-id'),
+        ).called(1);
       });
 
       test('映画IDでフィルタリングされたレビューが取得される', () async {
         // Arrange
         final mockQueryDocumentSnapshots = [mockQueryDocumentSnapshot];
 
-        when(mockCollection.where('movieId', isEqualTo: 'test-movie-id'))
-            .thenReturn(mockQuery);
-        when(mockQuery.orderBy('createdAt', descending: true))
-            .thenReturn(mockQuery);
-        when(mockQuery.get()).thenAnswer((_) => Future.value(mockQuerySnapshot));
+        when(
+          mockCollection.where('movieId', isEqualTo: 'test-movie-id'),
+        ).thenReturn(mockQuery);
+        when(
+          mockQuery.orderBy('createdAt', descending: true),
+        ).thenReturn(mockQuery);
+        when(
+          mockQuery.get(),
+        ).thenAnswer((_) => Future.value(mockQuerySnapshot));
         when(mockQuerySnapshot.docs).thenReturn(mockQueryDocumentSnapshots);
         when(mockQueryDocumentSnapshot.id).thenReturn('test-review-id');
         when(mockQueryDocumentSnapshot.data()).thenReturn(testReviewData);
@@ -196,7 +215,9 @@ void main() {
         // Assert
         expect(result, hasLength(1));
         expect(result.first.movieId, equals('test-movie-id'));
-        verify(mockCollection.where('movieId', isEqualTo: 'test-movie-id')).called(1);
+        verify(
+          mockCollection.where('movieId', isEqualTo: 'test-movie-id'),
+        ).called(1);
       });
     });
 
@@ -259,11 +280,15 @@ void main() {
         // Arrange
         final mockQueryDocumentSnapshots = [mockQueryDocumentSnapshot];
 
-        when(mockCollection.where('userId', isEqualTo: 'test-user-id'))
-            .thenReturn(mockQuery);
-        when(mockQuery.orderBy('createdAt', descending: true))
-            .thenReturn(mockQuery);
-        when(mockQuery.get()).thenAnswer((_) => Future.value(mockQuerySnapshot));
+        when(
+          mockCollection.where('userId', isEqualTo: 'test-user-id'),
+        ).thenReturn(mockQuery);
+        when(
+          mockQuery.orderBy('createdAt', descending: true),
+        ).thenReturn(mockQuery);
+        when(
+          mockQuery.get(),
+        ).thenAnswer((_) => Future.value(mockQuerySnapshot));
         when(mockQuerySnapshot.docs).thenReturn(mockQueryDocumentSnapshots);
         when(mockQueryDocumentSnapshot.id).thenReturn('test-review-id');
         when(mockQueryDocumentSnapshot.data()).thenReturn(testReviewData);
@@ -274,7 +299,9 @@ void main() {
         // Assert
         expect(result, hasLength(1));
         expect(result.first.userId, equals('test-user-id'));
-        verify(mockCollection.where('userId', isEqualTo: 'test-user-id')).called(1);
+        verify(
+          mockCollection.where('userId', isEqualTo: 'test-user-id'),
+        ).called(1);
         verify(mockQuery.orderBy('createdAt', descending: true)).called(1);
       });
     });
@@ -282,9 +309,12 @@ void main() {
     group('エラーハンドリングテスト', () {
       test('Firestoreのエラーが適切にキャッチされる', () async {
         // Arrange
-        when(mockCollection.orderBy('createdAt', descending: true))
-            .thenReturn(mockQuery);
-        when(mockQuery.get()).thenThrow(Exception('Firestore connection error'));
+        when(
+          mockCollection.orderBy('createdAt', descending: true),
+        ).thenReturn(mockQuery);
+        when(
+          mockQuery.get(),
+        ).thenThrow(Exception('Firestore connection error'));
 
         // Act & Assert
         expect(
@@ -292,7 +322,9 @@ void main() {
           throwsA(
             allOf(
               isA<APIException>(),
-              predicate<APIException>((e) => e.message.contains('Failed to get reviews')),
+              predicate<APIException>(
+                (e) => e.message.contains('Failed to get reviews'),
+              ),
             ),
           ),
         );

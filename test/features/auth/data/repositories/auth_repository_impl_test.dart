@@ -61,8 +61,9 @@ void main() {
 
     group('signInWithGoogle', () {
       test('returns user on successful sign in', () async {
-        when(mockRemoteDataSource.signInWithGoogle())
-            .thenAnswer((_) async => testUser);
+        when(
+          mockRemoteDataSource.signInWithGoogle(),
+        ).thenAnswer((_) async => testUser);
 
         final result = await repository.signInWithGoogle();
 
@@ -71,8 +72,9 @@ void main() {
       });
 
       test('returns null when sign in fails', () async {
-        when(mockRemoteDataSource.signInWithGoogle())
-            .thenAnswer((_) async => null);
+        when(
+          mockRemoteDataSource.signInWithGoogle(),
+        ).thenAnswer((_) async => null);
 
         final result = await repository.signInWithGoogle();
 
@@ -81,21 +83,20 @@ void main() {
       });
 
       test('throws exception when remote data source throws', () async {
-        when(mockRemoteDataSource.signInWithGoogle())
-            .thenThrow(Exception('Sign in failed'));
+        when(
+          mockRemoteDataSource.signInWithGoogle(),
+        ).thenThrow(Exception('Sign in failed'));
 
-        expect(
-          () => repository.signInWithGoogle(),
-          throwsException,
-        );
+        expect(() => repository.signInWithGoogle(), throwsException);
         verify(mockRemoteDataSource.signInWithGoogle()).called(1);
       });
     });
 
     group('signInAnonymously', () {
       test('returns user on successful anonymous sign in', () async {
-        when(mockRemoteDataSource.signInAnonymously())
-            .thenAnswer((_) async => testUser);
+        when(
+          mockRemoteDataSource.signInAnonymously(),
+        ).thenAnswer((_) async => testUser);
 
         final result = await repository.signInAnonymously();
 
@@ -114,13 +115,11 @@ void main() {
       });
 
       test('throws exception when remote data source throws', () async {
-        when(mockRemoteDataSource.signOut())
-            .thenThrow(Exception('Sign out failed'));
+        when(
+          mockRemoteDataSource.signOut(),
+        ).thenThrow(Exception('Sign out failed'));
 
-        expect(
-          () => repository.signOut(),
-          throwsException,
-        );
+        expect(() => repository.signOut(), throwsException);
         verify(mockRemoteDataSource.signOut()).called(1);
       });
     });
@@ -137,34 +136,39 @@ void main() {
 
     group('updateProfile', () {
       test('calls remote data source with provided parameters', () async {
-        when(mockRemoteDataSource.updateProfile(
-          displayName: anyNamed('displayName'),
-          photoURL: anyNamed('photoURL'),
-        )).thenAnswer((_) async {});
+        when(
+          mockRemoteDataSource.updateProfile(
+            displayName: anyNamed('displayName'),
+            photoURL: anyNamed('photoURL'),
+          ),
+        ).thenAnswer((_) async {});
 
         await repository.updateProfile(
           displayName: 'New Name',
           photoURL: 'https://example.com/photo.jpg',
         );
 
-        verify(mockRemoteDataSource.updateProfile(
-          displayName: 'New Name',
-          photoURL: 'https://example.com/photo.jpg',
-        )).called(1);
+        verify(
+          mockRemoteDataSource.updateProfile(
+            displayName: 'New Name',
+            photoURL: 'https://example.com/photo.jpg',
+          ),
+        ).called(1);
       });
 
       test('calls remote data source with null values', () async {
-        when(mockRemoteDataSource.updateProfile(
-          displayName: anyNamed('displayName'),
-          photoURL: anyNamed('photoURL'),
-        )).thenAnswer((_) async {});
+        when(
+          mockRemoteDataSource.updateProfile(
+            displayName: anyNamed('displayName'),
+            photoURL: anyNamed('photoURL'),
+          ),
+        ).thenAnswer((_) async {});
 
         await repository.updateProfile();
 
-        verify(mockRemoteDataSource.updateProfile(
-          displayName: null,
-          photoURL: null,
-        )).called(1);
+        verify(
+          mockRemoteDataSource.updateProfile(displayName: null, photoURL: null),
+        ).called(1);
       });
     });
   });

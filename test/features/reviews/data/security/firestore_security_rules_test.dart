@@ -8,9 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// Firestore Emulatorを使用して行う必要があります。
 void main() {
   group('Firestore Security Rules Specification Tests', () {
-
     group('レビューコレクションのセキュリティルール仕様', () {
-
       group('読み取り権限のテスト仕様', () {
         test('認証済みユーザーは全てのレビューを読み取り可能であること', () {
           // 期待される動作:
@@ -18,7 +16,11 @@ void main() {
           // - /reviews/{reviewId} への読み取りアクセス
           // - 結果: 許可される (allow read: if request.auth != null)
 
-          expect(true, isTrue, reason: 'Authenticated users can read all reviews');
+          expect(
+            true,
+            isTrue,
+            reason: 'Authenticated users can read all reviews',
+          );
         });
 
         test('未認証ユーザーはレビューを読み取り不可であること', () {
@@ -27,7 +29,11 @@ void main() {
           // - /reviews/{reviewId} への読み取りアクセス
           // - 結果: 拒否される (request.auth is null)
 
-          expect(true, isTrue, reason: 'Unauthenticated users cannot read reviews');
+          expect(
+            true,
+            isTrue,
+            reason: 'Unauthenticated users cannot read reviews',
+          );
         });
       });
 
@@ -41,11 +47,14 @@ void main() {
           const testScenario = {
             'authenticated': true,
             'userIdMatches': true,
-            'expectedResult': 'allowed'
+            'expectedResult': 'allowed',
           };
 
-          expect(testScenario['expectedResult'], equals('allowed'),
-              reason: 'Authenticated users can create their own reviews');
+          expect(
+            testScenario['expectedResult'],
+            equals('allowed'),
+            reason: 'Authenticated users can create their own reviews',
+          );
         });
 
         test('認証済みユーザーが他人のレビューを作成不可であること', () {
@@ -57,11 +66,14 @@ void main() {
           const testScenario = {
             'authenticated': true,
             'userIdMatches': false,
-            'expectedResult': 'denied'
+            'expectedResult': 'denied',
           };
 
-          expect(testScenario['expectedResult'], equals('denied'),
-              reason: 'Authenticated users cannot create reviews for other users');
+          expect(
+            testScenario['expectedResult'],
+            equals('denied'),
+            reason: 'Authenticated users cannot create reviews for other users',
+          );
         });
 
         test('未認証ユーザーはレビューを作成不可であること', () {
@@ -71,11 +83,14 @@ void main() {
 
           const testScenario = {
             'authenticated': false,
-            'expectedResult': 'denied'
+            'expectedResult': 'denied',
           };
 
-          expect(testScenario['expectedResult'], equals('denied'),
-              reason: 'Unauthenticated users cannot create reviews');
+          expect(
+            testScenario['expectedResult'],
+            equals('denied'),
+            reason: 'Unauthenticated users cannot create reviews',
+          );
         });
       });
 
@@ -89,11 +104,14 @@ void main() {
           const testScenario = {
             'authenticated': true,
             'isOwner': true,
-            'expectedResult': 'allowed'
+            'expectedResult': 'allowed',
           };
 
-          expect(testScenario['expectedResult'], equals('allowed'),
-              reason: 'Review owners can update their own reviews');
+          expect(
+            testScenario['expectedResult'],
+            equals('allowed'),
+            reason: 'Review owners can update their own reviews',
+          );
         });
 
         test('認証済みユーザーが他人のレビューを更新不可であること', () {
@@ -105,11 +123,14 @@ void main() {
           const testScenario = {
             'authenticated': true,
             'isOwner': false,
-            'expectedResult': 'denied'
+            'expectedResult': 'denied',
           };
 
-          expect(testScenario['expectedResult'], equals('denied'),
-              reason: 'Users cannot update reviews owned by others');
+          expect(
+            testScenario['expectedResult'],
+            equals('denied'),
+            reason: 'Users cannot update reviews owned by others',
+          );
         });
 
         test('未認証ユーザーはレビューを更新不可であること', () {
@@ -119,11 +140,14 @@ void main() {
 
           const testScenario = {
             'authenticated': false,
-            'expectedResult': 'denied'
+            'expectedResult': 'denied',
           };
 
-          expect(testScenario['expectedResult'], equals('denied'),
-              reason: 'Unauthenticated users cannot update reviews');
+          expect(
+            testScenario['expectedResult'],
+            equals('denied'),
+            reason: 'Unauthenticated users cannot update reviews',
+          );
         });
       });
 
@@ -137,11 +161,14 @@ void main() {
           const testScenario = {
             'authenticated': true,
             'isOwner': true,
-            'expectedResult': 'allowed'
+            'expectedResult': 'allowed',
           };
 
-          expect(testScenario['expectedResult'], equals('allowed'),
-              reason: 'Review owners can delete their own reviews');
+          expect(
+            testScenario['expectedResult'],
+            equals('allowed'),
+            reason: 'Review owners can delete their own reviews',
+          );
         });
 
         test('認証済みユーザーが他人のレビューを削除不可であること', () {
@@ -153,11 +180,14 @@ void main() {
           const testScenario = {
             'authenticated': true,
             'isOwner': false,
-            'expectedResult': 'denied'
+            'expectedResult': 'denied',
           };
 
-          expect(testScenario['expectedResult'], equals('denied'),
-              reason: 'Users cannot delete reviews owned by others');
+          expect(
+            testScenario['expectedResult'],
+            equals('denied'),
+            reason: 'Users cannot delete reviews owned by others',
+          );
         });
 
         test('未認証ユーザーはレビューを削除不可であること', () {
@@ -167,11 +197,14 @@ void main() {
 
           const testScenario = {
             'authenticated': false,
-            'expectedResult': 'denied'
+            'expectedResult': 'denied',
           };
 
-          expect(testScenario['expectedResult'], equals('denied'),
-              reason: 'Unauthenticated users cannot delete reviews');
+          expect(
+            testScenario['expectedResult'],
+            equals('denied'),
+            reason: 'Unauthenticated users cannot delete reviews',
+          );
         });
       });
     });
@@ -185,15 +218,18 @@ void main() {
           'movieTitle',
           'rating',
           'createdAt',
-          'updatedAt'
+          'updatedAt',
         ];
 
         // 期待される動作:
         // - 全ての必須フィールドが含まれている場合: 許可
         // - 必須フィールドが欠けている場合: 拒否
 
-        expect(requiredFields, hasLength(6),
-            reason: 'Review must contain all required fields');
+        expect(
+          requiredFields,
+          hasLength(6),
+          reason: 'Review must contain all required fields',
+        );
       });
 
       test('評価値が適切な範囲内であること', () {
@@ -205,13 +241,19 @@ void main() {
         const invalidRatings = [-1.0, 5.1, 10.0];
 
         for (final rating in validRatings) {
-          expect(rating >= 0.0 && rating <= 5.0, isTrue,
-              reason: 'Rating $rating should be valid');
+          expect(
+            rating >= 0.0 && rating <= 5.0,
+            isTrue,
+            reason: 'Rating $rating should be valid',
+          );
         }
 
         for (final rating in invalidRatings) {
-          expect(rating >= 0.0 && rating <= 5.0, isFalse,
-              reason: 'Rating $rating should be invalid');
+          expect(
+            rating >= 0.0 && rating <= 5.0,
+            isFalse,
+            reason: 'Rating $rating should be invalid',
+          );
         }
       });
 
@@ -224,10 +266,16 @@ void main() {
         const reviewUserId = 'auth-user-123';
         const otherUserId = 'other-user-456';
 
-        expect(authUserId == reviewUserId, isTrue,
-            reason: 'UserID must match authenticated user');
-        expect(authUserId == otherUserId, isFalse,
-            reason: 'UserID mismatch should be rejected');
+        expect(
+          authUserId == reviewUserId,
+          isTrue,
+          reason: 'UserID must match authenticated user',
+        );
+        expect(
+          authUserId == otherUserId,
+          isFalse,
+          reason: 'UserID mismatch should be rejected',
+        );
       });
     });
 
@@ -241,14 +289,20 @@ void main() {
           'collection': 'reviews',
           'fields': [
             {'field': 'userId', 'order': 'ASCENDING'},
-            {'field': 'createdAt', 'order': 'DESCENDING'}
-          ]
+            {'field': 'createdAt', 'order': 'DESCENDING'},
+          ],
         };
 
-        expect(expectedIndex['collection'], equals('reviews'),
-            reason: 'Index must be on reviews collection');
-        expect(expectedIndex['fields'], hasLength(2),
-            reason: 'Composite index required for userId + createdAt queries');
+        expect(
+          expectedIndex['collection'],
+          equals('reviews'),
+          reason: 'Index must be on reviews collection',
+        );
+        expect(
+          expectedIndex['fields'],
+          hasLength(2),
+          reason: 'Composite index required for userId + createdAt queries',
+        );
       });
 
       test('映画IDによるクエリにインデックスが必要', () {
@@ -260,14 +314,20 @@ void main() {
           'collection': 'reviews',
           'fields': [
             {'field': 'movieId', 'order': 'ASCENDING'},
-            {'field': 'createdAt', 'order': 'DESCENDING'}
-          ]
+            {'field': 'createdAt', 'order': 'DESCENDING'},
+          ],
         };
 
-        expect(expectedIndex['collection'], equals('reviews'),
-            reason: 'Index must be on reviews collection');
-        expect(expectedIndex['fields'], hasLength(2),
-            reason: 'Composite index required for movieId + createdAt queries');
+        expect(
+          expectedIndex['collection'],
+          equals('reviews'),
+          reason: 'Index must be on reviews collection',
+        );
+        expect(
+          expectedIndex['fields'],
+          hasLength(2),
+          reason: 'Composite index required for movieId + createdAt queries',
+        );
       });
     });
 
@@ -282,13 +342,19 @@ void main() {
           'defaultLimit': 20,
           'maxLimit': 100,
           'sortField': 'createdAt',
-          'sortOrder': 'descending'
+          'sortOrder': 'descending',
         };
 
-        expect(paginationSpecs['defaultLimit'], lessThanOrEqualTo(50),
-            reason: 'Default page size should be reasonable');
-        expect(paginationSpecs['maxLimit'], lessThanOrEqualTo(100),
-            reason: 'Maximum page size should prevent performance issues');
+        expect(
+          paginationSpecs['defaultLimit'],
+          lessThanOrEqualTo(50),
+          reason: 'Default page size should be reasonable',
+        );
+        expect(
+          paginationSpecs['maxLimit'],
+          lessThanOrEqualTo(100),
+          reason: 'Maximum page size should prevent performance issues',
+        );
       });
 
       test('レビューの削除は論理削除を推奨', () {
@@ -298,11 +364,14 @@ void main() {
         const deletionStrategy = {
           'type': 'soft_delete',
           'field': 'deleted',
-          'preserveData': true
+          'preserveData': true,
         };
 
-        expect(deletionStrategy['type'], equals('soft_delete'),
-            reason: 'Soft deletion preserves data for recommendations');
+        expect(
+          deletionStrategy['type'],
+          equals('soft_delete'),
+          reason: 'Soft deletion preserves data for recommendations',
+        );
       });
     });
   });

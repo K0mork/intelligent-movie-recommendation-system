@@ -28,18 +28,11 @@ class ReviewsPage extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.login,
-                    size: 64,
-                    color: Colors.grey,
-                  ),
+                  Icon(Icons.login, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text(
                     'レビューを見るにはログインが必要です',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                 ],
               ),
@@ -48,33 +41,35 @@ class ReviewsPage extends ConsumerWidget {
 
           return _MyReviewsTab(userId: user.uid);
         },
-        loading: () => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularWaveLoading(
-                color: theme.colorScheme.primary,
-                size: 60,
+        loading:
+            () => Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularWaveLoading(
+                    color: theme.colorScheme.primary,
+                    size: 60,
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    '読み込み中...',
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 24),
-              Text(
-                '読み込み中...',
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-        ),
-        error: (error, stackTrace) => ErrorDisplay(
-          title: 'ログインエラー',
-          message: 'ユーザー情報の取得に失敗しました',
-          icon: Icons.account_circle_outlined,
-          onRetry: () {
-            ref.invalidate(authStateProvider);
-          },
-          retryText: '再試行',
-        ),
+            ),
+        error:
+            (error, stackTrace) => ErrorDisplay(
+              title: 'ログインエラー',
+              message: 'ユーザー情報の取得に失敗しました',
+              icon: Icons.account_circle_outlined,
+              onRetry: () {
+                ref.invalidate(authStateProvider);
+              },
+              retryText: '再試行',
+            ),
       ),
     );
   }
@@ -103,7 +98,9 @@ class _MyReviewsTab extends ConsumerWidget {
               onReviewTap: (review) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => MovieDetailPage(movieId: int.parse(review.movieId)),
+                    builder:
+                        (context) =>
+                            MovieDetailPage(movieId: int.parse(review.movieId)),
                   ),
                 );
               },
@@ -125,31 +122,34 @@ class _MyReviewsTab extends ConsumerWidget {
           ),
         );
       },
-      loading: () => const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularWaveLoading(
-              color: Colors.blue,
-              size: 50,
+      loading:
+          () => const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularWaveLoading(color: Colors.blue, size: 50),
+                SizedBox(height: 16),
+                Text('レビューを読み込み中...'),
+              ],
             ),
-            SizedBox(height: 16),
-            Text('レビューを読み込み中...'),
-          ],
-        ),
-      ),
-      error: (error, stackTrace) => ErrorDisplay(
-        title: 'レビューの読み込みエラー',
-        message: 'レビューデータの取得に失敗しました',
-        icon: Icons.rate_review_outlined,
-        onRetry: () {
-          ref.refresh(userReviewsProvider(userId));
-        },
-      ),
+          ),
+      error:
+          (error, stackTrace) => ErrorDisplay(
+            title: 'レビューの読み込みエラー',
+            message: 'レビューデータの取得に失敗しました',
+            icon: Icons.rate_review_outlined,
+            onRetry: () {
+              ref.refresh(userReviewsProvider(userId));
+            },
+          ),
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context, WidgetRef ref, review) async {
+  void _showDeleteConfirmation(
+    BuildContext context,
+    WidgetRef ref,
+    review,
+  ) async {
     final confirmed = await DialogHelper.showConfirmDialog(
       context,
       title: 'レビューを削除',
@@ -160,20 +160,16 @@ class _MyReviewsTab extends ConsumerWidget {
 
     if (confirmed == true && context.mounted) {
       try {
-        await ref.read(reviewControllerProvider.notifier).deleteReview(review.id);
+        await ref
+            .read(reviewControllerProvider.notifier)
+            .deleteReview(review.id);
         if (context.mounted) {
-          SnackBarHelper.showSuccess(
-            context,
-            'レビューを削除しました',
-          );
+          SnackBarHelper.showSuccess(context, 'レビューを削除しました');
           ref.refresh(userReviewsProvider(userId));
         }
       } catch (e) {
         if (context.mounted) {
-          SnackBarHelper.showError(
-            context,
-            '削除に失敗しました',
-          );
+          SnackBarHelper.showError(context, '削除に失敗しました');
         }
       }
     }

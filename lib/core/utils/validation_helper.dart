@@ -2,8 +2,9 @@
 class ValidationHelper {
   /// メールアドレスの形式をチェック
   static bool isValidEmail(String email) {
-    return RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-        .hasMatch(email);
+    return RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    ).hasMatch(email);
   }
 
   /// パスワードの強度をチェック（最低8文字）
@@ -23,7 +24,10 @@ class ValidationHelper {
 
   /// 評価値（0.0-5.0）の有効性をチェック
   static bool isValidRating(double rating) {
-    return rating >= 0.0 && rating <= 5.0 && !rating.isNaN && !rating.isInfinite;
+    return rating >= 0.0 &&
+        rating <= 5.0 &&
+        !rating.isNaN &&
+        !rating.isInfinite;
   }
 
   /// URLの有効性をチェック
@@ -70,7 +74,10 @@ class ValidationHelper {
         .replaceAll(RegExp(r'<script.*?</script>', caseSensitive: false), '')
         .replaceAll(RegExp(r'javascript:', caseSensitive: false), '')
         .replaceAll(RegExp(r'<.*?>', caseSensitive: false), '') // HTMLタグ全般
-        .replaceAll(RegExp(r'alert\s*\(.*?\)', caseSensitive: false), '') // alert関数の完全除去
+        .replaceAll(
+          RegExp(r'alert\s*\(.*?\)', caseSensitive: false),
+          '',
+        ) // alert関数の完全除去
         .replaceAll(RegExp(r'alert', caseSensitive: false), '') // alert文字列の除去
         .replaceAll(RegExp(r'onerror', caseSensitive: false), '')
         .replaceAll(RegExp(r'onload', caseSensitive: false), '')
@@ -94,8 +101,16 @@ class ValidationHelper {
   /// 弱いパスワードかどうかをチェック
   static bool isWeakPassword(String password) {
     final weakPasswords = [
-      'password', '123456', 'qwerty', 'admin', 'password123',
-      '111111', 'abc123', 'letmein', 'welcome', 'monkey'
+      'password',
+      '123456',
+      'qwerty',
+      'admin',
+      'password123',
+      '111111',
+      'abc123',
+      'letmein',
+      'welcome',
+      'monkey',
     ];
 
     // 弱いパスワードリストにある場合
@@ -152,5 +167,4 @@ class ValidationHelper {
       return false;
     }
   }
-
 }

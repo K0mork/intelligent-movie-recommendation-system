@@ -46,7 +46,9 @@ class MovieGrid extends StatelessWidget {
     return NotificationListener<ScrollNotification>(
       onNotification: (scrollInfo) {
         // より精密な無限スクロールトリガー
-        if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - AppConstants.loadMoreTriggerDistance &&
+        if (scrollInfo.metrics.pixels >=
+                scrollInfo.metrics.maxScrollExtent -
+                    AppConstants.loadMoreTriggerDistance &&
             onLoadMore != null &&
             !isLoading) {
           onLoadMore!();
@@ -57,24 +59,27 @@ class MovieGrid extends StatelessWidget {
         behavior: AppScrollBehavior(),
         child: GridView.builder(
           controller: scrollController,
-          padding: EdgeInsets.all(kIsWeb ? AppConstants.webPadding : AppConstants.defaultPadding),
+          padding: EdgeInsets.all(
+            kIsWeb ? AppConstants.webPadding : AppConstants.defaultPadding,
+          ),
           // Macでのスムーズスクロールのためのphysics
-          physics: kIsWeb
-              ? const ClampingScrollPhysics()
-              : const BouncingScrollPhysics(),
+          physics:
+              kIsWeb
+                  ? const ClampingScrollPhysics()
+                  : const BouncingScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
             childAspectRatio: childAspectRatio,
-            crossAxisSpacing: kIsWeb ? AppConstants.webPadding : AppConstants.defaultPadding,
-            mainAxisSpacing: kIsWeb ? AppConstants.webPadding : AppConstants.defaultPadding,
+            crossAxisSpacing:
+                kIsWeb ? AppConstants.webPadding : AppConstants.defaultPadding,
+            mainAxisSpacing:
+                kIsWeb ? AppConstants.webPadding : AppConstants.defaultPadding,
           ),
           itemCount: movies.length + (isLoading ? crossAxisCount : 0),
           itemBuilder: (context, index) {
             if (index >= movies.length) {
               return const Card(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
+                child: Center(child: CircularProgressIndicator()),
               );
             }
 

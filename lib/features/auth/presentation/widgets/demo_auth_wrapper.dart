@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/loading_state_widget.dart';
 
-
 /// Firebase設定がない場合のデモ用認証ラッパー
 class DemoAuthWrapper extends ConsumerStatefulWidget {
   final Widget child;
 
-  const DemoAuthWrapper({
-    super.key,
-    required this.child,
-  });
+  const DemoAuthWrapper({super.key, required this.child});
 
   @override
   ConsumerState<DemoAuthWrapper> createState() => _DemoAuthWrapperState();
@@ -49,9 +45,7 @@ class _DemoAuthWrapperState extends ConsumerState<DemoAuthWrapper> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        body: LoadingStateWidget.fullScreen(
-          message: 'アプリを初期化中...',
-        ),
+        body: LoadingStateWidget.fullScreen(message: 'アプリを初期化中...'),
       );
     }
 
@@ -59,20 +53,14 @@ class _DemoAuthWrapperState extends ConsumerState<DemoAuthWrapper> {
       return DemoSignInPage(onSignIn: _demoSignIn);
     }
 
-    return DemoHomeWrapper(
-      onSignOut: _demoSignOut,
-      child: widget.child,
-    );
+    return DemoHomeWrapper(onSignOut: _demoSignOut, child: widget.child);
   }
 }
 
 class DemoSignInPage extends StatelessWidget {
   final VoidCallback onSignIn;
 
-  const DemoSignInPage({
-    super.key,
-    required this.onSignIn,
-  });
+  const DemoSignInPage({super.key, required this.onSignIn});
 
   @override
   Widget build(BuildContext context) {
@@ -178,7 +166,9 @@ class DemoSignInPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.3,
+                  ),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -199,7 +189,9 @@ class DemoSignInPage extends StatelessWidget {
                     Text(
                       'Firebase設定が完了していないため、認証機能は動作しません。UIとナビゲーションのデモをお楽しみください。',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.7,
+                        ),
                       ),
                       textAlign: TextAlign.center,
                     ),

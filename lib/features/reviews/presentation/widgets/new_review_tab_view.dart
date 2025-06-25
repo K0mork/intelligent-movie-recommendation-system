@@ -32,10 +32,11 @@ class NewReviewTabView extends ConsumerWidget {
         return _buildNewReviewContent(context);
       },
       loading: () => const LoadingStateWidget.fullScreen(),
-      error: (error, stackTrace) => ErrorDisplay(
-        message: 'ユーザー情報の取得に失敗しました',
-        onRetry: () => ref.refresh(authStateProvider),
-      ),
+      error:
+          (error, stackTrace) => ErrorDisplay(
+            message: 'ユーザー情報の取得に失敗しました',
+            onRetry: () => ref.refresh(authStateProvider),
+          ),
     );
   }
 
@@ -52,9 +53,7 @@ class NewReviewTabView extends ConsumerWidget {
           const SizedBox(height: 24),
 
           // メインコンテンツ
-          Expanded(
-            child: _buildMainContent(context, theme),
-          ),
+          Expanded(child: _buildMainContent(context, theme)),
         ],
       ),
     );
@@ -164,10 +163,7 @@ class NewReviewTabView extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.lightbulb_outline,
-                  color: theme.colorScheme.primary,
-                ),
+                Icon(Icons.lightbulb_outline, color: theme.colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
                   'レビューのコツ',
@@ -193,26 +189,25 @@ class NewReviewTabView extends ConsumerWidget {
       '他の人の参考になるように書きましょう',
     ];
 
-    return tips.map((tip) => Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            Icons.check_circle_outline,
-            size: 16,
-            color: theme.colorScheme.primary,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              tip,
-              style: theme.textTheme.bodySmall,
+    return tips
+        .map(
+          (tip) => Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.check_circle_outline,
+                  size: 16,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(child: Text(tip, style: theme.textTheme.bodySmall)),
+              ],
             ),
           ),
-        ],
-      ),
-    )).toList();
+        )
+        .toList();
   }
 
   Widget _buildFooterInfo(ThemeData theme) {
@@ -245,9 +240,7 @@ class NewReviewTabView extends ConsumerWidget {
 
   void _navigateToMovieSearch(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const CustomMovieSearchPage(),
-      ),
+      MaterialPageRoute(builder: (context) => const CustomMovieSearchPage()),
     );
   }
 }

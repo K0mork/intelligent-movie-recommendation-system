@@ -22,8 +22,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({
     required FirebaseAuth firebaseAuth,
     required GoogleSignIn googleSignIn,
-  })  : _firebaseAuth = firebaseAuth,
-        _googleSignIn = googleSignIn;
+  }) : _firebaseAuth = firebaseAuth,
+       _googleSignIn = googleSignIn;
 
   @override
   AppUser? getCurrentUser() {
@@ -39,9 +39,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Stream<AppUser?> authStateChanges() {
     return _firebaseAuth.authStateChanges().map(
-      (firebaseUser) => firebaseUser != null
-          ? AppUserModel.fromFirebaseUser(firebaseUser)
-          : null,
+      (firebaseUser) =>
+          firebaseUser != null
+              ? AppUserModel.fromFirebaseUser(firebaseUser)
+              : null,
     );
   }
 
@@ -78,8 +79,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       // Firebase Authでサインイン
-      final UserCredential userCredential =
-          await _firebaseAuth.signInWithCredential(credential);
+      final UserCredential userCredential = await _firebaseAuth
+          .signInWithCredential(credential);
 
       final User? firebaseUser = userCredential.user;
 
@@ -109,7 +110,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       return AppUserModel.fromFirebaseUser(firebaseUser);
     } on FirebaseAuthException catch (e) {
-      throw AuthException('Anonymous sign in failed: ${e.message}', code: e.code);
+      throw AuthException(
+        'Anonymous sign in failed: ${e.message}',
+        code: e.code,
+      );
     } catch (e) {
       throw AuthException('Anonymous sign in failed: $e');
     }
@@ -118,10 +122,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> signOut() async {
     try {
-      await Future.wait([
-        _firebaseAuth.signOut(),
-        _googleSignIn.signOut(),
-      ]);
+      await Future.wait([_firebaseAuth.signOut(), _googleSignIn.signOut()]);
     } catch (e) {
       throw AuthException('Sign out failed: $e');
     }
@@ -138,7 +139,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await user.delete();
       await _googleSignIn.signOut();
     } on FirebaseAuthException catch (e) {
-      throw AuthException('Account deletion failed: ${e.message}', code: e.code);
+      throw AuthException(
+        'Account deletion failed: ${e.message}',
+        code: e.code,
+      );
     } catch (e) {
       throw AuthException('Account deletion failed: $e');
     }

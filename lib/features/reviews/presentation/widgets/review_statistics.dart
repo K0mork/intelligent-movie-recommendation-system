@@ -5,10 +5,7 @@ import '../../domain/entities/review.dart';
 class ReviewStatistics extends StatelessWidget {
   final List<Review> reviews;
 
-  const ReviewStatistics({
-    super.key,
-    required this.reviews,
-  });
+  const ReviewStatistics({super.key, required this.reviews});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +16,8 @@ class ReviewStatistics extends StatelessWidget {
     }
 
     final totalReviews = reviews.length;
-    final averageRating = reviews.map((r) => r.rating).reduce((a, b) => a + b) / totalReviews;
+    final averageRating =
+        reviews.map((r) => r.rating).reduce((a, b) => a + b) / totalReviews;
 
     // Use fold instead of reduce to avoid type issues
     Review mostRecentReview = reviews.first;
@@ -43,7 +41,8 @@ class ReviewStatistics extends StatelessWidget {
     }
     for (final review in reviews) {
       final roundedRating = review.rating.round();
-      ratingDistribution[roundedRating] = (ratingDistribution[roundedRating] ?? 0) + 1;
+      ratingDistribution[roundedRating] =
+          (ratingDistribution[roundedRating] ?? 0) + 1;
     }
 
     final dateFormat = DateFormat('yyyy年MM月dd日');
@@ -175,21 +174,14 @@ class _StatisticCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-          width: 1,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(
-                icon,
-                size: isCompact ? 16 : 20,
-                color: color,
-              ),
+              Icon(icon, size: isCompact ? 16 : 20, color: color),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
@@ -249,11 +241,7 @@ class _RatingDistributionBar extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 4),
-                Icon(
-                  Icons.star,
-                  size: 16,
-                  color: Colors.amber,
-                ),
+                Icon(Icons.star, size: 16, color: Colors.amber),
               ],
             ),
           ),

@@ -7,17 +7,22 @@ void main() {
   group('Security Tests', () {
     setUpAll(() async {
       // テスト環境でdotenvを初期化
-      dotenv.testLoad(fileInput: '''
+      dotenv.testLoad(
+        fileInput: '''
 TMDB_API_KEY=testtmdbapikeyforsecuritytesting32chars
 TMDB_BASE_URL=https://api.themoviedb.org/3
 FIREBASE_PROJECT_ID=test-project-id
-''');
+''',
+      );
     });
 
     test('Environment configuration security validation', () {
       // 実際の環境設定のセキュリティ検証
-      expect(EnvConfig.tmdbApiKey, isNotEmpty,
-        reason: 'TMDB API key should be loaded from environment');
+      expect(
+        EnvConfig.tmdbApiKey,
+        isNotEmpty,
+        reason: 'TMDB API key should be loaded from environment',
+      );
 
       // 危険なプレースホルダーでないことを確認
       final dangerousPlaceholders = [
@@ -30,23 +35,34 @@ FIREBASE_PROJECT_ID=test-project-id
       ];
 
       for (final placeholder in dangerousPlaceholders) {
-        expect(EnvConfig.tmdbApiKey.toLowerCase(),
-               isNot(equals(placeholder.toLowerCase())),
-               reason: 'API key should not be placeholder: $placeholder');
+        expect(
+          EnvConfig.tmdbApiKey.toLowerCase(),
+          isNot(equals(placeholder.toLowerCase())),
+          reason: 'API key should not be placeholder: $placeholder',
+        );
       }
 
       // API keyの形式検証（TMDb APIキーの一般的な形式）
-      expect(EnvConfig.tmdbApiKey.length, greaterThanOrEqualTo(32),
-        reason: 'TMDb API key should be at least 32 characters');
+      expect(
+        EnvConfig.tmdbApiKey.length,
+        greaterThanOrEqualTo(32),
+        reason: 'TMDb API key should be at least 32 characters',
+      );
 
-      expect(RegExp(r'^[a-zA-Z0-9]+$').hasMatch(EnvConfig.tmdbApiKey), isTrue,
-        reason: 'API key should contain only alphanumeric characters');
+      expect(
+        RegExp(r'^[a-zA-Z0-9]+$').hasMatch(EnvConfig.tmdbApiKey),
+        isTrue,
+        reason: 'API key should contain only alphanumeric characters',
+      );
     });
 
     test('Network security validation', () {
       // HTTPS通信の強制確認
-      expect(EnvConfig.tmdbBaseUrl.startsWith('https://'), isTrue,
-        reason: 'All API endpoints must use HTTPS');
+      expect(
+        EnvConfig.tmdbBaseUrl.startsWith('https://'),
+        isTrue,
+        reason: 'All API endpoints must use HTTPS',
+      );
 
       // 正規のTMDb APIエンドポイントであることを確認
       final validTmdbUrls = [
@@ -54,8 +70,11 @@ FIREBASE_PROJECT_ID=test-project-id
         'https://api.themoviedb.org/4',
       ];
 
-      expect(validTmdbUrls.contains(EnvConfig.tmdbBaseUrl), isTrue,
-        reason: 'Should use official TMDb API endpoint');
+      expect(
+        validTmdbUrls.contains(EnvConfig.tmdbBaseUrl),
+        isTrue,
+        reason: 'Should use official TMDb API endpoint',
+      );
 
       // 不正なプロトコルや危険なURLパターンの検出
       final dangerousPatterns = [
@@ -69,9 +88,11 @@ FIREBASE_PROJECT_ID=test-project-id
       ];
 
       for (final pattern in dangerousPatterns) {
-        expect(EnvConfig.tmdbBaseUrl.toLowerCase(),
-               isNot(contains(pattern)),
-               reason: 'URL should not contain dangerous pattern: $pattern');
+        expect(
+          EnvConfig.tmdbBaseUrl.toLowerCase(),
+          isNot(contains(pattern)),
+          reason: 'URL should not contain dangerous pattern: $pattern',
+        );
       }
     });
 
@@ -130,8 +151,11 @@ FIREBASE_PROJECT_ID=test-project-id
       final extremelyLongInput = 'A' * 100000;
       final sanitized = ValidationHelper.sanitizeInput(extremelyLongInput);
 
-      expect(sanitized.length, lessThanOrEqualTo(1000),
-        reason: 'Input should be truncated to reasonable length');
+      expect(
+        sanitized.length,
+        lessThanOrEqualTo(1000),
+        reason: 'Input should be truncated to reasonable length',
+      );
 
       // 特殊文字の処理テスト
       final specialCharInput = '!@#\$%^&*()_+{}|:"<>?[];\'\\,./`~';
@@ -174,13 +198,19 @@ FIREBASE_PROJECT_ID=test-project-id
       ];
 
       for (final email in validEmails) {
-        expect(ValidationHelper.isValidEmail(email), isTrue,
-          reason: 'Valid email should pass: $email');
+        expect(
+          ValidationHelper.isValidEmail(email),
+          isTrue,
+          reason: 'Valid email should pass: $email',
+        );
       }
 
       for (final email in invalidEmails) {
-        expect(ValidationHelper.isValidEmail(email), isFalse,
-          reason: 'Invalid email should fail: $email');
+        expect(
+          ValidationHelper.isValidEmail(email),
+          isFalse,
+          reason: 'Invalid email should fail: $email',
+        );
       }
 
       // 評価値の検証
@@ -188,13 +218,19 @@ FIREBASE_PROJECT_ID=test-project-id
       final invalidRatings = [-1.0, 6.0, double.infinity, double.nan];
 
       for (final rating in validRatings) {
-        expect(ValidationHelper.isValidRating(rating), isTrue,
-          reason: 'Valid rating should pass: $rating');
+        expect(
+          ValidationHelper.isValidRating(rating),
+          isTrue,
+          reason: 'Valid rating should pass: $rating',
+        );
       }
 
       for (final rating in invalidRatings) {
-        expect(ValidationHelper.isValidRating(rating), isFalse,
-          reason: 'Invalid rating should fail: $rating');
+        expect(
+          ValidationHelper.isValidRating(rating),
+          isFalse,
+          reason: 'Invalid rating should fail: $rating',
+        );
       }
     });
 
@@ -213,8 +249,11 @@ FIREBASE_PROJECT_ID=test-project-id
       ];
 
       for (final password in weakPasswords) {
-        expect(ValidationHelper.isWeakPassword(password), isTrue,
-          reason: 'Weak password should be detected: $password');
+        expect(
+          ValidationHelper.isWeakPassword(password),
+          isTrue,
+          reason: 'Weak password should be detected: $password',
+        );
       }
 
       // 強いパスワードパターンの検証
@@ -225,8 +264,11 @@ FIREBASE_PROJECT_ID=test-project-id
       ];
 
       for (final password in strongPasswords) {
-        expect(ValidationHelper.isWeakPassword(password), isFalse,
-          reason: 'Strong password should not be flagged as weak: $password');
+        expect(
+          ValidationHelper.isWeakPassword(password),
+          isFalse,
+          reason: 'Strong password should not be flagged as weak: $password',
+        );
       }
     });
 
@@ -252,13 +294,19 @@ FIREBASE_PROJECT_ID=test-project-id
       ];
 
       for (final url in safeUrls) {
-        expect(ValidationHelper.isSafeUrl(url), isTrue,
-          reason: 'Safe URL should pass: $url');
+        expect(
+          ValidationHelper.isSafeUrl(url),
+          isTrue,
+          reason: 'Safe URL should pass: $url',
+        );
       }
 
       for (final url in dangerousUrls) {
-        expect(ValidationHelper.isSafeUrl(url), isFalse,
-          reason: 'Dangerous URL should fail: $url');
+        expect(
+          ValidationHelper.isSafeUrl(url),
+          isFalse,
+          reason: 'Dangerous URL should fail: $url',
+        );
       }
 
       print('URL Security validation completed');

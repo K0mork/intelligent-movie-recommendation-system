@@ -36,11 +36,7 @@ class AuthRequiredWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            _getIconForType(type),
-            size: 48,
-            color: Colors.grey,
-          ),
+          Icon(_getIconForType(type), size: 48, color: Colors.grey),
           const SizedBox(height: 8),
           if (title != null) ...[
             Text(
@@ -59,10 +55,7 @@ class AuthRequiredWidget extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          if (action != null) ...[
-            const SizedBox(height: 16),
-            action!,
-          ],
+          if (action != null) ...[const SizedBox(height: 16), action!],
         ],
       ),
     );
@@ -214,11 +207,7 @@ class NetworkErrorWidget extends StatelessWidget {
   final VoidCallback? onRetry;
   final String? message;
 
-  const NetworkErrorWidget({
-    super.key,
-    this.onRetry,
-    this.message,
-  });
+  const NetworkErrorWidget({super.key, this.onRetry, this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -236,11 +225,7 @@ class NotFoundErrorWidget extends StatelessWidget {
   final String? message;
   final VoidCallback? onGoBack;
 
-  const NotFoundErrorWidget({
-    super.key,
-    this.message,
-    this.onGoBack,
-  });
+  const NotFoundErrorWidget({super.key, this.message, this.onGoBack});
 
   @override
   Widget build(BuildContext context) {
@@ -339,10 +324,7 @@ class EmptyStateWidget extends StatelessWidget {
               ),
 
               // Action
-              if (action != null) ...[
-                const SizedBox(height: 24),
-                action!,
-              ],
+              if (action != null) ...[const SizedBox(height: 24), action!],
             ],
           ),
         ),
@@ -361,10 +343,7 @@ class SnackBarHelper {
       SnackBar(
         content: Row(
           children: [
-            const Icon(
-              Icons.check_circle,
-              color: Colors.white,
-            ),
+            const Icon(Icons.check_circle, color: Colors.white),
             const SizedBox(width: 8),
             Expanded(child: Text(message)),
           ],
@@ -372,9 +351,7 @@ class SnackBarHelper {
         backgroundColor: Colors.green,
         duration: duration,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       ),
     );
   }
@@ -390,10 +367,7 @@ class SnackBarHelper {
       SnackBar(
         content: Row(
           children: [
-            const Icon(
-              Icons.error,
-              color: Colors.white,
-            ),
+            const Icon(Icons.error, color: Colors.white),
             const SizedBox(width: 8),
             Expanded(child: Text(message)),
           ],
@@ -401,16 +375,15 @@ class SnackBarHelper {
         backgroundColor: Colors.red,
         duration: duration,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        action: onAction != null && actionLabel != null
-            ? SnackBarAction(
-                label: actionLabel,
-                textColor: Colors.white,
-                onPressed: onAction,
-              )
-            : null,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        action:
+            onAction != null && actionLabel != null
+                ? SnackBarAction(
+                  label: actionLabel,
+                  textColor: Colors.white,
+                  onPressed: onAction,
+                )
+                : null,
       ),
     );
   }
@@ -424,10 +397,7 @@ class SnackBarHelper {
       SnackBar(
         content: Row(
           children: [
-            const Icon(
-              Icons.warning,
-              color: Colors.black87,
-            ),
+            const Icon(Icons.warning, color: Colors.black87),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -440,9 +410,7 @@ class SnackBarHelper {
         backgroundColor: Colors.orange,
         duration: duration,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       ),
     );
   }
@@ -456,10 +424,7 @@ class SnackBarHelper {
       SnackBar(
         content: Row(
           children: [
-            const Icon(
-              Icons.info,
-              color: Colors.white,
-            ),
+            const Icon(Icons.info, color: Colors.white),
             const SizedBox(width: 8),
             Expanded(child: Text(message)),
           ],
@@ -467,9 +432,7 @@ class SnackBarHelper {
         backgroundColor: Colors.blue,
         duration: duration,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       ),
     );
   }
@@ -486,23 +449,25 @@ class DialogHelper {
   }) {
     return showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(cancelText),
+      builder:
+          (context) => AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(cancelText),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                style:
+                    confirmColor != null
+                        ? TextButton.styleFrom(foregroundColor: confirmColor)
+                        : null,
+                child: Text(confirmText),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: confirmColor != null
-                ? TextButton.styleFrom(foregroundColor: confirmColor)
-                : null,
-            child: Text(confirmText),
-          ),
-        ],
-      ),
     );
   }
 
@@ -514,25 +479,23 @@ class DialogHelper {
   }) {
     return showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            Icon(
-              Icons.error,
-              color: Theme.of(context).colorScheme.error,
+      builder:
+          (context) => AlertDialog(
+            title: Row(
+              children: [
+                Icon(Icons.error, color: Theme.of(context).colorScheme.error),
+                const SizedBox(width: 8),
+                Text(title),
+              ],
             ),
-            const SizedBox(width: 8),
-            Text(title),
-          ],
-        ),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(buttonText),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(buttonText),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -543,15 +506,16 @@ class DialogHelper {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        content: Row(
-          children: [
-            const CircularProgressIndicator(),
-            const SizedBox(width: 16),
-            Expanded(child: Text(message)),
-          ],
-        ),
-      ),
+      builder:
+          (context) => AlertDialog(
+            content: Row(
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(width: 16),
+                Expanded(child: Text(message)),
+              ],
+            ),
+          ),
     );
   }
 }

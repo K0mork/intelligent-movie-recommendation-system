@@ -57,8 +57,9 @@ void main() {
       const query = 'test movie';
       const page = 1;
 
-      when(mockRepository.searchMovies(query, page: page))
-          .thenAnswer((_) async => testMovies);
+      when(
+        mockRepository.searchMovies(query, page: page),
+      ).thenAnswer((_) async => testMovies);
 
       final result = await useCase.call(query, page: page);
 
@@ -66,24 +67,29 @@ void main() {
       verify(mockRepository.searchMovies(query, page: page)).called(1);
     });
 
-    test('calls repository with default page when page is not specified', () async {
-      const query = 'test movie';
+    test(
+      'calls repository with default page when page is not specified',
+      () async {
+        const query = 'test movie';
 
-      when(mockRepository.searchMovies(query, page: 1))
-          .thenAnswer((_) async => testMovies);
+        when(
+          mockRepository.searchMovies(query, page: 1),
+        ).thenAnswer((_) async => testMovies);
 
-      final result = await useCase.call(query);
+        final result = await useCase.call(query);
 
-      expect(result, equals(testMovies));
-      verify(mockRepository.searchMovies(query, page: 1)).called(1);
-    });
+        expect(result, equals(testMovies));
+        verify(mockRepository.searchMovies(query, page: 1)).called(1);
+      },
+    );
 
     test('calls repository with custom page number', () async {
       const query = 'test movie';
       const page = 3;
 
-      when(mockRepository.searchMovies(query, page: page))
-          .thenAnswer((_) async => testMovies);
+      when(
+        mockRepository.searchMovies(query, page: page),
+      ).thenAnswer((_) async => testMovies);
 
       final result = await useCase.call(query, page: page);
 
@@ -94,8 +100,9 @@ void main() {
     test('returns empty list when repository returns empty list', () async {
       const query = 'no results';
 
-      when(mockRepository.searchMovies(query, page: 1))
-          .thenAnswer((_) async => []);
+      when(
+        mockRepository.searchMovies(query, page: 1),
+      ).thenAnswer((_) async => []);
 
       final result = await useCase.call(query);
 
@@ -104,19 +111,13 @@ void main() {
     });
 
     test('throws ArgumentError when query is empty', () async {
-      expect(
-        () => useCase.call(''),
-        throwsA(isA<ArgumentError>()),
-      );
+      expect(() => useCase.call(''), throwsA(isA<ArgumentError>()));
 
       verifyNever(mockRepository.searchMovies(any, page: anyNamed('page')));
     });
 
     test('throws ArgumentError when query is only whitespace', () async {
-      expect(
-        () => useCase.call('   '),
-        throwsA(isA<ArgumentError>()),
-      );
+      expect(() => useCase.call('   '), throwsA(isA<ArgumentError>()));
 
       verifyNever(mockRepository.searchMovies(any, page: anyNamed('page')));
     });
@@ -135,13 +136,9 @@ void main() {
       const query = 'test movie';
       final exception = Exception('Network error');
 
-      when(mockRepository.searchMovies(query, page: 1))
-          .thenThrow(exception);
+      when(mockRepository.searchMovies(query, page: 1)).thenThrow(exception);
 
-      expect(
-        () => useCase.call(query),
-        throwsA(equals(exception)),
-      );
+      expect(() => useCase.call(query), throwsA(equals(exception)));
 
       verify(mockRepository.searchMovies(query, page: 1)).called(1);
     });
@@ -149,8 +146,9 @@ void main() {
     test('validates trimmed query but passes original to repository', () async {
       const query = '  test movie  ';
 
-      when(mockRepository.searchMovies(query, page: 1))
-          .thenAnswer((_) async => testMovies);
+      when(
+        mockRepository.searchMovies(query, page: 1),
+      ).thenAnswer((_) async => testMovies);
 
       await useCase.call(query);
 
@@ -161,8 +159,9 @@ void main() {
     test('handles special characters in query', () async {
       const query = 'movie with special chars: @#\$%';
 
-      when(mockRepository.searchMovies(query, page: 1))
-          .thenAnswer((_) async => testMovies);
+      when(
+        mockRepository.searchMovies(query, page: 1),
+      ).thenAnswer((_) async => testMovies);
 
       final result = await useCase.call(query);
 
@@ -173,8 +172,9 @@ void main() {
     test('handles unicode characters in query', () async {
       const query = '映画のタイトル';
 
-      when(mockRepository.searchMovies(query, page: 1))
-          .thenAnswer((_) async => testMovies);
+      when(
+        mockRepository.searchMovies(query, page: 1),
+      ).thenAnswer((_) async => testMovies);
 
       final result = await useCase.call(query);
 
@@ -182,22 +182,29 @@ void main() {
       verify(mockRepository.searchMovies(query, page: 1)).called(1);
     });
 
-    test('calls repository with year parameter when year is provided', () async {
-      const query = 'Test Movie';
-      const year = 2020;
-      when(mockRepository.searchMovies(query, page: 1, year: year))
-          .thenAnswer((_) async => testMovies);
+    test(
+      'calls repository with year parameter when year is provided',
+      () async {
+        const query = 'Test Movie';
+        const year = 2020;
+        when(
+          mockRepository.searchMovies(query, page: 1, year: year),
+        ).thenAnswer((_) async => testMovies);
 
-      final result = await useCase.call(query, year: year);
+        final result = await useCase.call(query, year: year);
 
-      expect(result, equals(testMovies));
-      verify(mockRepository.searchMovies(query, page: 1, year: year)).called(1);
-    });
+        expect(result, equals(testMovies));
+        verify(
+          mockRepository.searchMovies(query, page: 1, year: year),
+        ).called(1);
+      },
+    );
 
     test('calls repository without year parameter when year is null', () async {
       const query = 'Test Movie';
-      when(mockRepository.searchMovies(query, page: 1, year: null))
-          .thenAnswer((_) async => testMovies);
+      when(
+        mockRepository.searchMovies(query, page: 1, year: null),
+      ).thenAnswer((_) async => testMovies);
 
       final result = await useCase.call(query, year: null);
 
@@ -209,13 +216,16 @@ void main() {
       const query = 'Test Movie';
       const year = 2020;
       const page = 3;
-      when(mockRepository.searchMovies(query, page: page, year: year))
-          .thenAnswer((_) async => testMovies);
+      when(
+        mockRepository.searchMovies(query, page: page, year: year),
+      ).thenAnswer((_) async => testMovies);
 
       final result = await useCase.call(query, page: page, year: year);
 
       expect(result, equals(testMovies));
-      verify(mockRepository.searchMovies(query, page: page, year: year)).called(1);
+      verify(
+        mockRepository.searchMovies(query, page: page, year: year),
+      ).called(1);
     });
   });
 }

@@ -15,7 +15,11 @@ sealed class ResultState<T> {
   const factory ResultState.loading([String? message]) = Loading<T>;
 
   /// エラー状態
-  const factory ResultState.error(String message, [Object? error, StackTrace? stackTrace]) = Error<T>;
+  const factory ResultState.error(
+    String message, [
+    Object? error,
+    StackTrace? stackTrace,
+  ]) = Error<T>;
 
   /// 初期状態
   const factory ResultState.initial() = Initial<T>;
@@ -24,13 +28,18 @@ sealed class ResultState<T> {
   R when<R>({
     required R Function(T data) success,
     required R Function(String? message) loading,
-    required R Function(String message, Object? error, StackTrace? stackTrace) onError,
+    required R Function(String message, Object? error, StackTrace? stackTrace)
+    onError,
     required R Function() initial,
   }) {
     return switch (this) {
       Success<T>(data: final data) => success(data),
       Loading<T>(message: final message) => loading(message),
-      Error<T>(message: final message, error: final error, stackTrace: final stackTrace) =>
+      Error<T>(
+        message: final message,
+        error: final error,
+        stackTrace: final stackTrace,
+      ) =>
         onError(message, error, stackTrace),
       Initial<T>() => initial(),
     };
@@ -46,8 +55,15 @@ sealed class ResultState<T> {
   }) {
     return switch (this) {
       Success<T>(data: final data) when success != null => success(data),
-      Loading<T>(message: final message) when loading != null => loading(message),
-      Error<T>(message: final message, error: final error, stackTrace: final stackTrace) when onError != null =>
+      Loading<T>(message: final message) when loading != null => loading(
+        message,
+      ),
+      Error<T>(
+        message: final message,
+        error: final error,
+        stackTrace: final stackTrace,
+      )
+          when onError != null =>
         onError(message, error, stackTrace),
       Initial<T>() when initial != null => initial(),
       _ => orElse(),
@@ -89,7 +105,11 @@ sealed class ResultState<T> {
     return switch (this) {
       Success<T>(data: final data) => ResultState.success(mapper(data)),
       Loading<T>(message: final message) => ResultState.loading(message),
-      Error<T>(message: final message, error: final error, stackTrace: final stackTrace) =>
+      Error<T>(
+        message: final message,
+        error: final error,
+        stackTrace: final stackTrace,
+      ) =>
         ResultState.error(message, error, stackTrace),
       Initial<T>() => ResultState.initial(),
     };
@@ -100,13 +120,20 @@ sealed class ResultState<T> {
     return switch (this) {
       Success<T>(data: final data) => await _mapAsyncSuccess(mapper, data),
       Loading<T>(message: final message) => ResultState.loading(message),
-      Error<T>(message: final message, error: final error, stackTrace: final stackTrace) =>
+      Error<T>(
+        message: final message,
+        error: final error,
+        stackTrace: final stackTrace,
+      ) =>
         ResultState.error(message, error, stackTrace),
       Initial<T>() => ResultState.initial(),
     };
   }
 
-  Future<ResultState<R>> _mapAsyncSuccess<R>(Future<R> Function(T data) mapper, T data) async {
+  Future<ResultState<R>> _mapAsyncSuccess<R>(
+    Future<R> Function(T data) mapper,
+    T data,
+  ) async {
     try {
       final result = await mapper(data);
       return ResultState.success(result);
@@ -143,7 +170,9 @@ final class Success<T> extends ResultState<T> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Success<T> && runtimeType == other.runtimeType && data == other.data;
+      other is Success<T> &&
+          runtimeType == other.runtimeType &&
+          data == other.data;
 
   @override
   int get hashCode => data.hashCode;
@@ -160,7 +189,9 @@ final class Loading<T> extends ResultState<T> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Loading<T> && runtimeType == other.runtimeType && message == other.message;
+      other is Loading<T> &&
+          runtimeType == other.runtimeType &&
+          message == other.message;
 
   @override
   int get hashCode => message.hashCode;
@@ -181,9 +212,9 @@ final class Error<T> extends ResultState<T> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is Error<T> &&
-      runtimeType == other.runtimeType &&
-      message == other.message &&
-      error == other.error;
+          runtimeType == other.runtimeType &&
+          message == other.message &&
+          error == other.error;
 
   @override
   int get hashCode => Object.hash(message, error);
@@ -198,7 +229,8 @@ final class Initial<T> extends ResultState<T> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is Initial<T> && runtimeType == other.runtimeType;
+      identical(this, other) ||
+      other is Initial<T> && runtimeType == other.runtimeType;
 
   @override
   int get hashCode => runtimeType.hashCode;
@@ -212,8 +244,13 @@ extension ResultStateUtils<T> on ResultState<T> {
   /// リストのResultStateを単一のResultStateに集約
   static ResultState<List<T>> combine<T>(List<ResultState<T>> states) {
     if (states.any((state) => state.hasError)) {
-      final errorState = states.firstWhere((state) => state.hasError) as Error<T>;
-      return ResultState.error(errorState.message, errorState.error, errorState.stackTrace);
+      final errorState =
+          states.firstWhere((state) => state.hasError) as Error<T>;
+      return ResultState.error(
+        errorState.message,
+        errorState.error,
+        errorState.stackTrace,
+      );
     }
 
     if (states.any((state) => state.isLoading)) {
@@ -255,11 +292,7 @@ extension FutureResultState<T> on Future<T> {
       final result = await this;
       return ResultState.success(result);
     } catch (error, stackTrace) {
-      return ResultState.error(
-        error.toString(),
-        error,
-        stackTrace,
-      );
+      return ResultState.error(error.toString(), error, stackTrace);
     }
   }
 
@@ -269,11 +302,7 @@ extension FutureResultState<T> on Future<T> {
       final result = await this;
       return ResultState.success(result);
     } catch (error, stackTrace) {
-      return ResultState.error(
-        errorMessage,
-        error,
-        stackTrace,
-      );
+      return ResultState.error(errorMessage, error, stackTrace);
     }
   }
 }

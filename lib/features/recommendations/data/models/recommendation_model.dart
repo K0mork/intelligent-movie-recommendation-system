@@ -31,12 +31,15 @@ class RecommendationModel extends Recommendation {
       movieId: json['movieId'] ?? 0,
       movieTitle: json['movieTitle'] ?? '',
       posterPath: json['posterPath'],
-      confidenceScore: double.tryParse(json['confidenceScore']?.toString() ?? '0.0') ?? 0.0,
+      confidenceScore:
+          double.tryParse(json['confidenceScore']?.toString() ?? '0.0') ?? 0.0,
       reason: json['reason'] ?? '',
-      reasonCategories: (json['reasonCategories'] as List<dynamic>?)?.cast<String>() ?? [],
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : DateTime.now(),
+      reasonCategories:
+          (json['reasonCategories'] as List<dynamic>?)?.cast<String>() ?? [],
+      createdAt:
+          json['createdAt'] != null
+              ? DateTime.parse(json['createdAt'])
+              : DateTime.now(),
       additionalData: json['additionalData'] as Map<String, dynamic>?,
     );
   }
@@ -68,12 +71,15 @@ class RecommendationModel extends Recommendation {
       movieId: json['movieId'] ?? 0,
       movieTitle: json['movieTitle'] ?? '',
       posterPath: json['posterPath'],
-      confidenceScore: double.tryParse(json['confidenceScore']?.toString() ?? '0.0') ?? 0.0,
+      confidenceScore:
+          double.tryParse(json['confidenceScore']?.toString() ?? '0.0') ?? 0.0,
       reason: json['reason'] ?? '',
-      reasonCategories: (json['reasonCategories'] as List<dynamic>?)?.cast<String>() ?? [],
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : DateTime.now(),
+      reasonCategories:
+          (json['reasonCategories'] as List<dynamic>?)?.cast<String>() ?? [],
+      createdAt:
+          json['createdAt'] != null
+              ? DateTime.parse(json['createdAt'])
+              : DateTime.now(),
       additionalData: json['additionalData'] as Map<String, dynamic>?,
     );
   }

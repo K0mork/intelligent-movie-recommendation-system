@@ -43,15 +43,14 @@ class MovieDetailHeader extends StatelessWidget {
   BoxDecoration _buildBackgroundDecoration() {
     return BoxDecoration(
       color: Colors.grey[900],
-      image: movie.backdropPath != null
-          ? DecorationImage(
-              image: CachedNetworkImageProvider(
-                movie.fullBackdropUrl,
-              ),
-              fit: BoxFit.cover,
-              opacity: 0.3,
-            )
-          : null,
+      image:
+          movie.backdropPath != null
+              ? DecorationImage(
+                image: CachedNetworkImageProvider(movie.fullBackdropUrl),
+                fit: BoxFit.cover,
+                opacity: 0.3,
+              )
+              : null,
     );
   }
 
@@ -64,20 +63,20 @@ class MovieDetailHeader extends StatelessWidget {
       child: CachedNetworkImage(
         imageUrl: movie.fullBackdropUrl,
         fit: BoxFit.cover,
-        placeholder: (context, url) => Container(
-          color: Colors.grey[900],
-          child: const Center(
-            child: CircularProgressIndicator.adaptive(),
-          ),
-        ),
-        errorWidget: (context, url, error) => Container(
-          color: Colors.grey[900],
-          child: const Icon(
-            Icons.error_outline,
-            color: Colors.white54,
-            size: 48,
-          ),
-        ),
+        placeholder:
+            (context, url) => Container(
+              color: Colors.grey[900],
+              child: const Center(child: CircularProgressIndicator.adaptive()),
+            ),
+        errorWidget:
+            (context, url, error) => Container(
+              color: Colors.grey[900],
+              child: const Icon(
+                Icons.error_outline,
+                color: Colors.white54,
+                size: 48,
+              ),
+            ),
       ),
     );
   }
@@ -88,10 +87,7 @@ class MovieDetailHeader extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Colors.transparent,
-            Colors.black87,
-          ],
+          colors: [Colors.transparent, Colors.black87],
           stops: [0.0, 1.0],
         ),
       ),
@@ -120,9 +116,7 @@ class MovieDetailHeader extends StatelessWidget {
                 const SizedBox(width: 16),
 
                 // 映画詳細
-                Expanded(
-                  child: _buildMovieInfo(theme),
-                ),
+                Expanded(child: _buildMovieInfo(theme)),
               ],
             ),
           ],
@@ -165,17 +159,29 @@ class MovieDetailHeader extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
-        child: movie.posterPath != null
-            ? CachedNetworkImage(
-                imageUrl: movie.fullPosterUrl,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  color: Colors.grey[800],
-                  child: const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  ),
-                ),
-                errorWidget: (context, url, error) => Container(
+        child:
+            movie.posterPath != null
+                ? CachedNetworkImage(
+                  imageUrl: movie.fullPosterUrl,
+                  fit: BoxFit.cover,
+                  placeholder:
+                      (context, url) => Container(
+                        color: Colors.grey[800],
+                        child: const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                      ),
+                  errorWidget:
+                      (context, url, error) => Container(
+                        color: Colors.grey[800],
+                        child: const Icon(
+                          Icons.movie,
+                          color: Colors.white54,
+                          size: 48,
+                        ),
+                      ),
+                )
+                : Container(
                   color: Colors.grey[800],
                   child: const Icon(
                     Icons.movie,
@@ -183,15 +189,6 @@ class MovieDetailHeader extends StatelessWidget {
                     size: 48,
                   ),
                 ),
-              )
-            : Container(
-                color: Colors.grey[800],
-                child: const Icon(
-                  Icons.movie,
-                  color: Colors.white54,
-                  size: 48,
-                ),
-              ),
       ),
     );
   }
@@ -217,9 +214,7 @@ class MovieDetailHeader extends StatelessWidget {
         if (movie.releaseDate != null) ...[
           Text(
             _getReleaseYear(movie.releaseDate!),
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: Colors.white70,
-            ),
+            style: theme.textTheme.titleMedium?.copyWith(color: Colors.white70),
           ),
           const SizedBox(height: 12),
         ],
@@ -228,11 +223,7 @@ class MovieDetailHeader extends StatelessWidget {
         if (movie.voteAverage > 0) ...[
           Row(
             children: [
-              const Icon(
-                Icons.star,
-                color: Colors.amber,
-                size: 20,
-              ),
+              const Icon(Icons.star, color: Colors.amber, size: 20),
               const SizedBox(width: 4),
               Text(
                 movie.voteAverage.toStringAsFixed(1),
@@ -290,11 +281,7 @@ class MovieInfoCard extends StatelessWidget {
             Row(
               children: [
                 if (icon != null) ...[
-                  Icon(
-                    icon,
-                    size: 16,
-                    color: theme.colorScheme.primary,
-                  ),
+                  Icon(icon, size: 16, color: theme.colorScheme.primary),
                   const SizedBox(width: 4),
                 ],
                 Text(

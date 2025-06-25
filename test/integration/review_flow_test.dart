@@ -15,7 +15,9 @@ import 'package:filmflow/main.dart';
 void main() {
   group('Review Flow Integration Tests', () {
     // 実際のアプリケーションを使用した真の統合テスト
-    testWidgets('App launches successfully without errors', (WidgetTester tester) async {
+    testWidgets('App launches successfully without errors', (
+      WidgetTester tester,
+    ) async {
       // 実際のアプリケーションを起動
       await tester.pumpWidget(
         ProviderScope(
@@ -40,7 +42,9 @@ void main() {
       debugPrint('App launched successfully in test environment');
     });
 
-    testWidgets('Review creation form validation works correctly', (WidgetTester tester) async {
+    testWidgets('Review creation form validation works correctly', (
+      WidgetTester tester,
+    ) async {
       // テスト用の映画データ
       const testMovie = Movie(
         id: 12345,
@@ -61,9 +65,7 @@ void main() {
 
       // レビュー追加ページを表示
       await tester.pumpWidget(
-        TestHelpers.createTestWidget(
-          child: AddReviewPage(movie: testMovie),
-        ),
+        TestHelpers.createTestWidget(child: AddReviewPage(movie: testMovie)),
       );
 
       await tester.pumpAndSettle();
@@ -116,7 +118,9 @@ void main() {
       // テスト環境では成功メッセージまたはエラーハンドリングを確認
     });
 
-    testWidgets('Star rating widget behavior verification', (WidgetTester tester) async {
+    testWidgets('Star rating widget behavior verification', (
+      WidgetTester tester,
+    ) async {
       // 星評価ウィジェットの動作を詳細にテスト
       await tester.pumpWidget(
         TestHelpers.createTestWidget(
@@ -151,12 +155,12 @@ void main() {
       }
     });
 
-    testWidgets('Navigation and app structure verification', (WidgetTester tester) async {
+    testWidgets('Navigation and app structure verification', (
+      WidgetTester tester,
+    ) async {
       // アプリケーション全体の基本構造と安定性をテスト
       await tester.pumpWidget(
-        ProviderScope(
-          child: MyApp(firebaseAvailable: false),
-        ),
+        ProviderScope(child: MyApp(firebaseAvailable: false)),
       );
 
       await tester.pumpAndSettle(const Duration(seconds: 5));
@@ -169,18 +173,24 @@ void main() {
       expect(find.byType(ErrorWidget), findsNothing);
 
       // 何らかのインタラクティブ要素が存在することを確認（ボタン、タップ可能領域など）
-      final hasButtons = find.byType(ElevatedButton).evaluate().isNotEmpty ||
-                        find.byType(TextButton).evaluate().isNotEmpty ||
-                        find.byType(IconButton).evaluate().isNotEmpty ||
-                        find.byType(FloatingActionButton).evaluate().isNotEmpty;
+      final hasButtons =
+          find.byType(ElevatedButton).evaluate().isNotEmpty ||
+          find.byType(TextButton).evaluate().isNotEmpty ||
+          find.byType(IconButton).evaluate().isNotEmpty ||
+          find.byType(FloatingActionButton).evaluate().isNotEmpty;
 
-      final hasInteractiveElements = hasButtons ||
-                                   find.byType(GestureDetector).evaluate().isNotEmpty ||
-                                   find.byType(InkWell).evaluate().isNotEmpty;
+      final hasInteractiveElements =
+          hasButtons ||
+          find.byType(GestureDetector).evaluate().isNotEmpty ||
+          find.byType(InkWell).evaluate().isNotEmpty;
 
       // インタラクティブ要素の存在を確認、なければ最低限の構造が正しいことを確認
       if (hasInteractiveElements) {
-        expect(hasInteractiveElements, isTrue, reason: 'App should have interactive elements');
+        expect(
+          hasInteractiveElements,
+          isTrue,
+          reason: 'App should have interactive elements',
+        );
       } else {
         // インタラクティブ要素がない場合でも、基本構造は正常
         expect(find.byType(Scaffold), findsOneWidget);
@@ -211,9 +221,7 @@ void main() {
       );
 
       await tester.pumpWidget(
-        TestHelpers.createTestWidget(
-          child: AddReviewPage(movie: testMovie),
-        ),
+        TestHelpers.createTestWidget(child: AddReviewPage(movie: testMovie)),
       );
 
       await tester.pumpAndSettle();
@@ -238,7 +246,9 @@ void main() {
       expect(find.byType(TextFormField), findsOneWidget);
     });
 
-    testWidgets('Theme and responsive design verification', (WidgetTester tester) async {
+    testWidgets('Theme and responsive design verification', (
+      WidgetTester tester,
+    ) async {
       // テーマとレスポンシブデザインのテスト
       const testMovie = Movie(
         id: 12345,

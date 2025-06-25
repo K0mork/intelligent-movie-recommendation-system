@@ -7,9 +7,7 @@ void main() {
     testWidgets('displays correct number of stars', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: StarRating(rating: 3.0, maxRating: 5),
-          ),
+          home: Scaffold(body: StarRating(rating: 3.0, maxRating: 5)),
         ),
       );
 
@@ -17,15 +15,13 @@ void main() {
       expect(find.byIcon(Icons.star_border), findsNWidgets(2));
     });
 
-    testWidgets('displays half stars when allowHalfRating is true', (tester) async {
+    testWidgets('displays half stars when allowHalfRating is true', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: StarRating(
-              rating: 3.5,
-              maxRating: 5,
-              allowHalfRating: true,
-            ),
+            body: StarRating(rating: 3.5, maxRating: 5, allowHalfRating: true),
           ),
         ),
       );
@@ -35,15 +31,13 @@ void main() {
       expect(find.byIcon(Icons.star_border), findsOneWidget);
     });
 
-    testWidgets('does not display half stars when allowHalfRating is false', (tester) async {
+    testWidgets('does not display half stars when allowHalfRating is false', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: StarRating(
-              rating: 3.5,
-              maxRating: 5,
-              allowHalfRating: false,
-            ),
+            body: StarRating(rating: 3.5, maxRating: 5, allowHalfRating: false),
           ),
         ),
       );
@@ -77,15 +71,12 @@ void main() {
       expect(tappedRating, equals(3.0));
     });
 
-    testWidgets('does not respond to taps when onRatingChanged is null', (tester) async {
+    testWidgets('does not respond to taps when onRatingChanged is null', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: StarRating(
-              rating: 2.0,
-              maxRating: 5,
-            ),
-          ),
+          home: Scaffold(body: StarRating(rating: 2.0, maxRating: 5)),
         ),
       );
 
@@ -120,7 +111,9 @@ void main() {
       }
 
       // Check that empty stars have the inactive color
-      final emptyStars = starIcons.where((icon) => icon.icon == Icons.star_border);
+      final emptyStars = starIcons.where(
+        (icon) => icon.icon == Icons.star_border,
+      );
       for (final star in emptyStars) {
         expect(star.color, equals(Colors.grey));
       }
@@ -132,11 +125,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: StarRating(
-              rating: 3.0,
-              maxRating: 5,
-              size: customSize,
-            ),
+            body: StarRating(rating: 3.0, maxRating: 5, size: customSize),
           ),
         ),
       );
@@ -151,9 +140,7 @@ void main() {
       // Test rating of 0
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: StarRating(rating: 0.0, maxRating: 5),
-          ),
+          home: Scaffold(body: StarRating(rating: 0.0, maxRating: 5)),
         ),
       );
 
@@ -163,9 +150,7 @@ void main() {
       // Test maximum rating
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: StarRating(rating: 5.0, maxRating: 5),
-          ),
+          home: Scaffold(body: StarRating(rating: 5.0, maxRating: 5)),
         ),
       );
 
@@ -272,7 +257,9 @@ void main() {
         expect(star.color, equals(Colors.orange));
       }
 
-      final emptyStars = starIcons.where((icon) => icon.icon == Icons.star_border);
+      final emptyStars = starIcons.where(
+        (icon) => icon.icon == Icons.star_border,
+      );
       for (final star in emptyStars) {
         expect(star.color, equals(Colors.grey));
       }
@@ -292,7 +279,10 @@ void main() {
 
       final paddingWidgets = tester.widgetList<Padding>(find.byType(Padding));
       for (final padding in paddingWidgets) {
-        expect(padding.padding, equals(const EdgeInsets.symmetric(horizontal: 2.0)));
+        expect(
+          padding.padding,
+          equals(const EdgeInsets.symmetric(horizontal: 2.0)),
+        );
       }
     });
 

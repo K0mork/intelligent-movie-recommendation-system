@@ -13,7 +13,8 @@ void main() {
       testMovie = const Movie(
         id: 12345,
         title: 'Test Movie Title',
-        overview: 'This is a comprehensive test overview for the movie that provides detailed information about the plot and characters.',
+        overview:
+            'This is a comprehensive test overview for the movie that provides detailed information about the plot and characters.',
         posterPath: '/test-poster.jpg',
         backdropPath: '/test-backdrop.jpg',
         releaseDate: '2023-06-15',
@@ -29,15 +30,13 @@ void main() {
     });
 
     Widget createTestWidget(Widget child) {
-      return MaterialApp(
-        home: Scaffold(
-          body: child,
-        ),
-      );
+      return MaterialApp(home: Scaffold(body: child));
     }
 
     group('Basic Rendering', () {
-      testWidgets('should display movie title correctly', (WidgetTester tester) async {
+      testWidgets('should display movie title correctly', (
+        WidgetTester tester,
+      ) async {
         // Arrange & Act
         await tester.pumpWidget(
           createTestWidget(MovieInfoSection(movie: testMovie)),
@@ -47,7 +46,9 @@ void main() {
         expect(find.text('Test Movie Title'), findsOneWidget);
       });
 
-      testWidgets('should display original title when different from title', (WidgetTester tester) async {
+      testWidgets('should display original title when different from title', (
+        WidgetTester tester,
+      ) async {
         // Arrange & Act
         await tester.pumpWidget(
           createTestWidget(MovieInfoSection(movie: testMovie)),
@@ -57,7 +58,9 @@ void main() {
         expect(find.text('Original Test Movie Title'), findsOneWidget);
       });
 
-      testWidgets('should not display original title when same as title', (WidgetTester tester) async {
+      testWidgets('should not display original title when same as title', (
+        WidgetTester tester,
+      ) async {
         // Arrange
         final movieWithSameTitle = testMovie.copyWith(
           originalTitle: 'Test Movie Title', // Same as title
@@ -74,7 +77,9 @@ void main() {
         expect(find.text('Test Movie Title'), findsOneWidget);
       });
 
-      testWidgets('should display release date when available', (WidgetTester tester) async {
+      testWidgets('should display release date when available', (
+        WidgetTester tester,
+      ) async {
         // Arrange & Act
         await tester.pumpWidget(
           createTestWidget(MovieInfoSection(movie: testMovie)),
@@ -85,22 +90,24 @@ void main() {
         expect(find.byIcon(Icons.calendar_today), findsOneWidget);
       });
 
-      testWidgets('should not display release date when empty', (WidgetTester tester) async {
+      testWidgets('should not display release date when empty', (
+        WidgetTester tester,
+      ) async {
         // Arrange
         final movieWithoutDate = testMovie.copyWith(releaseDate: '');
 
         // Act
         await tester.pumpWidget(
-          createTestWidget(
-            MovieInfoSection(movie: movieWithoutDate),
-          ),
+          createTestWidget(MovieInfoSection(movie: movieWithoutDate)),
         );
 
         // Assert
         expect(find.byIcon(Icons.calendar_today), findsNothing);
       });
 
-      testWidgets('should not display release date when null', (WidgetTester tester) async {
+      testWidgets('should not display release date when null', (
+        WidgetTester tester,
+      ) async {
         // Arrange
         const movieWithNullDate = Movie(
           id: 12345,
@@ -121,9 +128,7 @@ void main() {
 
         // Act
         await tester.pumpWidget(
-          createTestWidget(
-            MovieInfoSection(movie: movieWithNullDate),
-          ),
+          createTestWidget(MovieInfoSection(movie: movieWithNullDate)),
         );
 
         // Assert
@@ -132,7 +137,9 @@ void main() {
     });
 
     group('Rating Information', () {
-      testWidgets('should display vote average correctly', (WidgetTester tester) async {
+      testWidgets('should display vote average correctly', (
+        WidgetTester tester,
+      ) async {
         // Arrange & Act
         await tester.pumpWidget(
           createTestWidget(MovieInfoSection(movie: testMovie)),
@@ -143,7 +150,9 @@ void main() {
         expect(find.byIcon(Icons.star), findsOneWidget);
       });
 
-      testWidgets('should display vote count correctly', (WidgetTester tester) async {
+      testWidgets('should display vote count correctly', (
+        WidgetTester tester,
+      ) async {
         // Arrange & Act
         await tester.pumpWidget(
           createTestWidget(MovieInfoSection(movie: testMovie)),
@@ -159,24 +168,22 @@ void main() {
 
         // Act
         await tester.pumpWidget(
-          createTestWidget(
-            MovieInfoSection(movie: movieWithZeroVotes),
-          ),
+          createTestWidget(MovieInfoSection(movie: movieWithZeroVotes)),
         );
 
         // Assert
         expect(find.text(' (0 votes)'), findsOneWidget);
       });
 
-      testWidgets('should format vote average to one decimal place', (WidgetTester tester) async {
+      testWidgets('should format vote average to one decimal place', (
+        WidgetTester tester,
+      ) async {
         // Arrange
         final movieWithPreciseRating = testMovie.copyWith(voteAverage: 8.567);
 
         // Act
         await tester.pumpWidget(
-          createTestWidget(
-            MovieInfoSection(movie: movieWithPreciseRating),
-          ),
+          createTestWidget(MovieInfoSection(movie: movieWithPreciseRating)),
         );
 
         // Assert
@@ -185,7 +192,9 @@ void main() {
     });
 
     group('Poster Image', () {
-      testWidgets('should display CachedNetworkImage for poster', (WidgetTester tester) async {
+      testWidgets('should display CachedNetworkImage for poster', (
+        WidgetTester tester,
+      ) async {
         // Arrange & Act
         await tester.pumpWidget(
           createTestWidget(MovieInfoSection(movie: testMovie)),
@@ -208,7 +217,9 @@ void main() {
         expect(cachedImageWidget.imageUrl, equals(testMovie.fullPosterUrl));
       });
 
-      testWidgets('should have correct poster dimensions', (WidgetTester tester) async {
+      testWidgets('should have correct poster dimensions', (
+        WidgetTester tester,
+      ) async {
         // Arrange & Act
         await tester.pumpWidget(
           createTestWidget(MovieInfoSection(movie: testMovie)),
@@ -224,7 +235,9 @@ void main() {
     });
 
     group('Overview Section', () {
-      testWidgets('should display overview when available', (WidgetTester tester) async {
+      testWidgets('should display overview when available', (
+        WidgetTester tester,
+      ) async {
         // Arrange & Act
         await tester.pumpWidget(
           createTestWidget(MovieInfoSection(movie: testMovie)),
@@ -235,7 +248,9 @@ void main() {
         expect(find.text(testMovie.overview), findsOneWidget);
       });
 
-      testWidgets('should not display overview when empty', (WidgetTester tester) async {
+      testWidgets('should not display overview when empty', (
+        WidgetTester tester,
+      ) async {
         // Arrange
         final movieWithoutOverview = testMovie.copyWith(overview: '');
 
@@ -248,16 +263,20 @@ void main() {
         expect(find.text('あらすじ'), findsNothing);
       });
 
-      testWidgets('should handle long overview text', (WidgetTester tester) async {
+      testWidgets('should handle long overview text', (
+        WidgetTester tester,
+      ) async {
         // Arrange
-        final longOverview = 'This is a very long overview that contains multiple sentences and provides extensive detail about the movie plot, characters, and setting. ' * 5;
-        final movieWithLongOverview = testMovie.copyWith(overview: longOverview);
+        final longOverview =
+            'This is a very long overview that contains multiple sentences and provides extensive detail about the movie plot, characters, and setting. ' *
+            5;
+        final movieWithLongOverview = testMovie.copyWith(
+          overview: longOverview,
+        );
 
         // Act
         await tester.pumpWidget(
-          createTestWidget(
-            MovieInfoSection(movie: movieWithLongOverview),
-          ),
+          createTestWidget(MovieInfoSection(movie: movieWithLongOverview)),
         );
 
         // Assert
@@ -267,7 +286,9 @@ void main() {
     });
 
     group('Layout and Structure', () {
-      testWidgets('should have proper widget structure', (WidgetTester tester) async {
+      testWidgets('should have proper widget structure', (
+        WidgetTester tester,
+      ) async {
         // Arrange & Act
         await tester.pumpWidget(
           createTestWidget(MovieInfoSection(movie: testMovie)),
@@ -279,7 +300,9 @@ void main() {
         expect(find.byType(ClipRRect), findsOneWidget);
       });
 
-      testWidgets('should have rounded corners on poster image', (WidgetTester tester) async {
+      testWidgets('should have rounded corners on poster image', (
+        WidgetTester tester,
+      ) async {
         // Arrange & Act
         await tester.pumpWidget(
           createTestWidget(MovieInfoSection(movie: testMovie)),
@@ -291,7 +314,9 @@ void main() {
         expect(borderRadius.topLeft.x, equals(8.0));
       });
 
-      testWidgets('should be responsive to different screen sizes', (WidgetTester tester) async {
+      testWidgets('should be responsive to different screen sizes', (
+        WidgetTester tester,
+      ) async {
         // Arrange - Set small screen size
         await tester.binding.setSurfaceSize(const Size(400, 600));
 
@@ -316,7 +341,9 @@ void main() {
     });
 
     group('Edge Cases', () {
-      testWidgets('should handle movie with minimal data', (WidgetTester tester) async {
+      testWidgets('should handle movie with minimal data', (
+        WidgetTester tester,
+      ) async {
         // Arrange
         const minimalMovie = Movie(
           id: 1,
@@ -337,9 +364,7 @@ void main() {
 
         // Act
         await tester.pumpWidget(
-          createTestWidget(
-            MovieInfoSection(movie: minimalMovie),
-          ),
+          createTestWidget(MovieInfoSection(movie: minimalMovie)),
         );
 
         // Assert
@@ -350,30 +375,30 @@ void main() {
         expect(find.byIcon(Icons.calendar_today), findsNothing);
       });
 
-      testWidgets('should handle very high vote counts', (WidgetTester tester) async {
+      testWidgets('should handle very high vote counts', (
+        WidgetTester tester,
+      ) async {
         // Arrange
         final movieWithHighVotes = testMovie.copyWith(voteCount: 999999);
 
         // Act
         await tester.pumpWidget(
-          createTestWidget(
-            MovieInfoSection(movie: movieWithHighVotes),
-          ),
+          createTestWidget(MovieInfoSection(movie: movieWithHighVotes)),
         );
 
         // Assert
         expect(find.text(' (999999 votes)'), findsOneWidget);
       });
 
-      testWidgets('should handle extreme rating values', (WidgetTester tester) async {
+      testWidgets('should handle extreme rating values', (
+        WidgetTester tester,
+      ) async {
         // Arrange
         final movieWithExtremeRating = testMovie.copyWith(voteAverage: 10.0);
 
         // Act
         await tester.pumpWidget(
-          createTestWidget(
-            MovieInfoSection(movie: movieWithExtremeRating),
-          ),
+          createTestWidget(MovieInfoSection(movie: movieWithExtremeRating)),
         );
 
         // Assert
@@ -382,7 +407,9 @@ void main() {
     });
 
     group('Accessibility', () {
-      testWidgets('should have proper semantic structure', (WidgetTester tester) async {
+      testWidgets('should have proper semantic structure', (
+        WidgetTester tester,
+      ) async {
         // Arrange & Act
         await tester.pumpWidget(
           createTestWidget(MovieInfoSection(movie: testMovie)),
@@ -401,9 +428,7 @@ void main() {
       testWidgets('should adapt to dark theme', (WidgetTester tester) async {
         // Arrange & Act
         await tester.pumpWidget(
-          createTestWidget(
-            MovieInfoSection(movie: testMovie),
-          ),
+          createTestWidget(MovieInfoSection(movie: testMovie)),
         );
 
         // Assert - Widget should render without issues in dark theme
@@ -414,9 +439,7 @@ void main() {
       testWidgets('should adapt to light theme', (WidgetTester tester) async {
         // Arrange & Act
         await tester.pumpWidget(
-          createTestWidget(
-            MovieInfoSection(movie: testMovie),
-          ),
+          createTestWidget(MovieInfoSection(movie: testMovie)),
         );
 
         // Assert - Widget should render without issues in light theme

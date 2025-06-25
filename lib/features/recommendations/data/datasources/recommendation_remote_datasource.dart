@@ -17,7 +17,8 @@ abstract class RecommendationRemoteDataSource {
   );
 }
 
-class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSource {
+class RecommendationRemoteDataSourceImpl
+    implements RecommendationRemoteDataSource {
   final FirebaseFirestore firestore;
   final FirebaseFunctions functions;
 
@@ -30,18 +31,20 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
   Future<List<RecommendationModel>> getRecommendations(String userId) async {
     try {
       // インデックス作成中のため、まずuserIdでフィルタリングのみ実行
-      final snapshot = await firestore
-          .collection('recommendations')
-          .where('userId', isEqualTo: userId)
-          .limit(20)
-          .get();
+      final snapshot =
+          await firestore
+              .collection('recommendations')
+              .where('userId', isEqualTo: userId)
+              .limit(20)
+              .get();
 
       // クライアント側でソート（インデックス作成完了まで）
-      final recommendations = snapshot.docs.map((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
-        return RecommendationModel.fromFirestore(data);
-      }).toList();
+      final recommendations =
+          snapshot.docs.map((doc) {
+            final data = doc.data();
+            data['id'] = doc.id;
+            return RecommendationModel.fromFirestore(data);
+          }).toList();
 
       // 作成日時でソート
       recommendations.sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -53,7 +56,9 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
   }
 
   @override
-  Future<List<RecommendationModel>> generateRecommendations(String userId) async {
+  Future<List<RecommendationModel>> generateRecommendations(
+    String userId,
+  ) async {
     try {
       // Cloud Functions経由で実際のAI推薦を取得
       final result = await functions
@@ -61,20 +66,26 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
           .call({'userId': userId});
 
       final recommendationsData = result.data as Map<String, dynamic>;
-      final recommendationsList = recommendationsData['recommendations'] as List;
+      final recommendationsList =
+          recommendationsData['recommendations'] as List;
 
-      final recommendations = recommendationsList
-          .map((item) => RecommendationModel.fromCloudFunction(
-                item as Map<String, dynamic>,
-                userId,
-              ))
-          .toList();
+      final recommendations =
+          recommendationsList
+              .map(
+                (item) => RecommendationModel.fromCloudFunction(
+                  item as Map<String, dynamic>,
+                  userId,
+                ),
+              )
+              .toList();
 
       // Firestoreに保存（将来的な取得のため）
       try {
         final batch = firestore.batch();
         for (final recommendation in recommendations) {
-          final docRef = firestore.collection('recommendations').doc(recommendation.id);
+          final docRef = firestore
+              .collection('recommendations')
+              .doc(recommendation.id);
           batch.set(docRef, recommendation.toFirestore());
         }
         await batch.commit();
@@ -94,7 +105,9 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
       try {
         final batch = firestore.batch();
         for (final recommendation in sampleRecommendations) {
-          final docRef = firestore.collection('recommendations').doc(recommendation.id);
+          final docRef = firestore
+              .collection('recommendations')
+              .doc(recommendation.id);
           batch.set(docRef, recommendation.toFirestore());
         }
         await batch.commit();
@@ -151,7 +164,10 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
   }
 
   @override
-  Future<void> saveRecommendation(String userId, String recommendationId) async {
+  Future<void> saveRecommendation(
+    String userId,
+    String recommendationId,
+  ) async {
     try {
       await firestore
           .collection('users')
@@ -159,36 +175,41 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
           .collection('savedRecommendations')
           .doc(recommendationId)
           .set({
-        'recommendationId': recommendationId,
-        'savedAt': FieldValue.serverTimestamp(),
-      });
+            'recommendationId': recommendationId,
+            'savedAt': FieldValue.serverTimestamp(),
+          });
     } catch (e) {
       throw Exception('推薦結果の保存に失敗しました: $e');
     }
   }
 
   @override
-  Future<List<RecommendationModel>> getSavedRecommendations(String userId) async {
+  Future<List<RecommendationModel>> getSavedRecommendations(
+    String userId,
+  ) async {
     try {
-      final savedSnapshot = await firestore
-          .collection('users')
-          .doc(userId)
-          .collection('savedRecommendations')
-          .orderBy('savedAt', descending: true)
-          .get();
+      final savedSnapshot =
+          await firestore
+              .collection('users')
+              .doc(userId)
+              .collection('savedRecommendations')
+              .orderBy('savedAt', descending: true)
+              .get();
 
-      final recommendationIds = savedSnapshot.docs
-          .map((doc) => doc.data()['recommendationId'] as String)
-          .toList();
+      final recommendationIds =
+          savedSnapshot.docs
+              .map((doc) => doc.data()['recommendationId'] as String)
+              .toList();
 
       if (recommendationIds.isEmpty) {
         return [];
       }
 
-      final recommendationsSnapshot = await firestore
-          .collection('recommendations')
-          .where(FieldPath.documentId, whereIn: recommendationIds)
-          .get();
+      final recommendationsSnapshot =
+          await firestore
+              .collection('recommendations')
+              .where(FieldPath.documentId, whereIn: recommendationIds)
+              .get();
 
       return recommendationsSnapshot.docs.map((doc) {
         final data = doc.data();
@@ -201,7 +222,10 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
   }
 
   @override
-  Future<void> deleteRecommendation(String userId, String recommendationId) async {
+  Future<void> deleteRecommendation(
+    String userId,
+    String recommendationId,
+  ) async {
     try {
       // 保存済みリストから削除
       await firestore
@@ -223,9 +247,7 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
     String? feedback,
   ) async {
     try {
-      await firestore
-          .collection('recommendationFeedback')
-          .add({
+      await firestore.collection('recommendationFeedback').add({
         'userId': userId,
         'recommendationId': recommendationId,
         'isHelpful': isHelpful,
@@ -238,9 +260,10 @@ class RecommendationRemoteDataSourceImpl implements RecommendationRemoteDataSour
           .collection('recommendations')
           .doc(recommendationId)
           .update({
-        'feedbackCount': FieldValue.increment(1),
-        'helpfulCount': isHelpful ? FieldValue.increment(1) : FieldValue.increment(0),
-      });
+            'feedbackCount': FieldValue.increment(1),
+            'helpfulCount':
+                isHelpful ? FieldValue.increment(1) : FieldValue.increment(0),
+          });
     } catch (e) {
       throw Exception('フィードバックの送信に失敗しました: $e');
     }

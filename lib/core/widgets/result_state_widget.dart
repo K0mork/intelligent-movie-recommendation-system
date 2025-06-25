@@ -13,7 +13,8 @@ class ResultStateWidget<T> extends StatelessWidget {
   final Widget Function(T data) builder;
   final Widget Function()? initialBuilder;
   final Widget Function(String? message)? loadingBuilder;
-  final Widget Function(String message, Object? error, StackTrace? stackTrace)? errorBuilder;
+  final Widget Function(String message, Object? error, StackTrace? stackTrace)?
+  errorBuilder;
   final VoidCallback? onRetry;
   final bool showDebugInfo;
 
@@ -33,10 +34,13 @@ class ResultStateWidget<T> extends StatelessWidget {
     return state.when(
       success: builder,
       initial: () => initialBuilder?.call() ?? _buildDefaultInitial(),
-      loading: (message) => loadingBuilder?.call(message) ?? _buildDefaultLoading(message),
-      onError: (message, error, stackTrace) =>
-          errorBuilder?.call(message, error, stackTrace) ??
-          _buildDefaultError(message, error, stackTrace),
+      loading:
+          (message) =>
+              loadingBuilder?.call(message) ?? _buildDefaultLoading(message),
+      onError:
+          (message, error, stackTrace) =>
+              errorBuilder?.call(message, error, stackTrace) ??
+              _buildDefaultError(message, error, stackTrace),
     );
   }
 
@@ -49,12 +53,14 @@ class ResultStateWidget<T> extends StatelessWidget {
   }
 
   Widget _buildDefaultLoading(String? message) {
-    return LoadingStateWidget.fullScreen(
-      message: message ?? '読み込み中...',
-    );
+    return LoadingStateWidget.fullScreen(message: message ?? '読み込み中...');
   }
 
-  Widget _buildDefaultError(String message, Object? error, StackTrace? stackTrace) {
+  Widget _buildDefaultError(
+    String message,
+    Object? error,
+    StackTrace? stackTrace,
+  ) {
     return ErrorDisplay(
       message: message,
       onRetry: onRetry,
@@ -70,7 +76,8 @@ class SliverResultStateWidget<T> extends StatelessWidget {
   final Widget Function(T data) builder;
   final Widget Function()? initialBuilder;
   final Widget Function(String? message)? loadingBuilder;
-  final Widget Function(String message, Object? error, StackTrace? stackTrace)? errorBuilder;
+  final Widget Function(String message, Object? error, StackTrace? stackTrace)?
+  errorBuilder;
   final VoidCallback? onRetry;
 
   const SliverResultStateWidget({
@@ -88,10 +95,13 @@ class SliverResultStateWidget<T> extends StatelessWidget {
     final widget = state.when(
       success: builder,
       initial: () => initialBuilder?.call() ?? _buildDefaultInitial(),
-      loading: (message) => loadingBuilder?.call(message) ?? _buildDefaultLoading(message),
-      onError: (message, error, stackTrace) =>
-          errorBuilder?.call(message, error, stackTrace) ??
-          _buildDefaultError(message, error, stackTrace),
+      loading:
+          (message) =>
+              loadingBuilder?.call(message) ?? _buildDefaultLoading(message),
+      onError:
+          (message, error, stackTrace) =>
+              errorBuilder?.call(message, error, stackTrace) ??
+              _buildDefaultError(message, error, stackTrace),
     );
 
     return SliverToBoxAdapter(child: widget);
@@ -99,24 +109,20 @@ class SliverResultStateWidget<T> extends StatelessWidget {
 
   Widget _buildDefaultInitial() {
     return const Center(
-      child: Padding(
-        padding: EdgeInsets.all(32.0),
-        child: Text('データを準備中...'),
-      ),
+      child: Padding(padding: EdgeInsets.all(32.0), child: Text('データを準備中...')),
     );
   }
 
   Widget _buildDefaultLoading(String? message) {
-    return LoadingStateWidget.fullScreen(
-      message: message ?? '読み込み中...',
-    );
+    return LoadingStateWidget.fullScreen(message: message ?? '読み込み中...');
   }
 
-  Widget _buildDefaultError(String message, Object? error, StackTrace? stackTrace) {
-    return ErrorDisplay(
-      message: message,
-      onRetry: onRetry,
-    );
+  Widget _buildDefaultError(
+    String message,
+    Object? error,
+    StackTrace? stackTrace,
+  ) {
+    return ErrorDisplay(message: message, onRetry: onRetry);
   }
 }
 
@@ -127,7 +133,8 @@ class RefreshableResultStateWidget<T> extends StatelessWidget {
   final Future<void> Function() onRefresh;
   final Widget Function()? initialBuilder;
   final Widget Function(String? message)? loadingBuilder;
-  final Widget Function(String message, Object? error, StackTrace? stackTrace)? errorBuilder;
+  final Widget Function(String message, Object? error, StackTrace? stackTrace)?
+  errorBuilder;
 
   const RefreshableResultStateWidget({
     super.key,
@@ -162,7 +169,8 @@ class ListResultStateWidget<T> extends StatelessWidget {
   final Widget? emptyWidget;
   final Widget Function()? initialBuilder;
   final Widget Function(String? message)? loadingBuilder;
-  final Widget Function(String message, Object? error, StackTrace? stackTrace)? errorBuilder;
+  final Widget Function(String message, Object? error, StackTrace? stackTrace)?
+  errorBuilder;
   final VoidCallback? onRetry;
 
   const ListResultStateWidget({
@@ -186,10 +194,13 @@ class ListResultStateWidget<T> extends StatelessWidget {
         return builder(data);
       },
       initial: () => initialBuilder?.call() ?? _buildDefaultInitial(),
-      loading: (message) => loadingBuilder?.call(message) ?? _buildDefaultLoading(message),
-      onError: (message, error, stackTrace) =>
-          errorBuilder?.call(message, error, stackTrace) ??
-          _buildDefaultError(message, error, stackTrace),
+      loading:
+          (message) =>
+              loadingBuilder?.call(message) ?? _buildDefaultLoading(message),
+      onError:
+          (message, error, stackTrace) =>
+              errorBuilder?.call(message, error, stackTrace) ??
+              _buildDefaultError(message, error, stackTrace),
     );
   }
 
@@ -210,16 +221,15 @@ class ListResultStateWidget<T> extends StatelessWidget {
   }
 
   Widget _buildDefaultLoading(String? message) {
-    return LoadingStateWidget.fullScreen(
-      message: message ?? '読み込み中...',
-    );
+    return LoadingStateWidget.fullScreen(message: message ?? '読み込み中...');
   }
 
-  Widget _buildDefaultError(String message, Object? error, StackTrace? stackTrace) {
-    return ErrorDisplay(
-      message: message,
-      onRetry: onRetry,
-    );
+  Widget _buildDefaultError(
+    String message,
+    Object? error,
+    StackTrace? stackTrace,
+  ) {
+    return ErrorDisplay(message: message, onRetry: onRetry);
   }
 }
 
@@ -260,13 +270,12 @@ class PaginatedResultStateWidget<T> extends StatelessWidget {
         );
       },
       initial: () => _buildDefaultInitial(),
-      loading: (message) => LoadingStateWidget.fullScreen(
-        message: message ?? '読み込み中...',
-      ),
-      onError: (message, error, stackTrace) => ErrorDisplay(
-        message: message,
-        onRetry: onRetry,
-      ),
+      loading:
+          (message) =>
+              LoadingStateWidget.fullScreen(message: message ?? '読み込み中...'),
+      onError:
+          (message, error, stackTrace) =>
+              ErrorDisplay(message: message, onRetry: onRetry),
     );
   }
 
@@ -289,25 +298,28 @@ class PaginatedResultStateWidget<T> extends StatelessWidget {
   Widget _buildLoadMoreButton() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: isLoadingMore
-          ? const LoadingStateWidget.inline()
-          : ElevatedButton(
-              onPressed: onLoadMore,
-              child: const Text('さらに読み込む'),
-            ),
+      child:
+          isLoadingMore
+              ? const LoadingStateWidget.inline()
+              : ElevatedButton(
+                onPressed: onLoadMore,
+                child: const Text('さらに読み込む'),
+              ),
     );
   }
 }
 
 /// ResultState用のConsumerWidget拡張
-mixin ResultStateConsumerMixin<T extends ConsumerStatefulWidget> on ConsumerState<T> {
+mixin ResultStateConsumerMixin<T extends ConsumerStatefulWidget>
+    on ConsumerState<T> {
   Widget buildResultState<R>({
     required ResultState<R> state,
     required Widget Function(R data) builder,
     VoidCallback? onRetry,
     Widget Function()? initialBuilder,
     Widget Function(String? message)? loadingBuilder,
-    Widget Function(String message, Object? error, StackTrace? stackTrace)? errorBuilder,
+    Widget Function(String message, Object? error, StackTrace? stackTrace)?
+    errorBuilder,
   }) {
     return ResultStateWidget<R>(
       state: state,

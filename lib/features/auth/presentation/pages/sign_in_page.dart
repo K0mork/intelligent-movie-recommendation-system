@@ -81,21 +81,19 @@ class SignInPage extends ConsumerWidget {
               // 区切り線
               Row(
                 children: [
-                  Expanded(
-                    child: Divider(color: theme.colorScheme.outline),
-                  ),
+                  Expanded(child: Divider(color: theme.colorScheme.outline)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'または',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Divider(color: theme.colorScheme.outline),
-                  ),
+                  Expanded(child: Divider(color: theme.colorScheme.outline)),
                 ],
               ),
               const SizedBox(height: 32),
@@ -104,7 +102,9 @@ class SignInPage extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.3,
+                  ),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -112,7 +112,9 @@ class SignInPage extends ConsumerWidget {
                     Text(
                       '映画を見る前に、まずは人気作品を\nチェックしてみませんか？',
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.8,
+                        ),
                       ),
                       textAlign: TextAlign.center,
                     ),

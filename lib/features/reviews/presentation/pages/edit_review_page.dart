@@ -9,10 +9,7 @@ import '../../../../core/widgets/error_widgets.dart';
 class EditReviewPage extends ConsumerStatefulWidget {
   final Review review;
 
-  const EditReviewPage({
-    super.key,
-    required this.review,
-  });
+  const EditReviewPage({super.key, required this.review});
 
   @override
   ConsumerState<EditReviewPage> createState() => _EditReviewPageState();
@@ -28,7 +25,9 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
   @override
   void initState() {
     super.initState();
-    _commentController = TextEditingController(text: widget.review.comment ?? '');
+    _commentController = TextEditingController(
+      text: widget.review.comment ?? '',
+    );
     _rating = widget.review.rating;
     _watchedDate = widget.review.watchedDate;
   }
@@ -64,35 +63,45 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: widget.review.moviePosterUrl != null
-                              ? Image.network(
-                                  widget.review.moviePosterUrl!,
-                                  width: 80,
-                                  height: 120,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      width: 80,
-                                      height: 120,
-                                      color: theme.colorScheme.surfaceContainerHighest,
-                                      child: Icon(
-                                        Icons.movie,
-                                        size: 40,
-                                        color: theme.colorScheme.onSurfaceVariant,
-                                      ),
-                                    );
-                                  },
-                                )
-                              : Container(
-                                  width: 80,
-                                  height: 120,
-                                  color: theme.colorScheme.surfaceContainerHighest,
-                                  child: Icon(
-                                    Icons.movie,
-                                    size: 40,
-                                    color: theme.colorScheme.onSurfaceVariant,
+                          child:
+                              widget.review.moviePosterUrl != null
+                                  ? Image.network(
+                                    widget.review.moviePosterUrl!,
+                                    width: 80,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        width: 80,
+                                        height: 120,
+                                        color:
+                                            theme
+                                                .colorScheme
+                                                .surfaceContainerHighest,
+                                        child: Icon(
+                                          Icons.movie,
+                                          size: 40,
+                                          color:
+                                              theme
+                                                  .colorScheme
+                                                  .onSurfaceVariant,
+                                        ),
+                                      );
+                                    },
+                                  )
+                                  : Container(
+                                    width: 80,
+                                    height: 120,
+                                    color:
+                                        theme
+                                            .colorScheme
+                                            .surfaceContainerHighest,
+                                    child: Icon(
+                                      Icons.movie,
+                                      size: 40,
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
                                   ),
-                                ),
                         ),
                         const SizedBox(width: 16),
                         Expanded(
@@ -112,7 +121,8 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                                   color: theme.colorScheme.onSurfaceVariant,
                                 ),
                               ),
-                              if (widget.review.updatedAt != widget.review.createdAt) ...[
+                              if (widget.review.updatedAt !=
+                                  widget.review.createdAt) ...[
                                 const SizedBox(height: 4),
                                 Text(
                                   '最終更新: ${_formatDate(widget.review.updatedAt)}',
@@ -133,10 +143,7 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                 const SizedBox(height: 24),
 
                 // Rating Section
-                Text(
-                  '評価',
-                  style: theme.textTheme.titleMedium,
-                ),
+                Text('評価', style: theme.textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -162,10 +169,7 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                 const SizedBox(height: 24),
 
                 // Watched Date Section
-                Text(
-                  '鑑賞日',
-                  style: theme.textTheme.titleMedium,
-                ),
+                Text('鑑賞日', style: theme.textTheme.titleMedium),
                 const SizedBox(height: 8),
                 InkWell(
                   onTap: () async {
@@ -183,7 +187,10 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                   },
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: theme.colorScheme.outline),
                       borderRadius: BorderRadius.circular(8.0),
@@ -202,9 +209,10 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                               ? '${_watchedDate!.year}年${_watchedDate!.month}月${_watchedDate!.day}日'
                               : '鑑賞日を選択（任意）',
                           style: theme.textTheme.bodyLarge?.copyWith(
-                            color: _watchedDate != null
-                                ? theme.colorScheme.onSurface
-                                : theme.colorScheme.onSurfaceVariant,
+                            color:
+                                _watchedDate != null
+                                    ? theme.colorScheme.onSurface
+                                    : theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                         const Spacer(),
@@ -229,10 +237,7 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                 const SizedBox(height: 24),
 
                 // Comment Section
-                Text(
-                  'レビューコメント',
-                  style: theme.textTheme.titleMedium,
-                ),
+                Text('レビューコメント', style: theme.textTheme.titleMedium),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _commentController,
@@ -266,13 +271,14 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    child: _isSubmitting
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Text('レビューを更新'),
+                    child:
+                        _isSubmitting
+                            ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                            : const Text('レビューを更新'),
                   ),
                 ),
 
@@ -282,7 +288,10 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
+                    onPressed:
+                        _isSubmitting
+                            ? null
+                            : () => Navigator.of(context).pop(),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
@@ -329,30 +338,32 @@ class _EditReviewPageState extends ConsumerState<EditReviewPage> {
         movieTitle: widget.review.movieTitle,
         moviePosterUrl: widget.review.moviePosterUrl,
         rating: _rating,
-        comment: _commentController.text.trim().isEmpty
-            ? null
-            : _commentController.text.trim(),
+        comment:
+            _commentController.text.trim().isEmpty
+                ? null
+                : _commentController.text.trim(),
         watchedDate: _watchedDate,
         createdAt: widget.review.createdAt,
         updatedAt: DateTime.now(),
       );
 
-      await ref.read(reviewControllerProvider.notifier).updateReview(updatedReview);
+      await ref
+          .read(reviewControllerProvider.notifier)
+          .updateReview(updatedReview);
 
       if (mounted) {
-        SnackBarHelper.showSuccess(
-          context,
-          'レビューを更新しました',
-        );
+        SnackBarHelper.showSuccess(context, 'レビューを更新しました');
         Navigator.of(context).pop(true); // Return true to indicate success
       }
     } catch (e) {
       if (mounted) {
         String errorMessage = 'レビューの更新に失敗しました';
 
-        if (e.toString().contains('network') || e.toString().contains('internet')) {
+        if (e.toString().contains('network') ||
+            e.toString().contains('internet')) {
           errorMessage = 'ネットワークエラーが発生しました。インターネット接続を確認してください。';
-        } else if (e.toString().contains('permission') || e.toString().contains('auth')) {
+        } else if (e.toString().contains('permission') ||
+            e.toString().contains('auth')) {
           errorMessage = 'アクセス権限がありません。ログインし直してください。';
         } else if (e.toString().contains('validation')) {
           errorMessage = '入力内容に問題があります。再度確認してください。';

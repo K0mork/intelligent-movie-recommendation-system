@@ -7,8 +7,8 @@ import 'package:filmflow/features/movies/data/models/movie.dart' as movie_model;
 ///
 /// 複雑だった検索ロジックを個別のウィジェットに分離し、
 /// 保守性と再利用性を向上。
-class MovieSearchDelegate extends SearchDelegate<movie_model.Movie?> with YearFilterMixin {
-
+class MovieSearchDelegate extends SearchDelegate<movie_model.Movie?>
+    with YearFilterMixin {
   @override
   String get searchFieldLabel => '映画を検索...';
 
@@ -64,9 +64,7 @@ class MovieSearchDelegate extends SearchDelegate<movie_model.Movie?> with YearFi
   @override
   Widget buildSuggestions(BuildContext context) {
     if (query.isEmpty) {
-      return MovieSearchInitialState(
-        selectedYear: selectedYear,
-      );
+      return MovieSearchInitialState(selectedYear: selectedYear);
     }
 
     // 検索クエリがある場合は結果を表示

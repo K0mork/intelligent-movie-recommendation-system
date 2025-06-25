@@ -108,79 +108,72 @@ class LoadingStateWidget extends StatelessWidget {
         return TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.5, end: 1.0),
           duration: const Duration(milliseconds: 800),
-          builder: (context, value, child) => Transform.scale(
-            scale: value,
-            child: Opacity(
-              opacity: value,
-              child: Container(
-                width: size ?? 32.0,
-                height: size ?? 32.0,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
+          builder:
+              (context, value, child) => Transform.scale(
+                scale: value,
+                child: Opacity(
+                  opacity: value,
+                  child: Container(
+                    width: size ?? 32.0,
+                    height: size ?? 32.0,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
         );
 
       case LoadingType.fade:
         return TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.3, end: 1.0),
           duration: const Duration(milliseconds: 1000),
-          builder: (context, value, child) => Opacity(
-            opacity: value,
-            child: Container(
-              width: size ?? 32.0,
-              height: size ?? 32.0,
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
+          builder:
+              (context, value, child) => Opacity(
+                opacity: value,
+                child: Container(
+                  width: size ?? 32.0,
+                  height: size ?? 32.0,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
+                ),
               ),
-            ),
-          ),
         );
 
       case LoadingType.spin:
         return TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.0, end: 1.0),
           duration: const Duration(seconds: 1),
-          builder: (context, value, child) => Transform.rotate(
-            angle: value * 2.0 * 3.14159,
-            child: Icon(
-              Icons.refresh,
-              size: size ?? 32.0,
-              color: color,
-            ),
-          ),
+          builder:
+              (context, value, child) => Transform.rotate(
+                angle: value * 2.0 * 3.14159,
+                child: Icon(Icons.refresh, size: size ?? 32.0, color: color),
+              ),
         );
 
       case LoadingType.skeleton:
         return TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.3, end: 0.7),
           duration: const Duration(milliseconds: 1000),
-          builder: (context, value, child) => Container(
-            width: size ?? 200.0,
-            height: 20.0,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: value),
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-          ),
+          builder:
+              (context, value, child) => Container(
+                width: size ?? 200.0,
+                height: 20.0,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: value),
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
         );
     }
   }
 }
 
 /// ローディングの種類
-enum LoadingType {
-  circular,
-  linear,
-  pulse,
-  fade,
-  spin,
-  skeleton,
-}
+enum LoadingType { circular, linear, pulse, fade, spin, skeleton }
 
 /// 複数の要素を持つローディング状態
 class LoadingStateList extends StatelessWidget {
@@ -206,10 +199,7 @@ class LoadingStateList extends StatelessWidget {
           itemCount,
           (index) => Padding(
             padding: EdgeInsets.only(bottom: spacing),
-            child: LoadingStateWidget(
-              type: type,
-              padding: EdgeInsets.zero,
-            ),
+            child: LoadingStateWidget(type: type, padding: EdgeInsets.zero),
           ),
         ),
       ),
@@ -237,10 +227,8 @@ class ConditionalLoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return loadingWidget ?? LoadingStateWidget(
-        message: loadingMessage,
-        type: loadingType,
-      );
+      return loadingWidget ??
+          LoadingStateWidget(message: loadingMessage, type: loadingType);
     }
     return child;
   }
@@ -271,12 +259,8 @@ class LoadingOverlay extends StatelessWidget {
         if (isLoading)
           Positioned.fill(
             child: Container(
-              color: backgroundColor ??
-                  Colors.black.withValues(alpha: 0.5),
-              child: LoadingStateWidget(
-                message: message,
-                type: type,
-              ),
+              color: backgroundColor ?? Colors.black.withValues(alpha: 0.5),
+              child: LoadingStateWidget(message: message, type: type),
             ),
           ),
       ],

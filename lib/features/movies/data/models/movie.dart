@@ -56,13 +56,15 @@ class Movie {
       posterPath: json['poster_path'],
       backdropPath: json['backdrop_path'],
       releaseDate: json['release_date'],
-      voteAverage: double.tryParse(json['vote_average']?.toString() ?? '0.0') ?? 0.0,
+      voteAverage:
+          double.tryParse(json['vote_average']?.toString() ?? '0.0') ?? 0.0,
       voteCount: json['vote_count'] ?? 0,
       genreIds: (json['genre_ids'] as List<dynamic>?)?.cast<int>() ?? <int>[],
       adult: json['adult'] ?? false,
       originalLanguage: json['original_language'] ?? '',
       originalTitle: json['original_title'] ?? '',
-      popularity: double.tryParse(json['popularity']?.toString() ?? '0.0') ?? 0.0,
+      popularity:
+          double.tryParse(json['popularity']?.toString() ?? '0.0') ?? 0.0,
       video: json['video'] ?? false,
     );
   }
@@ -76,7 +78,8 @@ class Movie {
       backdropPath: null,
       releaseDate: json['Released'],
       voteAverage: double.tryParse(json['imdbRating'] ?? '0') ?? 0.0,
-      voteCount: int.tryParse(json['imdbVotes']?.replaceAll(',', '') ?? '0') ?? 0,
+      voteCount:
+          int.tryParse(json['imdbVotes']?.replaceAll(',', '') ?? '0') ?? 0,
       genreIds: [],
       adult: json['Rated'] == 'R',
       originalLanguage: 'en',
@@ -96,9 +99,10 @@ class Movie {
     return 'https://image.tmdb.org/t/p/w500$posterPath';
   }
 
-  String get fullBackdropUrl => backdropPath != null
-    ? 'https://image.tmdb.org/t/p/w780$backdropPath'
-    : '';
+  String get fullBackdropUrl =>
+      backdropPath != null
+          ? 'https://image.tmdb.org/t/p/w780$backdropPath'
+          : '';
 
   /// MovieEntityへの変換メソッド
   MovieEntity toEntity() {

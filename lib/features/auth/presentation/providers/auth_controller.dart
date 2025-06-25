@@ -87,5 +87,5 @@ class AuthController extends StateNotifier<AsyncValue<AppUser?>> {
 // Auth Controller Provider
 final authControllerProvider =
     StateNotifierProvider<AuthController, AsyncValue<AppUser?>>((ref) {
-  return AuthController(ref);
-});
+      return AuthController(ref);
+    });

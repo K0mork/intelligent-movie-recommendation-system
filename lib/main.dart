@@ -46,7 +46,6 @@ void main() async {
         child: MyApp(firebaseAvailable: initResult.firebaseAvailable),
       ),
     );
-
   } catch (error, stackTrace) {
     // 初期化プロセス自体でキャッチされない例外が発生した場合
     if (kIsWeb) {
@@ -95,13 +94,15 @@ class MyApp extends StatelessWidget {
       locale: const Locale('ja', 'JP'),
       initialRoute: '/',
       routes: {
-        '/': (context) => firebaseAvailable
-            ? const AuthWrapper(
-                child: MyHomePage(title: AppConstants.appName),
-              )
-            : const DemoAuthWrapper(
-                child: MyHomePage(title: AppConstants.appName),
-              ),
+        '/':
+            (context) =>
+                firebaseAvailable
+                    ? const AuthWrapper(
+                      child: MyHomePage(title: AppConstants.appName),
+                    )
+                    : const DemoAuthWrapper(
+                      child: MyHomePage(title: AppConstants.appName),
+                    ),
         '/sign-in': (context) => const SignInPage(),
         '/home': (context) => const MyHomePage(title: AppConstants.appName),
         '/guest': (context) => const MyHomePage(title: AppConstants.appName),
@@ -126,59 +127,59 @@ class MyHomePage extends ConsumerStatefulWidget {
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage> {
-
   void _showUserMenu() {
     showModalBottomSheet(
       context: context,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.person_outline),
-              title: const Text('プロフィール'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.of(context).pushNamed('/profile');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.history),
-              title: const Text('レビュー履歴'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.of(context).pushNamed('/my-reviews');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings_outlined),
-              title: const Text('設定'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.of(context).pushNamed('/settings');
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: Icon(
-                Icons.logout,
-                color: Theme.of(context).colorScheme.error,
-              ),
-              title: Text(
-                'サインアウト',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
+      builder:
+          (context) => Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.person_outline),
+                  title: const Text('プロフィール'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pushNamed('/profile');
+                  },
                 ),
-              ),
-              onTap: () async {
-                Navigator.pop(context);
-                await ref.read(authControllerProvider.notifier).signOut();
-              },
+                ListTile(
+                  leading: const Icon(Icons.history),
+                  title: const Text('レビュー履歴'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pushNamed('/my-reviews');
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.settings_outlined),
+                  title: const Text('設定'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pushNamed('/settings');
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  leading: Icon(
+                    Icons.logout,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                  title: Text(
+                    'サインアウト',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                  onTap: () async {
+                    Navigator.pop(context);
+                    await ref.read(authControllerProvider.notifier).signOut();
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 
@@ -188,12 +189,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
-        actions: [
-          UserAvatar(
-            onTap: _showUserMenu,
-          ),
-          const SizedBox(width: 16),
-        ],
+        actions: [UserAvatar(onTap: _showUserMenu), const SizedBox(width: 16)],
       ),
       body: Center(
         child: Column(
@@ -214,7 +210,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             Text(
               'AIが分析するパーソナライズ映画推薦システム',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -268,10 +266,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 class AppInitializationErrorPage extends StatelessWidget {
   final String errorMessage;
 
-  const AppInitializationErrorPage({
-    super.key,
-    required this.errorMessage,
-  });
+  const AppInitializationErrorPage({super.key, required this.errorMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -283,11 +278,7 @@ class AppInitializationErrorPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.red[700],
-              ),
+              Icon(Icons.error_outline, size: 64, color: Colors.red[700]),
               const SizedBox(height: 24),
               Text(
                 'アプリケーション初期化エラー',
@@ -301,10 +292,7 @@ class AppInitializationErrorPage extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 errorMessage,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
+                style: const TextStyle(fontSize: 16, color: Colors.black87),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),

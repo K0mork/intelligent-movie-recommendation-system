@@ -2,7 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/recommendation_providers.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 
-final recommendationControllerProvider = Provider<RecommendationController>((ref) {
+final recommendationControllerProvider = Provider<RecommendationController>((
+  ref,
+) {
   return RecommendationController(ref);
 });
 
@@ -88,7 +90,12 @@ class RecommendationController {
     if (user == null) return;
 
     final submitFeedbackUseCase = ref.read(submitFeedbackUseCaseProvider);
-    await submitFeedbackUseCase(user.uid, recommendationId, isHelpful, feedback);
+    await submitFeedbackUseCase(
+      user.uid,
+      recommendationId,
+      isHelpful,
+      feedback,
+    );
   }
 
   // 推薦結果をクリア

@@ -36,7 +36,9 @@ final movieRepositoryProvider = Provider<MovieRepository>((ref) {
   return MovieRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
-final getPopularMoviesUseCaseProvider = Provider<GetPopularMoviesUseCase>((ref) {
+final getPopularMoviesUseCaseProvider = Provider<GetPopularMoviesUseCase>((
+  ref,
+) {
   final repository = ref.read(movieRepositoryProvider);
   return GetPopularMoviesUseCase(repository);
 });
@@ -51,27 +53,31 @@ final getMovieDetailsUseCaseProvider = Provider<GetMovieDetailsUseCase>((ref) {
   return GetMovieDetailsUseCase(repository);
 });
 
-final getSimilarMoviesUseCaseProvider = Provider<GetSimilarMoviesUseCase>((ref) {
+final getSimilarMoviesUseCaseProvider = Provider<GetSimilarMoviesUseCase>((
+  ref,
+) {
   final repository = ref.read(movieRepositoryProvider);
   return GetSimilarMoviesUseCase(repository);
 });
 
-final getRecommendedMoviesUseCaseProvider = Provider<GetRecommendedMoviesUseCase>((ref) {
-  final repository = ref.read(movieRepositoryProvider);
-  return GetRecommendedMoviesUseCase(repository);
-});
+final getRecommendedMoviesUseCaseProvider =
+    Provider<GetRecommendedMoviesUseCase>((ref) {
+      final repository = ref.read(movieRepositoryProvider);
+      return GetRecommendedMoviesUseCase(repository);
+    });
 
-final movieControllerProvider = StateNotifierProvider<MovieController, MovieState>((ref) {
-  final getPopularMoviesUseCase = ref.read(getPopularMoviesUseCaseProvider);
-  final searchMoviesUseCase = ref.read(searchMoviesUseCaseProvider);
-  final getMovieDetailsUseCase = ref.read(getMovieDetailsUseCaseProvider);
+final movieControllerProvider =
+    StateNotifierProvider<MovieController, MovieState>((ref) {
+      final getPopularMoviesUseCase = ref.read(getPopularMoviesUseCaseProvider);
+      final searchMoviesUseCase = ref.read(searchMoviesUseCaseProvider);
+      final getMovieDetailsUseCase = ref.read(getMovieDetailsUseCaseProvider);
 
-  return MovieController(
-    getPopularMoviesUseCase: getPopularMoviesUseCase,
-    searchMoviesUseCase: searchMoviesUseCase,
-    getMovieDetailsUseCase: getMovieDetailsUseCase,
-  );
-});
+      return MovieController(
+        getPopularMoviesUseCase: getPopularMoviesUseCase,
+        searchMoviesUseCase: searchMoviesUseCase,
+        getMovieDetailsUseCase: getMovieDetailsUseCase,
+      );
+    });
 
 final popularMoviesProvider = FutureProvider<List<Movie>>((ref) async {
   final useCase = ref.read(getPopularMoviesUseCaseProvider);
@@ -90,17 +96,26 @@ final searchResultsProvider = FutureProvider<List<Movie>>((ref) async {
   return await useCase.call(searchQuery);
 });
 
-final movieDetailsProvider = FutureProvider.family<Movie, int>((ref, movieId) async {
+final movieDetailsProvider = FutureProvider.family<Movie, int>((
+  ref,
+  movieId,
+) async {
   final useCase = ref.read(getMovieDetailsUseCaseProvider);
   return await useCase.call(movieId);
 });
 
-final similarMoviesProvider = FutureProvider.family<List<Movie>, int>((ref, movieId) async {
+final similarMoviesProvider = FutureProvider.family<List<Movie>, int>((
+  ref,
+  movieId,
+) async {
   final useCase = ref.read(getSimilarMoviesUseCaseProvider);
   return await useCase.call(movieId);
 });
 
-final recommendedMoviesProvider = FutureProvider.family<List<Movie>, int>((ref, movieId) async {
+final recommendedMoviesProvider = FutureProvider.family<List<Movie>, int>((
+  ref,
+  movieId,
+) async {
   final useCase = ref.read(getRecommendedMoviesUseCaseProvider);
   return await useCase.call(movieId);
 });

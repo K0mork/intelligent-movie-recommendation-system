@@ -28,7 +28,9 @@ void main() {
       );
     });
 
-    testWidgets('displays basic review information', (WidgetTester tester) async {
+    testWidgets('displays basic review information', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       final widget = TestHelpers.createTestWidget(
         child: ReviewCard(review: testReview, showMovieInfo: true),
@@ -39,12 +41,17 @@ void main() {
 
       // Assert
       expect(find.text('Test Movie'), findsOneWidget);
-      expect(find.text('This is a great test movie with excellent acting.'), findsOneWidget);
+      expect(
+        find.text('This is a great test movie with excellent acting.'),
+        findsOneWidget,
+      );
       expect(find.text('4.5'), findsOneWidget);
       expect(find.byType(StarRating), findsOneWidget);
     });
 
-    testWidgets('displays watched date when available', (WidgetTester tester) async {
+    testWidgets('displays watched date when available', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       final widget = TestHelpers.createTestWidget(
         child: ReviewCard(review: testReview, showMovieInfo: true),
@@ -58,7 +65,9 @@ void main() {
       expect(find.text('投稿日: 2023年06月16日'), findsOneWidget);
     });
 
-    testWidgets('handles review without watched date', (WidgetTester tester) async {
+    testWidgets('handles review without watched date', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       final reviewWithoutWatchedDate = Review(
         id: testReview.id,
@@ -73,7 +82,10 @@ void main() {
         updatedAt: testReview.updatedAt,
       );
       final widget = TestHelpers.createTestWidget(
-        child: ReviewCard(review: reviewWithoutWatchedDate, showMovieInfo: true),
+        child: ReviewCard(
+          review: reviewWithoutWatchedDate,
+          showMovieInfo: true,
+        ),
       );
 
       // Act
@@ -109,10 +121,15 @@ void main() {
       expect(find.text('Test Movie'), findsOneWidget);
       expect(find.text('4.5'), findsOneWidget);
       // Comment should not be displayed
-      expect(find.text('This is a great test movie with excellent acting.'), findsNothing);
+      expect(
+        find.text('This is a great test movie with excellent acting.'),
+        findsNothing,
+      );
     });
 
-    testWidgets('displays edit indicator for updated reviews', (WidgetTester tester) async {
+    testWidgets('displays edit indicator for updated reviews', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       final updatedReview = testReview.copyWith(
         updatedAt: DateTime(2023, 6, 17), // Different from createdAt
@@ -128,7 +145,9 @@ void main() {
       expect(find.text('編集済み'), findsOneWidget);
     });
 
-    testWidgets('does not show edit indicator for non-updated reviews', (WidgetTester tester) async {
+    testWidgets('does not show edit indicator for non-updated reviews', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       final widget = TestHelpers.createTestWidget(
         child: ReviewCard(review: testReview),
@@ -145,10 +164,7 @@ void main() {
       // Arrange
       bool tapped = false;
       final widget = TestHelpers.createTestWidget(
-        child: ReviewCard(
-          review: testReview,
-          onTap: () => tapped = true,
-        ),
+        child: ReviewCard(review: testReview, onTap: () => tapped = true),
       );
 
       // Act
@@ -160,7 +176,9 @@ void main() {
       expect(tapped, true);
     });
 
-    testWidgets('shows popup menu when edit/delete callbacks provided', (WidgetTester tester) async {
+    testWidgets('shows popup menu when edit/delete callbacks provided', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       bool editCalled = false;
       bool deleteCalled = false;
@@ -182,7 +200,10 @@ void main() {
       final iconButtons = find.byType(IconButton);
 
       // PopupMenuButtonまたはIconButtonのいずれかが存在することを確認
-      expect(popupButtons.evaluate().length + iconButtons.evaluate().length, greaterThan(0));
+      expect(
+        popupButtons.evaluate().length + iconButtons.evaluate().length,
+        greaterThan(0),
+      );
 
       // もしPopupMenuButtonが存在する場合はそのテストを実行
       if (popupButtons.evaluate().isNotEmpty) {
@@ -198,7 +219,9 @@ void main() {
       }
     });
 
-    testWidgets('hides popup menu when no callbacks provided', (WidgetTester tester) async {
+    testWidgets('hides popup menu when no callbacks provided', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       final widget = TestHelpers.createTestWidget(
         child: ReviewCard(review: testReview, showMovieInfo: true),
@@ -211,13 +234,12 @@ void main() {
       expect(find.byType(PopupMenuButton), findsNothing);
     });
 
-    testWidgets('displays movie poster when showMovieInfo is true', (WidgetTester tester) async {
+    testWidgets('displays movie poster when showMovieInfo is true', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       final widget = TestHelpers.createTestWidget(
-        child: ReviewCard(
-          review: testReview,
-          showMovieInfo: true,
-        ),
+        child: ReviewCard(review: testReview, showMovieInfo: true),
       );
 
       // Act
@@ -227,14 +249,13 @@ void main() {
       expect(find.byType(Image), findsOneWidget);
     });
 
-    testWidgets('handles missing movie poster gracefully', (WidgetTester tester) async {
+    testWidgets('handles missing movie poster gracefully', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       final reviewWithoutPoster = testReview.copyWith(moviePosterUrl: null);
       final widget = TestHelpers.createTestWidget(
-        child: ReviewCard(
-          review: reviewWithoutPoster,
-          showMovieInfo: true,
-        ),
+        child: ReviewCard(review: reviewWithoutPoster, showMovieInfo: true),
       );
 
       // Act
@@ -244,16 +265,17 @@ void main() {
       expect(find.byIcon(Icons.movie), findsOneWidget);
     });
 
-    testWidgets('truncates long comments when showMovieInfo is true', (WidgetTester tester) async {
+    testWidgets('truncates long comments when showMovieInfo is true', (
+      WidgetTester tester,
+    ) async {
       // Arrange
-      final longComment = 'This is a very long comment that should be truncated when displayed in movie info mode. ' * 5;
+      final longComment =
+          'This is a very long comment that should be truncated when displayed in movie info mode. ' *
+          5;
       final reviewWithLongComment = testReview.copyWith(comment: longComment);
 
       final widget = TestHelpers.createTestWidget(
-        child: ReviewCard(
-          review: reviewWithLongComment,
-          showMovieInfo: true,
-        ),
+        child: ReviewCard(review: reviewWithLongComment, showMovieInfo: true),
       );
 
       // Act
@@ -265,7 +287,9 @@ void main() {
       expect(textWidget.overflow, TextOverflow.ellipsis);
     });
 
-    testWidgets('accessibility - has proper semantic labels', (WidgetTester tester) async {
+    testWidgets('accessibility - has proper semantic labels', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       final widget = TestHelpers.createTestWidget(
         child: ReviewCard(review: testReview),
@@ -282,7 +306,9 @@ void main() {
       );
     });
 
-    testWidgets('accessibility - star rating has proper labels', (WidgetTester tester) async {
+    testWidgets('accessibility - star rating has proper labels', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       final widget = TestHelpers.createTestWidget(
         child: ReviewCard(review: testReview),
@@ -297,7 +323,9 @@ void main() {
       expect(starRating, findsOneWidget);
     });
 
-    testWidgets('handles different rating values correctly', (WidgetTester tester) async {
+    testWidgets('handles different rating values correctly', (
+      WidgetTester tester,
+    ) async {
       // Test different rating values
       final testCases = [0.0, 1.5, 3.0, 4.5, 5.0];
 
@@ -321,7 +349,8 @@ void main() {
 
     testWidgets('handles very long movie titles', (WidgetTester tester) async {
       // Arrange
-      final longTitle = 'This is a Very Long Movie Title That Should Be Handled Properly in the UI';
+      final longTitle =
+          'This is a Very Long Movie Title That Should Be Handled Properly in the UI';
       final reviewWithLongTitle = testReview.copyWith(movieTitle: longTitle);
 
       final widget = TestHelpers.createTestWidget(
@@ -332,12 +361,17 @@ void main() {
       await TestHelpers.pumpAndSettle(tester, widget);
 
       // Assert
-      expect(find.textContaining('This is a Very Long Movie Title'), findsOneWidget);
+      expect(
+        find.textContaining('This is a Very Long Movie Title'),
+        findsOneWidget,
+      );
     });
   });
 
   group('ReviewList Widget Tests', () {
-    testWidgets('displays empty state when no reviews', (WidgetTester tester) async {
+    testWidgets('displays empty state when no reviews', (
+      WidgetTester tester,
+    ) async {
       // Arrange
       final widget = TestHelpers.createTestWidget(
         child: const ReviewList(reviews: []),
@@ -353,16 +387,19 @@ void main() {
 
     testWidgets('displays multiple reviews', (WidgetTester tester) async {
       // Arrange
-      final reviews = List.generate(3, (index) => Review(
-        id: 'review-$index',
-        userId: 'user-id',
-        movieId: 'movie-$index',
-        movieTitle: 'Movie $index',
-        rating: 4.0 + index * 0.5,
-        comment: 'Comment $index',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ));
+      final reviews = List.generate(
+        3,
+        (index) => Review(
+          id: 'review-$index',
+          userId: 'user-id',
+          movieId: 'movie-$index',
+          movieTitle: 'Movie $index',
+          rating: 4.0 + index * 0.5,
+          comment: 'Comment $index',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
 
       final widget = TestHelpers.createTestWidget(
         child: ReviewList(reviews: reviews, showMovieInfo: true),

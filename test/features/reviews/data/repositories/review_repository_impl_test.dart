@@ -52,8 +52,9 @@ void main() {
       test('レビューが正常に作成され、IDが返される', () async {
         // Arrange
         const expectedReviewId = 'new-review-id';
-        when(mockDataSource.createReview(any))
-            .thenAnswer((_) => Future.value(expectedReviewId));
+        when(
+          mockDataSource.createReview(any),
+        ).thenAnswer((_) => Future.value(expectedReviewId));
 
         // Act
         final result = await repository.createReview(
@@ -69,7 +70,8 @@ void main() {
         expect(result, equals(expectedReviewId));
 
         // データソースが正しいパラメータで呼ばれることを確認
-        final captured = verify(mockDataSource.createReview(captureAny)).captured;
+        final captured =
+            verify(mockDataSource.createReview(captureAny)).captured;
         final capturedReview = captured.first as ReviewModel;
 
         expect(capturedReview.userId, equals('test-user-id'));
@@ -82,8 +84,9 @@ void main() {
       test('レビュー作成時にタイムスタンプが正しく設定される', () async {
         // Arrange
         const expectedReviewId = 'new-review-id';
-        when(mockDataSource.createReview(any))
-            .thenAnswer((_) => Future.value(expectedReviewId));
+        when(
+          mockDataSource.createReview(any),
+        ).thenAnswer((_) => Future.value(expectedReviewId));
 
         final beforeCreate = DateTime.now();
 
@@ -98,20 +101,28 @@ void main() {
         final afterCreate = DateTime.now();
 
         // Assert
-        final captured = verify(mockDataSource.createReview(captureAny)).captured;
+        final captured =
+            verify(mockDataSource.createReview(captureAny)).captured;
         final capturedReview = captured.first as ReviewModel;
 
-        expect(capturedReview.createdAt.isAfter(beforeCreate) ||
-               capturedReview.createdAt.isAtSameMomentAs(beforeCreate), isTrue);
-        expect(capturedReview.createdAt.isBefore(afterCreate) ||
-               capturedReview.createdAt.isAtSameMomentAs(afterCreate), isTrue);
+        expect(
+          capturedReview.createdAt.isAfter(beforeCreate) ||
+              capturedReview.createdAt.isAtSameMomentAs(beforeCreate),
+          isTrue,
+        );
+        expect(
+          capturedReview.createdAt.isBefore(afterCreate) ||
+              capturedReview.createdAt.isAtSameMomentAs(afterCreate),
+          isTrue,
+        );
         expect(capturedReview.updatedAt, equals(capturedReview.createdAt));
       });
 
       test('データソースでエラーが発生した場合、APIExceptionが適切に処理される', () async {
         // Arrange
-        when(mockDataSource.createReview(any))
-            .thenThrow(APIException('Database connection failed'));
+        when(
+          mockDataSource.createReview(any),
+        ).thenThrow(APIException('Database connection failed'));
 
         // Act & Assert
         expect(
@@ -124,7 +135,9 @@ void main() {
           throwsA(
             allOf(
               isA<APIException>(),
-              predicate<APIException>((e) => e.message.contains('Failed to create review')),
+              predicate<APIException>(
+                (e) => e.message.contains('Failed to create review'),
+              ),
             ),
           ),
         );
@@ -134,8 +147,9 @@ void main() {
     group('レビュー取得統合テスト (getReview)', () {
       test('指定されたIDのレビューがエンティティとして正常に返される', () async {
         // Arrange
-        when(mockDataSource.getReview('test-review-id'))
-            .thenAnswer((_) => Future.value(testReviewModel));
+        when(
+          mockDataSource.getReview('test-review-id'),
+        ).thenAnswer((_) => Future.value(testReviewModel));
 
         // Act
         final result = await repository.getReview('test-review-id');
@@ -150,8 +164,9 @@ void main() {
 
       test('存在しないレビューの場合、APIExceptionが適切に処理される', () async {
         // Arrange
-        when(mockDataSource.getReview('non-existent-id'))
-            .thenThrow(APIException('Review not found'));
+        when(
+          mockDataSource.getReview('non-existent-id'),
+        ).thenThrow(APIException('Review not found'));
 
         // Act & Assert
         expect(
@@ -159,7 +174,9 @@ void main() {
           throwsA(
             allOf(
               isA<APIException>(),
-              predicate<APIException>((e) => e.message.contains('Failed to get review')),
+              predicate<APIException>(
+                (e) => e.message.contains('Failed to get review'),
+              ),
             ),
           ),
         );
@@ -170,8 +187,9 @@ void main() {
       test('フィルタなしで全てのレビューが取得される', () async {
         // Arrange
         final mockReviews = [testReviewModel];
-        when(mockDataSource.getReviews())
-            .thenAnswer((_) => Future.value(mockReviews));
+        when(
+          mockDataSource.getReviews(),
+        ).thenAnswer((_) => Future.value(mockReviews));
 
         // Act
         final result = await repository.getReviews();
@@ -186,8 +204,9 @@ void main() {
       test('ユーザーIDフィルタが正しく適用される', () async {
         // Arrange
         final mockReviews = [testReviewModel];
-        when(mockDataSource.getReviews(userId: 'test-user-id'))
-            .thenAnswer((_) => Future.value(mockReviews));
+        when(
+          mockDataSource.getReviews(userId: 'test-user-id'),
+        ).thenAnswer((_) => Future.value(mockReviews));
 
         // Act
         final result = await repository.getReviews(userId: 'test-user-id');
@@ -201,8 +220,9 @@ void main() {
       test('映画IDフィルタが正しく適用される', () async {
         // Arrange
         final mockReviews = [testReviewModel];
-        when(mockDataSource.getReviews(movieId: 'test-movie-id'))
-            .thenAnswer((_) => Future.value(mockReviews));
+        when(
+          mockDataSource.getReviews(movieId: 'test-movie-id'),
+        ).thenAnswer((_) => Future.value(mockReviews));
 
         // Act
         final result = await repository.getReviews(movieId: 'test-movie-id');
@@ -216,10 +236,12 @@ void main() {
       test('複数フィルタが同時に適用される', () async {
         // Arrange
         final mockReviews = [testReviewModel];
-        when(mockDataSource.getReviews(
-          userId: 'test-user-id',
-          movieId: 'test-movie-id',
-        )).thenAnswer((_) => Future.value(mockReviews));
+        when(
+          mockDataSource.getReviews(
+            userId: 'test-user-id',
+            movieId: 'test-movie-id',
+          ),
+        ).thenAnswer((_) => Future.value(mockReviews));
 
         // Act
         final result = await repository.getReviews(
@@ -231,18 +253,21 @@ void main() {
         expect(result, hasLength(1));
         expect(result.first.userId, equals('test-user-id'));
         expect(result.first.movieId, equals('test-movie-id'));
-        verify(mockDataSource.getReviews(
-          userId: 'test-user-id',
-          movieId: 'test-movie-id',
-        )).called(1);
+        verify(
+          mockDataSource.getReviews(
+            userId: 'test-user-id',
+            movieId: 'test-movie-id',
+          ),
+        ).called(1);
       });
     });
 
     group('レビュー更新統合テスト (updateReview)', () {
       test('レビューが正常に更新され、updatedAtが更新される', () async {
         // Arrange
-        when(mockDataSource.updateReview(any))
-            .thenAnswer((_) => Future.value());
+        when(
+          mockDataSource.updateReview(any),
+        ).thenAnswer((_) => Future.value());
 
         final beforeUpdate = DateTime.now();
 
@@ -252,7 +277,8 @@ void main() {
         final afterUpdate = DateTime.now();
 
         // Assert
-        final captured = verify(mockDataSource.updateReview(captureAny)).captured;
+        final captured =
+            verify(mockDataSource.updateReview(captureAny)).captured;
         final capturedReview = captured.first as ReviewModel;
 
         expect(capturedReview.id, equals(testReview.id));
@@ -260,16 +286,23 @@ void main() {
         expect(capturedReview.createdAt, equals(testReview.createdAt));
 
         // updatedAtが更新されることを確認
-        expect(capturedReview.updatedAt.isAfter(beforeUpdate) ||
-               capturedReview.updatedAt.isAtSameMomentAs(beforeUpdate), isTrue);
-        expect(capturedReview.updatedAt.isBefore(afterUpdate) ||
-               capturedReview.updatedAt.isAtSameMomentAs(afterUpdate), isTrue);
+        expect(
+          capturedReview.updatedAt.isAfter(beforeUpdate) ||
+              capturedReview.updatedAt.isAtSameMomentAs(beforeUpdate),
+          isTrue,
+        );
+        expect(
+          capturedReview.updatedAt.isBefore(afterUpdate) ||
+              capturedReview.updatedAt.isAtSameMomentAs(afterUpdate),
+          isTrue,
+        );
       });
 
       test('更新に失敗した場合、APIExceptionが適切に処理される', () async {
         // Arrange
-        when(mockDataSource.updateReview(any))
-            .thenThrow(APIException('Update operation failed'));
+        when(
+          mockDataSource.updateReview(any),
+        ).thenThrow(APIException('Update operation failed'));
 
         // Act & Assert
         expect(
@@ -277,7 +310,9 @@ void main() {
           throwsA(
             allOf(
               isA<APIException>(),
-              predicate<APIException>((e) => e.message.contains('Failed to update review')),
+              predicate<APIException>(
+                (e) => e.message.contains('Failed to update review'),
+              ),
             ),
           ),
         );
@@ -287,8 +322,9 @@ void main() {
     group('レビュー削除統合テスト (deleteReview)', () {
       test('レビューが正常に削除される', () async {
         // Arrange
-        when(mockDataSource.deleteReview('test-review-id'))
-            .thenAnswer((_) => Future.value());
+        when(
+          mockDataSource.deleteReview('test-review-id'),
+        ).thenAnswer((_) => Future.value());
 
         // Act
         await repository.deleteReview('test-review-id');
@@ -299,8 +335,9 @@ void main() {
 
       test('削除に失敗した場合、APIExceptionが適切に処理される', () async {
         // Arrange
-        when(mockDataSource.deleteReview('test-review-id'))
-            .thenThrow(APIException('Delete operation failed'));
+        when(
+          mockDataSource.deleteReview('test-review-id'),
+        ).thenThrow(APIException('Delete operation failed'));
 
         // Act & Assert
         expect(
@@ -308,7 +345,9 @@ void main() {
           throwsA(
             allOf(
               isA<APIException>(),
-              predicate<APIException>((e) => e.message.contains('Failed to delete review')),
+              predicate<APIException>(
+                (e) => e.message.contains('Failed to delete review'),
+              ),
             ),
           ),
         );
@@ -319,8 +358,9 @@ void main() {
       test('特定ユーザーのレビューが正常に取得される', () async {
         // Arrange
         final mockReviews = [testReviewModel];
-        when(mockDataSource.getUserReviews('test-user-id'))
-            .thenAnswer((_) => Future.value(mockReviews));
+        when(
+          mockDataSource.getUserReviews('test-user-id'),
+        ).thenAnswer((_) => Future.value(mockReviews));
 
         // Act
         final result = await repository.getUserReviews('test-user-id');
@@ -334,8 +374,9 @@ void main() {
 
       test('ユーザーレビュー取得に失敗した場合、APIExceptionが適切に処理される', () async {
         // Arrange
-        when(mockDataSource.getUserReviews('test-user-id'))
-            .thenThrow(APIException('User reviews query failed'));
+        when(
+          mockDataSource.getUserReviews('test-user-id'),
+        ).thenThrow(APIException('User reviews query failed'));
 
         // Act & Assert
         expect(
@@ -343,7 +384,9 @@ void main() {
           throwsA(
             allOf(
               isA<APIException>(),
-              predicate<APIException>((e) => e.message.contains('Failed to get user reviews')),
+              predicate<APIException>(
+                (e) => e.message.contains('Failed to get user reviews'),
+              ),
             ),
           ),
         );
@@ -353,8 +396,9 @@ void main() {
     group('データ変換統合テスト', () {
       test('ReviewModelからReviewエンティティへの変換が正確に行われる', () async {
         // Arrange
-        when(mockDataSource.getReview('test-review-id'))
-            .thenAnswer((_) => Future.value(testReviewModel));
+        when(
+          mockDataSource.getReview('test-review-id'),
+        ).thenAnswer((_) => Future.value(testReviewModel));
 
         // Act
         final result = await repository.getReview('test-review-id');
@@ -373,21 +417,26 @@ void main() {
 
       test('ReviewエンティティからReviewModelへの変換が正確に行われる', () async {
         // Arrange
-        when(mockDataSource.updateReview(any))
-            .thenAnswer((_) => Future.value());
+        when(
+          mockDataSource.updateReview(any),
+        ).thenAnswer((_) => Future.value());
 
         // Act
         await repository.updateReview(testReview);
 
         // Assert
-        final captured = verify(mockDataSource.updateReview(captureAny)).captured;
+        final captured =
+            verify(mockDataSource.updateReview(captureAny)).captured;
         final capturedReview = captured.first as ReviewModel;
 
         expect(capturedReview.id, equals(testReview.id));
         expect(capturedReview.userId, equals(testReview.userId));
         expect(capturedReview.movieId, equals(testReview.movieId));
         expect(capturedReview.movieTitle, equals(testReview.movieTitle));
-        expect(capturedReview.moviePosterUrl, equals(testReview.moviePosterUrl));
+        expect(
+          capturedReview.moviePosterUrl,
+          equals(testReview.moviePosterUrl),
+        );
         expect(capturedReview.rating, equals(testReview.rating));
         expect(capturedReview.comment, equals(testReview.comment));
         expect(capturedReview.createdAt, equals(testReview.createdAt));

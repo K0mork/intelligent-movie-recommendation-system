@@ -40,7 +40,9 @@ void main() {
         overrides: [
           firebaseAuthProvider.overrideWithValue(mockFirebaseAuth),
           googleSignInProvider.overrideWithValue(mockGoogleSignIn),
-          authRemoteDataSourceProvider.overrideWithValue(mockAuthRemoteDataSource),
+          authRemoteDataSourceProvider.overrideWithValue(
+            mockAuthRemoteDataSource,
+          ),
           authRepositoryProvider.overrideWithValue(mockAuthRepository),
         ],
       );
@@ -65,19 +67,22 @@ void main() {
     });
 
     group('googleSignInProvider', () {
-      test('should provide GoogleSignIn instance with correct configuration', () {
-        when(mockGoogleSignIn.scopes).thenReturn([
-          'email',
-          'profile',
-          'https://www.googleapis.com/auth/userinfo.email',
-          'https://www.googleapis.com/auth/userinfo.profile',
-        ]);
+      test(
+        'should provide GoogleSignIn instance with correct configuration',
+        () {
+          when(mockGoogleSignIn.scopes).thenReturn([
+            'email',
+            'profile',
+            'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/userinfo.profile',
+          ]);
 
-        final googleSignIn = container.read(googleSignInProvider);
-        expect(googleSignIn, isA<GoogleSignIn>());
-        expect(googleSignIn.scopes, contains('email'));
-        expect(googleSignIn.scopes, contains('profile'));
-      });
+          final googleSignIn = container.read(googleSignInProvider);
+          expect(googleSignIn, isA<GoogleSignIn>());
+          expect(googleSignIn.scopes, contains('email'));
+          expect(googleSignIn.scopes, contains('profile'));
+        },
+      );
     });
 
     group('authRemoteDataSourceProvider', () {
@@ -127,8 +132,9 @@ void main() {
           isEmailVerified: true,
         );
 
-        when(mockAuthRepository.authStateChanges())
-            .thenAnswer((_) => Stream.value(testUser));
+        when(
+          mockAuthRepository.authStateChanges(),
+        ).thenAnswer((_) => Stream.value(testUser));
 
         container = ProviderContainer(
           overrides: [
@@ -148,8 +154,9 @@ void main() {
       });
 
       test('should handle null user state', () async {
-        when(mockAuthRepository.authStateChanges())
-            .thenAnswer((_) => Stream.value(null));
+        when(
+          mockAuthRepository.authStateChanges(),
+        ).thenAnswer((_) => Stream.value(null));
 
         container = ProviderContainer(
           overrides: [
@@ -169,8 +176,9 @@ void main() {
       });
 
       test('should handle stream errors', () async {
-        when(mockAuthRepository.authStateChanges())
-            .thenAnswer((_) => Stream.error(Exception('Stream error')));
+        when(
+          mockAuthRepository.authStateChanges(),
+        ).thenAnswer((_) => Stream.error(Exception('Stream error')));
 
         container = ProviderContainer(
           overrides: [
@@ -208,9 +216,7 @@ void main() {
 
         container = ProviderContainer(
           overrides: [
-            authStateProvider.overrideWith(
-              (ref) => Stream.value(testUser),
-            ),
+            authStateProvider.overrideWith((ref) => Stream.value(testUser)),
           ],
         );
 
@@ -224,9 +230,7 @@ void main() {
       test('should return null when no user is authenticated', () {
         container = ProviderContainer(
           overrides: [
-            authStateProvider.overrideWith(
-              (ref) => Stream.value(null),
-            ),
+            authStateProvider.overrideWith((ref) => Stream.value(null)),
           ],
         );
 
@@ -248,9 +252,7 @@ void main() {
         );
 
         container = ProviderContainer(
-          overrides: [
-            currentUserProvider.overrideWithValue(testUser),
-          ],
+          overrides: [currentUserProvider.overrideWithValue(testUser)],
         );
 
         final isAuthenticated = container.read(isAuthenticatedProvider);
@@ -259,9 +261,7 @@ void main() {
 
       test('should return false when user is not authenticated', () {
         container = ProviderContainer(
-          overrides: [
-            currentUserProvider.overrideWithValue(null),
-          ],
+          overrides: [currentUserProvider.overrideWithValue(null)],
         );
 
         final isAuthenticated = container.read(isAuthenticatedProvider);
@@ -285,11 +285,17 @@ void main() {
     group('Provider Integration Tests', () {
       test('should maintain provider dependencies correctly', () {
         // Verify that all providers can be instantiated without circular dependencies
-        expect(() => container.read(authRemoteDataSourceProvider), returnsNormally);
+        expect(
+          () => container.read(authRemoteDataSourceProvider),
+          returnsNormally,
+        );
         expect(() => container.read(authRepositoryProvider), returnsNormally);
         expect(() => container.read(signInUseCaseProvider), returnsNormally);
         expect(() => container.read(signOutUseCaseProvider), returnsNormally);
-        expect(() => container.read(getCurrentUserUseCaseProvider), returnsNormally);
+        expect(
+          () => container.read(getCurrentUserUseCaseProvider),
+          returnsNormally,
+        );
       });
 
       test('should handle provider disposal correctly', () {
@@ -304,19 +310,25 @@ void main() {
         // After disposal, reading should not throw
         final newContainer = ProviderContainer(
           overrides: [
-            authRemoteDataSourceProvider.overrideWithValue(mockAuthRemoteDataSource),
+            authRemoteDataSourceProvider.overrideWithValue(
+              mockAuthRemoteDataSource,
+            ),
           ],
         );
 
-        expect(() => newContainer.read(authRepositoryProvider), returnsNormally);
+        expect(
+          () => newContainer.read(authRepositoryProvider),
+          returnsNormally,
+        );
         newContainer.dispose();
       });
     });
 
     group('Error Handling Tests', () {
       test('should handle exceptions in auth state stream', () async {
-        when(mockAuthRepository.authStateChanges())
-            .thenAnswer((_) => Stream.error(Exception('Auth error')));
+        when(
+          mockAuthRepository.authStateChanges(),
+        ).thenAnswer((_) => Stream.error(Exception('Auth error')));
 
         container = ProviderContainer(
           overrides: [

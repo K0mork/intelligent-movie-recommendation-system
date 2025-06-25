@@ -28,9 +28,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         constraints: const BoxConstraints(maxWidth: 400, maxHeight: 500),
         child: Column(
@@ -127,9 +125,9 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
       children: [
         Text(
           'この推薦は役に立ちましたか？',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         Row(
@@ -183,14 +181,18 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? color.withValues(alpha: 0.1)
-              : Theme.of(context).colorScheme.surfaceContainerHighest,
+          color:
+              isSelected
+                  ? color.withValues(alpha: 0.1)
+                  : Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected
-                ? color
-                : Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+            color:
+                isSelected
+                    ? color
+                    : Theme.of(
+                      context,
+                    ).colorScheme.outline.withValues(alpha: 0.3),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -213,9 +215,9 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -230,9 +232,9 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
       children: [
         Text(
           'コメント（任意）',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         TextFormField(
@@ -240,9 +242,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
           maxLines: 4,
           decoration: InputDecoration(
             hintText: 'この推薦についてのご意見をお聞かせください...',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),
         ),
       ],
@@ -273,10 +273,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
     if (_isHelpful == null) return;
 
     final feedback = _feedbackController.text.trim();
-    widget.onSubmit(
-      _isHelpful!,
-      feedback.isEmpty ? null : feedback,
-    );
+    widget.onSubmit(_isHelpful!, feedback.isEmpty ? null : feedback);
 
     Navigator.of(context).pop();
   }

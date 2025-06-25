@@ -23,28 +23,28 @@ class AnonymousSignInButton extends ConsumerWidget {
       width: double.infinity,
       height: 56,
       child: ElevatedButton.icon(
-        onPressed: isLoading
-            ? null
-            : onPressed ?? () => authController.signInAnonymously(),
+        onPressed:
+            isLoading
+                ? null
+                : onPressed ?? () => authController.signInAnonymously(),
         style: ElevatedButton.styleFrom(
           backgroundColor: theme.colorScheme.primary,
           foregroundColor: theme.colorScheme.onPrimary,
           elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        icon: isLoading
-            ? const SizedBox(
-                width: 16,
-                height: 16,
-                child: LoadingStateWidget.inline(),
-              )
-            : Icon(
-                Icons.explore,
-                size: 20,
-                color: theme.colorScheme.onPrimary,
-              ),
+        icon:
+            isLoading
+                ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: LoadingStateWidget.inline(),
+                )
+                : Icon(
+                  Icons.explore,
+                  size: 20,
+                  color: theme.colorScheme.onPrimary,
+                ),
         label: Text(
           'ゲストとして映画を探す',
           style: theme.textTheme.titleMedium?.copyWith(

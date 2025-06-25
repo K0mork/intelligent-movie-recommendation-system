@@ -24,19 +24,26 @@ final reviewRepositoryProvider = Provider<ReviewRepository>((ref) {
 });
 
 // Controller provider
-final reviewControllerProvider = StateNotifierProvider<ReviewController, ReviewState>((ref) {
-  final repository = ref.read(reviewRepositoryProvider);
-  return ReviewController(repository: repository);
-});
+final reviewControllerProvider =
+    StateNotifierProvider<ReviewController, ReviewState>((ref) {
+      final repository = ref.read(reviewRepositoryProvider);
+      return ReviewController(repository: repository);
+    });
 
 // Get reviews by movie ID
-final movieReviewsProvider = FutureProvider.family<List<Review>, String>((ref, movieId) async {
+final movieReviewsProvider = FutureProvider.family<List<Review>, String>((
+  ref,
+  movieId,
+) async {
   final repository = ref.read(reviewRepositoryProvider);
   return await repository.getReviews(movieId: movieId);
 });
 
 // Get user reviews
-final userReviewsProvider = FutureProvider.family<List<Review>, String>((ref, userId) async {
+final userReviewsProvider = FutureProvider.family<List<Review>, String>((
+  ref,
+  userId,
+) async {
   final repository = ref.read(reviewRepositoryProvider);
   return await repository.getUserReviews(userId);
 });

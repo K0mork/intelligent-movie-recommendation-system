@@ -9,10 +9,7 @@ import '../../../../core/widgets/error_widgets.dart';
 class AddReviewPage extends ConsumerStatefulWidget {
   final Movie movie;
 
-  const AddReviewPage({
-    super.key,
-    required this.movie,
-  });
+  const AddReviewPage({super.key, required this.movie});
 
   @override
   ConsumerState<AddReviewPage> createState() => _AddReviewPageState();
@@ -56,35 +53,45 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: widget.movie.posterPath != null
-                              ? Image.network(
-                                  widget.movie.fullPosterUrl,
-                                  width: 80,
-                                  height: 120,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      width: 80,
-                                      height: 120,
-                                      color: theme.colorScheme.surfaceContainerHighest,
-                                      child: Icon(
-                                        Icons.movie,
-                                        size: 40,
-                                        color: theme.colorScheme.onSurfaceVariant,
-                                      ),
-                                    );
-                                  },
-                                )
-                              : Container(
-                                  width: 80,
-                                  height: 120,
-                                  color: theme.colorScheme.surfaceContainerHighest,
-                                  child: Icon(
-                                    Icons.movie,
-                                    size: 40,
-                                    color: theme.colorScheme.onSurfaceVariant,
+                          child:
+                              widget.movie.posterPath != null
+                                  ? Image.network(
+                                    widget.movie.fullPosterUrl,
+                                    width: 80,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        width: 80,
+                                        height: 120,
+                                        color:
+                                            theme
+                                                .colorScheme
+                                                .surfaceContainerHighest,
+                                        child: Icon(
+                                          Icons.movie,
+                                          size: 40,
+                                          color:
+                                              theme
+                                                  .colorScheme
+                                                  .onSurfaceVariant,
+                                        ),
+                                      );
+                                    },
+                                  )
+                                  : Container(
+                                    width: 80,
+                                    height: 120,
+                                    color:
+                                        theme
+                                            .colorScheme
+                                            .surfaceContainerHighest,
+                                    child: Icon(
+                                      Icons.movie,
+                                      size: 40,
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
                                   ),
-                                ),
                         ),
                         const SizedBox(width: 16),
                         Expanded(
@@ -131,10 +138,7 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                 const SizedBox(height: 24),
 
                 // Rating Section
-                Text(
-                  '評価',
-                  style: theme.textTheme.titleMedium,
-                ),
+                Text('評価', style: theme.textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -160,10 +164,7 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                 const SizedBox(height: 24),
 
                 // Watched Date Section
-                Text(
-                  '鑑賞日',
-                  style: theme.textTheme.titleMedium,
-                ),
+                Text('鑑賞日', style: theme.textTheme.titleMedium),
                 const SizedBox(height: 8),
                 InkWell(
                   onTap: () async {
@@ -181,7 +182,10 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                   },
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: theme.colorScheme.outline),
                       borderRadius: BorderRadius.circular(8.0),
@@ -200,9 +204,10 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                               ? '${_watchedDate!.year}年${_watchedDate!.month}月${_watchedDate!.day}日'
                               : '鑑賞日を選択（任意）',
                           style: theme.textTheme.bodyLarge?.copyWith(
-                            color: _watchedDate != null
-                                ? theme.colorScheme.onSurface
-                                : theme.colorScheme.onSurfaceVariant,
+                            color:
+                                _watchedDate != null
+                                    ? theme.colorScheme.onSurface
+                                    : theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                         const Spacer(),
@@ -227,10 +232,7 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                 const SizedBox(height: 24),
 
                 // Comment Section
-                Text(
-                  'レビューコメント',
-                  style: theme.textTheme.titleMedium,
-                ),
+                Text('レビューコメント', style: theme.textTheme.titleMedium),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _commentController,
@@ -264,13 +266,14 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    child: _isSubmitting
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Text('レビューを投稿'),
+                    child:
+                        _isSubmitting
+                            ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                            : const Text('レビューを投稿'),
                   ),
                 ),
               ],
@@ -294,25 +297,26 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
         throw Exception('ユーザーが認証されていません');
       }
 
-      final reviewId = await ref.read(reviewControllerProvider.notifier).submitReview(
-        userId: user.uid,
-        movieId: widget.movie.id.toString(),
-        movieTitle: widget.movie.title,
-        moviePosterUrl: widget.movie.posterPath != null
-            ? widget.movie.fullPosterUrl
-            : null,
-        rating: _rating,
-        comment: _commentController.text.trim().isEmpty
-            ? null
-            : _commentController.text.trim(),
-        watchedDate: _watchedDate,
-      );
+      final reviewId = await ref
+          .read(reviewControllerProvider.notifier)
+          .submitReview(
+            userId: user.uid,
+            movieId: widget.movie.id.toString(),
+            movieTitle: widget.movie.title,
+            moviePosterUrl:
+                widget.movie.posterPath != null
+                    ? widget.movie.fullPosterUrl
+                    : null,
+            rating: _rating,
+            comment:
+                _commentController.text.trim().isEmpty
+                    ? null
+                    : _commentController.text.trim(),
+            watchedDate: _watchedDate,
+          );
 
       if (mounted && reviewId != null) {
-        SnackBarHelper.showSuccess(
-          context,
-          'レビューを投稿しました',
-        );
+        SnackBarHelper.showSuccess(context, 'レビューを投稿しました');
         Navigator.of(context).pop(true); // Return true to indicate success
       } else if (mounted) {
         throw Exception('レビューの投稿に失敗しました');
@@ -321,9 +325,11 @@ class _AddReviewPageState extends ConsumerState<AddReviewPage> {
       if (mounted) {
         String errorMessage = 'レビューの投稿に失敗しました';
 
-        if (e.toString().contains('network') || e.toString().contains('internet')) {
+        if (e.toString().contains('network') ||
+            e.toString().contains('internet')) {
           errorMessage = 'ネットワークエラーが発生しました。インターネット接続を確認してください。';
-        } else if (e.toString().contains('permission') || e.toString().contains('auth')) {
+        } else if (e.toString().contains('permission') ||
+            e.toString().contains('auth')) {
           errorMessage = 'アクセス権限がありません。ログインし直してください。';
         } else if (e.toString().contains('validation')) {
           errorMessage = '入力内容に問題があります。再度確認してください。';

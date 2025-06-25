@@ -39,9 +39,9 @@ class RecommendationEmptyState extends StatelessWidget {
             // メッセージ
             Text(
               message,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: Colors.grey[600],
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -49,9 +49,9 @@ class RecommendationEmptyState extends StatelessWidget {
             // 説明文
             Text(
               'あなたの映画レビューを基に、\nAIが最適な映画を推薦します',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Colors.grey[500],
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
 

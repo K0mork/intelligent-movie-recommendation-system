@@ -10,7 +10,8 @@ class EnvConfig {
     // Firebase設定（公開可能な設定のみ）
     'FIREBASE_AUTH_DOMAIN': 'movie-recommendation-sys-21b5d.firebaseapp.com',
     'FIREBASE_PROJECT_ID': 'movie-recommendation-sys-21b5d',
-    'FIREBASE_STORAGE_BUCKET': 'movie-recommendation-sys-21b5d.firebasestorage.app',
+    'FIREBASE_STORAGE_BUCKET':
+        'movie-recommendation-sys-21b5d.firebasestorage.app',
     'FIREBASE_MESSAGING_SENDER_ID': '519346109803',
     'FIREBASE_APP_ID': '1:519346109803:web:ac06582ded29f1c88c202e',
 
@@ -27,13 +28,19 @@ class EnvConfig {
     if (kIsWeb) {
       // 機密情報は実行時環境変数から取得を試行
       if (key == 'FIREBASE_API_KEY') {
-        const envValue = String.fromEnvironment('FIREBASE_API_KEY', defaultValue: '');
+        const envValue = String.fromEnvironment(
+          'FIREBASE_API_KEY',
+          defaultValue: '',
+        );
         if (envValue.isNotEmpty) return envValue;
         // fallbackとして.envファイルから取得
         return dotenv.env[key] ?? defaultValue;
       }
       if (key == 'TMDB_API_KEY') {
-        const envValue = String.fromEnvironment('TMDB_API_KEY', defaultValue: '');
+        const envValue = String.fromEnvironment(
+          'TMDB_API_KEY',
+          defaultValue: '',
+        );
         if (envValue.isNotEmpty) return envValue;
         // fallbackとして.envファイルから取得
         return dotenv.env[key] ?? defaultValue;
@@ -49,18 +56,24 @@ class EnvConfig {
   static String get firebaseApiKey => _getEnvVar('FIREBASE_API_KEY');
   static String get firebaseAuthDomain => _getEnvVar('FIREBASE_AUTH_DOMAIN');
   static String get firebaseProjectId => _getEnvVar('FIREBASE_PROJECT_ID');
-  static String get firebaseStorageBucket => _getEnvVar('FIREBASE_STORAGE_BUCKET');
-  static String get firebaseMessagingSenderId => _getEnvVar('FIREBASE_MESSAGING_SENDER_ID');
+  static String get firebaseStorageBucket =>
+      _getEnvVar('FIREBASE_STORAGE_BUCKET');
+  static String get firebaseMessagingSenderId =>
+      _getEnvVar('FIREBASE_MESSAGING_SENDER_ID');
   static String get firebaseAppId => _getEnvVar('FIREBASE_APP_ID');
 
   static String get tmdbApiKey => _getEnvVar('TMDB_API_KEY');
-  static String get tmdbBaseUrl => _getEnvVar('TMDB_BASE_URL', defaultValue: AppConstants.tmdbBaseUrl);
+  static String get tmdbBaseUrl =>
+      _getEnvVar('TMDB_BASE_URL', defaultValue: AppConstants.tmdbBaseUrl);
 
   static String get omdbApiKey => _getEnvVar('OMDB_API_KEY');
-  static String get omdbBaseUrl => _getEnvVar('OMDB_BASE_URL', defaultValue: AppConstants.omdbBaseUrl);
+  static String get omdbBaseUrl =>
+      _getEnvVar('OMDB_BASE_URL', defaultValue: AppConstants.omdbBaseUrl);
 
-  static String get googleCloudProjectId => _getEnvVar('GOOGLE_CLOUD_PROJECT_ID');
-  static String get vertexAiRegion => _getEnvVar('VERTEX_AI_REGION', defaultValue: AppConstants.defaultRegion);
+  static String get googleCloudProjectId =>
+      _getEnvVar('GOOGLE_CLOUD_PROJECT_ID');
+  static String get vertexAiRegion =>
+      _getEnvVar('VERTEX_AI_REGION', defaultValue: AppConstants.defaultRegion);
 
   static bool get isFirebaseConfigured =>
       firebaseApiKey.isNotEmpty &&
@@ -97,15 +110,18 @@ class EnvConfig {
     if (firebaseApiKey.isEmpty) missingRequired.add('FIREBASE_API_KEY');
     if (firebaseAuthDomain.isEmpty) missingRequired.add('FIREBASE_AUTH_DOMAIN');
     if (firebaseProjectId.isEmpty) missingRequired.add('FIREBASE_PROJECT_ID');
-    if (firebaseStorageBucket.isEmpty) missingRequired.add('FIREBASE_STORAGE_BUCKET');
-    if (firebaseMessagingSenderId.isEmpty) missingRequired.add('FIREBASE_MESSAGING_SENDER_ID');
+    if (firebaseStorageBucket.isEmpty)
+      missingRequired.add('FIREBASE_STORAGE_BUCKET');
+    if (firebaseMessagingSenderId.isEmpty)
+      missingRequired.add('FIREBASE_MESSAGING_SENDER_ID');
     if (firebaseAppId.isEmpty) missingRequired.add('FIREBASE_APP_ID');
 
     // TMDb API設定チェック（必須）
     if (tmdbApiKey.isEmpty) missingRequired.add('TMDB_API_KEY');
 
     // オプション設定チェック
-    if (googleCloudProjectId.isEmpty) missingOptional.add('GOOGLE_CLOUD_PROJECT_ID');
+    if (googleCloudProjectId.isEmpty)
+      missingOptional.add('GOOGLE_CLOUD_PROJECT_ID');
     if (omdbApiKey.isEmpty) missingOptional.add('OMDB_API_KEY');
 
     return ValidationResult(
@@ -119,7 +135,8 @@ class EnvConfig {
     final List<String> missingOptionals = [];
 
     // Google Cloud設定（AI推薦機能用）
-    if (googleCloudProjectId.isEmpty) missingOptionals.add('GOOGLE_CLOUD_PROJECT_ID');
+    if (googleCloudProjectId.isEmpty)
+      missingOptionals.add('GOOGLE_CLOUD_PROJECT_ID');
 
     // OMDB API設定（補助的な映画情報用）
     if (omdbApiKey.isEmpty) missingOptionals.add('OMDB_API_KEY');
@@ -134,7 +151,11 @@ class EnvConfig {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🌐 Web環境: ${kIsWeb ? '✅' : '❌'}
 🔥 Firebase設定: ${isFirebaseConfigured ? '✅ 完了' : '❌ 不完全'}
-  - API Key: ${firebaseApiKey.isNotEmpty ? '✅' : '❌'} (${firebaseApiKey.length > 10 ? '${firebaseApiKey.substring(0, 10)}...' : firebaseApiKey.isEmpty ? 'empty' : firebaseApiKey})
+  - API Key: ${firebaseApiKey.isNotEmpty ? '✅' : '❌'} (${firebaseApiKey.length > 10
+        ? '${firebaseApiKey.substring(0, 10)}...'
+        : firebaseApiKey.isEmpty
+        ? 'empty'
+        : firebaseApiKey})
   - Auth Domain: ${firebaseAuthDomain.isNotEmpty ? '✅' : '❌'}
   - Project ID: ${firebaseProjectId.isNotEmpty ? '✅' : '❌'}
   - Storage Bucket: ${firebaseStorageBucket.isNotEmpty ? '✅' : '❌'}
@@ -142,7 +163,11 @@ class EnvConfig {
   - App ID: ${firebaseAppId.isNotEmpty ? '✅' : '❌'}
 
 🎬 TMDb API設定: ${isTmdbConfigured ? '✅ 完了' : '❌ 未設定'}
-  - API Key: ${tmdbApiKey.isNotEmpty ? '✅' : '❌'} (${tmdbApiKey.length > 10 ? '${tmdbApiKey.substring(0, 10)}...' : tmdbApiKey.isEmpty ? 'empty' : tmdbApiKey})
+  - API Key: ${tmdbApiKey.isNotEmpty ? '✅' : '❌'} (${tmdbApiKey.length > 10
+        ? '${tmdbApiKey.substring(0, 10)}...'
+        : tmdbApiKey.isEmpty
+        ? 'empty'
+        : tmdbApiKey})
   - Base URL: ${tmdbBaseUrl.isNotEmpty ? '✅' : '❌'}
 
 🎭 OMDb API設定: ${isOmdbConfigured ? '✅ 完了' : '⚠️ 未設定（オプション）'}

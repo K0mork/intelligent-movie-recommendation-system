@@ -4,17 +4,12 @@ import '../../domain/entities/recommendation.dart';
 class RecommendationReasonDialog extends StatelessWidget {
   final Recommendation recommendation;
 
-  const RecommendationReasonDialog({
-    super.key,
-    required this.recommendation,
-  });
+  const RecommendationReasonDialog({super.key, required this.recommendation});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
         child: Column(
@@ -112,9 +107,10 @@ class RecommendationReasonDialog extends StatelessWidget {
 
   Widget _buildConfidenceSection(BuildContext context) {
     final score = recommendation.confidenceScore;
-    final color = score >= 0.8
-        ? Colors.green
-        : score >= 0.6
+    final color =
+        score >= 0.8
+            ? Colors.green
+            : score >= 0.6
             ? Colors.orange
             : Colors.red;
 
@@ -127,11 +123,7 @@ class RecommendationReasonDialog extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.analytics_outlined,
-            color: color,
-            size: 24,
-          ),
+          Icon(Icons.analytics_outlined, color: color, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -154,9 +146,9 @@ class RecommendationReasonDialog extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   _getConfidenceDescription(score),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -172,31 +164,35 @@ class RecommendationReasonDialog extends StatelessWidget {
       children: [
         Text(
           '推薦の根拠',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: recommendation.reasonCategories.map((category) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondaryContainer,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                category,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            );
-          }).toList(),
+          children:
+              recommendation.reasonCategories.map((category) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    category,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                );
+              }).toList(),
         ),
       ],
     );
@@ -208,9 +204,9 @@ class RecommendationReasonDialog extends StatelessWidget {
       children: [
         Text(
           '詳細な推薦理由',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         Container(
@@ -221,9 +217,7 @@ class RecommendationReasonDialog extends StatelessWidget {
           ),
           child: Text(
             recommendation.reason,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              height: 1.5,
-            ),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.5),
           ),
         ),
       ],
@@ -237,9 +231,9 @@ class RecommendationReasonDialog extends StatelessWidget {
         const SizedBox(height: 24),
         Text(
           '追加情報',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         Container(
@@ -271,9 +265,9 @@ class RecommendationReasonDialog extends StatelessWidget {
               children: [
                 Text(
                   '$key: ',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                 ),
                 Expanded(
                   child: Text(

@@ -31,10 +31,7 @@ class SectionHeader extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -60,19 +57,13 @@ class ProfileSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(
-          title: 'プロフィール',
-          icon: Icons.person_outline,
-        ),
+        const SectionHeader(title: 'プロフィール', icon: Icons.person_outline),
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                UserAvatar(
-                  user: user,
-                  size: 60,
-                ),
+                UserAvatar(user: user, size: 60),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -124,24 +115,19 @@ class DisplaySettingsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(
-          title: '表示設定',
-          icon: Icons.palette_outlined,
-        ),
+        const SectionHeader(title: '表示設定', icon: Icons.palette_outlined),
         Card(
           child: Column(
             children: [
               ListTile(
-                leading: Icon(
-                  isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                ),
+                leading: Icon(isDarkMode ? Icons.dark_mode : Icons.light_mode),
                 title: const Text('ダークモード'),
-                subtitle: Text(
-                  isDarkMode ? '現在ダークモードです' : '現在ライトモードです',
-                ),
+                subtitle: Text(isDarkMode ? '現在ダークモードです' : '現在ライトモードです'),
                 trailing: Switch(
                   value: isDarkMode,
-                  onChanged: onDarkModeChanged ?? (_) => _showComingSoonMessage(context),
+                  onChanged:
+                      onDarkModeChanged ??
+                      (_) => _showComingSoonMessage(context),
                 ),
               ),
             ],
@@ -152,10 +138,7 @@ class DisplaySettingsSection extends StatelessWidget {
   }
 
   void _showComingSoonMessage(BuildContext context) {
-    SnackBarHelper.showInfo(
-      context,
-      'ダークモード切り替えは将来実装予定です',
-    );
+    SnackBarHelper.showInfo(context, 'ダークモード切り替えは将来実装予定です');
   }
 }
 
@@ -179,10 +162,7 @@ class NotificationSettingsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(
-          title: '通知設定',
-          icon: Icons.notifications_outlined,
-        ),
+        const SectionHeader(title: '通知設定', icon: Icons.notifications_outlined),
         Card(
           child: Column(
             children: [
@@ -191,7 +171,8 @@ class NotificationSettingsSection extends StatelessWidget {
                 title: const Text('新作映画通知'),
                 subtitle: const Text('新しい映画が追加されたときに通知'),
                 value: newMovieNotifications,
-                onChanged: onNewMovieNotificationChanged ??
+                onChanged:
+                    onNewMovieNotificationChanged ??
                     (_) => _showComingSoonMessage(context),
               ),
               SwitchListTile(
@@ -199,7 +180,8 @@ class NotificationSettingsSection extends StatelessWidget {
                 title: const Text('おすすめ通知'),
                 subtitle: const Text('新しいおすすめ映画が利用可能になったときに通知'),
                 value: recommendationNotifications,
-                onChanged: onRecommendationNotificationChanged ??
+                onChanged:
+                    onRecommendationNotificationChanged ??
                     (_) => _showComingSoonMessage(context),
               ),
             ],
@@ -210,10 +192,7 @@ class NotificationSettingsSection extends StatelessWidget {
   }
 
   void _showComingSoonMessage(BuildContext context) {
-    SnackBarHelper.showInfo(
-      context,
-      '通知設定は将来実装予定です',
-    );
+    SnackBarHelper.showInfo(context, '通知設定は将来実装予定です');
   }
 }
 
@@ -233,10 +212,7 @@ class DataManagementSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(
-          title: 'データ管理',
-          icon: Icons.storage_outlined,
-        ),
+        const SectionHeader(title: 'データ管理', icon: Icons.storage_outlined),
         Card(
           child: Column(
             children: [
@@ -249,7 +225,10 @@ class DataManagementSection extends StatelessWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.delete_outline, color: Colors.red),
-                title: const Text('アカウント削除', style: TextStyle(color: Colors.red)),
+                title: const Text(
+                  'アカウント削除',
+                  style: TextStyle(color: Colors.red),
+                ),
                 subtitle: const Text('アカウントとすべてのデータを削除'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: onDeleteAccount,
@@ -282,10 +261,7 @@ class AppInfoSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(
-          title: 'アプリ情報',
-          icon: Icons.info_outline,
-        ),
+        const SectionHeader(title: 'アプリ情報', icon: Icons.info_outline),
         Card(
           child: Column(
             children: [
@@ -339,13 +315,14 @@ class LogoutSection extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton.icon(
         onPressed: isLoading ? null : onLogout,
-        icon: isLoading
-            ? const SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : const Icon(Icons.logout),
+        icon:
+            isLoading
+                ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+                : const Icon(Icons.logout),
         label: Text(isLoading ? 'ログアウト中...' : 'ログアウト'),
         style: ElevatedButton.styleFrom(
           foregroundColor: theme.colorScheme.error,
@@ -413,9 +390,6 @@ class SettingsDefaults {
   static const EdgeInsets cardPadding = EdgeInsets.all(16.0);
 
   static void showComingSoonSnackBar(BuildContext context, String feature) {
-    SnackBarHelper.showInfo(
-      context,
-      '$feature機能は将来実装予定です',
-    );
+    SnackBarHelper.showInfo(context, '$feature機能は将来実装予定です');
   }
 }

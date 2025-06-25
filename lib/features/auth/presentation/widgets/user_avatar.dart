@@ -25,10 +25,7 @@ class UserAvatar extends ConsumerWidget {
     if (currentUser == null) {
       return IconButton(
         onPressed: onTap,
-        icon: Icon(
-          Icons.account_circle_outlined,
-          size: size,
-        ),
+        icon: Icon(Icons.account_circle_outlined, size: size),
       );
     }
 
@@ -39,17 +36,20 @@ class UserAvatar extends ConsumerWidget {
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: showBorder ? Border.all(
-            color: Theme.of(context).colorScheme.primary,
-            width: 2,
-          ) : Border.all(
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
-            width: 1,
-          ),
+          border:
+              showBorder
+                  ? Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 2,
+                  )
+                  : Border.all(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outline.withValues(alpha: 0.3),
+                    width: 1,
+                  ),
         ),
-        child: ClipOval(
-          child: _buildAvatarContent(context, currentUser),
-        ),
+        child: ClipOval(child: _buildAvatarContent(context, currentUser)),
       ),
     );
   }
@@ -73,10 +73,11 @@ class UserAvatar extends ConsumerWidget {
               height: size * 0.5,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
+                value:
+                    loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
               ),
             ),
           );

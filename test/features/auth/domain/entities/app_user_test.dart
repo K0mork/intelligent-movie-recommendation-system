@@ -3,7 +3,6 @@ import 'package:filmflow/features/auth/domain/entities/app_user.dart';
 
 void main() {
   group('AppUser', () {
-
     test('creates instance with required properties', () {
       final createdAt = DateTime.now();
       final lastSignInAt = DateTime.now();

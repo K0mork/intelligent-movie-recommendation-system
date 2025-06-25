@@ -34,8 +34,8 @@ class DateHelper {
   static bool isToday(DateTime date) {
     final now = DateTime.now();
     return date.year == now.year &&
-           date.month == now.month &&
-           date.day == now.day;
+        date.month == now.month &&
+        date.day == now.day;
   }
 
   /// 相対的な時間表示（例：2時間前、3日前）

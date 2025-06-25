@@ -30,19 +30,28 @@ class StarRating extends StatelessWidget {
     return AccessibleRating(
       rating: rating,
       maxRating: maxRating.toDouble(),
-      semanticLabel: AccessibilityHelper.formatRatingForScreenReader(rating, maxRating.toDouble()),
+      semanticLabel: AccessibilityHelper.formatRatingForScreenReader(
+        rating,
+        maxRating.toDouble(),
+      ),
       itemCount: maxRating,
       itemBuilder: (context, index, isActive) {
         return GestureDetector(
-          onTap: onRatingChanged != null
-              ? () => onRatingChanged!(index + 1.0)
-              : null,
+          onTap:
+              onRatingChanged != null
+                  ? () => onRatingChanged!(index + 1.0)
+                  : null,
           child: Semantics(
             label: '${index + 1}星',
             button: onRatingChanged != null,
             child: Icon(
               _getStarIcon(index + 1, rating),
-              color: _getStarColor(index + 1, rating, activeColor, inactiveColor),
+              color: _getStarColor(
+                index + 1,
+                rating,
+                activeColor,
+                inactiveColor,
+              ),
               size: size,
             ),
           ),
@@ -115,7 +124,8 @@ class _InteractiveStarRatingState extends State<InteractiveStarRating> {
     final inactiveColor = widget.unratedColor ?? theme.colorScheme.outline;
 
     return Semantics(
-      label: '評価を選択してください。現在の評価: ${AccessibilityHelper.formatRatingForScreenReader(_currentRating, widget.maxRating.toDouble())}',
+      label:
+          '評価を選択してください。現在の評価: ${AccessibilityHelper.formatRatingForScreenReader(_currentRating, widget.maxRating.toDouble())}',
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: List.generate(widget.maxRating, (index) {

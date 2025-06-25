@@ -5,9 +5,7 @@ import 'package:filmflow/features/reviews/presentation/widgets/star_rating.dart'
 void main() {
   group('Performance Tests', () {
     Widget createTestWidget(Widget child) {
-      return MaterialApp(
-        home: Scaffold(body: child),
-      );
+      return MaterialApp(home: Scaffold(body: child));
     }
 
     test('Data processing performance - lightweight', () {
@@ -15,19 +13,23 @@ void main() {
       final stopwatch = Stopwatch()..start();
 
       // 中量のデータ処理をシミュレート（軽量化）
-      final movieData = List.generate(1000, (index) => {
-        'id': index,
-        'title': 'Movie $index',
-        'rating': (index % 10) / 2.0,
-        'year': 2000 + (index % 24),
-        'genres': [(index % 5) + 1, (index % 3) + 6],
-      });
+      final movieData = List.generate(
+        1000,
+        (index) => {
+          'id': index,
+          'title': 'Movie $index',
+          'rating': (index % 10) / 2.0,
+          'year': 2000 + (index % 24),
+          'genres': [(index % 5) + 1, (index % 3) + 6],
+        },
+      );
 
       // データフィルタリング処理
-      final filteredMovies = movieData.where((movie) {
-        return movie['rating'] as double > 3.0 &&
-               (movie['year'] as int) > 2010;
-      }).toList();
+      final filteredMovies =
+          movieData.where((movie) {
+            return movie['rating'] as double > 3.0 &&
+                (movie['year'] as int) > 2010;
+          }).toList();
 
       // データソート処理
       filteredMovies.sort((a, b) {
@@ -46,8 +48,12 @@ void main() {
       stopwatch.stop();
 
       // パフォーマンス検証（軽量化）
-      expect(stopwatch.elapsedMilliseconds, lessThan(100),
-        reason: 'Data processing should complete under 100ms, was ${stopwatch.elapsedMilliseconds}ms');
+      expect(
+        stopwatch.elapsedMilliseconds,
+        lessThan(100),
+        reason:
+            'Data processing should complete under 100ms, was ${stopwatch.elapsedMilliseconds}ms',
+      );
 
       // 結果の正確性検証
       expect(filteredMovies.isNotEmpty, true);
@@ -66,21 +72,25 @@ void main() {
       print('  Grouped by year: ${groupedByYear.length} years');
     });
 
-    testWidgets('Star rating widget basic rendering', (WidgetTester tester) async {
+    testWidgets('Star rating widget basic rendering', (
+      WidgetTester tester,
+    ) async {
       // 星評価ウィジェットの基本描画テスト（軽量化）
       final stopwatch = Stopwatch()..start();
 
       await tester.pumpWidget(
-        createTestWidget(
-          const StarRating(rating: 4.5, maxRating: 5),
-        ),
+        createTestWidget(const StarRating(rating: 4.5, maxRating: 5)),
       );
 
       stopwatch.stop();
 
       // パフォーマンス検証
-      expect(stopwatch.elapsedMilliseconds, lessThan(500),
-        reason: 'Star rating rendering should be under 500ms, was ${stopwatch.elapsedMilliseconds}ms');
+      expect(
+        stopwatch.elapsedMilliseconds,
+        lessThan(500),
+        reason:
+            'Star rating rendering should be under 500ms, was ${stopwatch.elapsedMilliseconds}ms',
+      );
 
       // UIが正しく表示されることを確認
       expect(find.byType(StarRating), findsOneWidget);
@@ -89,7 +99,9 @@ void main() {
       print('  Render time: ${stopwatch.elapsedMilliseconds}ms');
     });
 
-    testWidgets('Simple list rendering performance', (WidgetTester tester) async {
+    testWidgets('Simple list rendering performance', (
+      WidgetTester tester,
+    ) async {
       // シンプルなリスト描画パフォーマンステスト（軽量化）
       final items = List.generate(20, (index) => 'Item $index'); // 100 -> 20に削減
 
@@ -99,10 +111,11 @@ void main() {
         createTestWidget(
           ListView.builder(
             itemCount: items.length,
-            itemBuilder: (context, index) => ListTile(
-              title: Text(items[index]),
-              leading: const Icon(Icons.movie),
-            ),
+            itemBuilder:
+                (context, index) => ListTile(
+                  title: Text(items[index]),
+                  leading: const Icon(Icons.movie),
+                ),
           ),
         ),
       );
@@ -112,8 +125,12 @@ void main() {
       stopwatch.stop();
 
       // パフォーマンス検証（軽量化）
-      expect(stopwatch.elapsedMilliseconds, lessThan(1000),
-        reason: 'List render should be under 1 second, was ${stopwatch.elapsedMilliseconds}ms');
+      expect(
+        stopwatch.elapsedMilliseconds,
+        lessThan(1000),
+        reason:
+            'List render should be under 1 second, was ${stopwatch.elapsedMilliseconds}ms',
+      );
 
       // リストが正しく表示されることを確認
       expect(find.byType(ListTile), findsWidgets);
@@ -144,8 +161,12 @@ void main() {
       stopwatch.stop();
 
       // パフォーマンス検証
-      expect(stopwatch.elapsedMilliseconds, lessThan(50),
-        reason: 'Algorithm should complete under 50ms, was ${stopwatch.elapsedMilliseconds}ms');
+      expect(
+        stopwatch.elapsedMilliseconds,
+        lessThan(50),
+        reason:
+            'Algorithm should complete under 50ms, was ${stopwatch.elapsedMilliseconds}ms',
+      );
 
       // 結果の正確性検証
       expect(filtered.isNotEmpty, true);
@@ -188,8 +209,12 @@ void main() {
       stopwatch.stop();
 
       // パフォーマンス検証
-      expect(stopwatch.elapsedMilliseconds, lessThan(100),
-        reason: 'Memory allocation should complete under 100ms, was ${stopwatch.elapsedMilliseconds}ms');
+      expect(
+        stopwatch.elapsedMilliseconds,
+        lessThan(100),
+        reason:
+            'Memory allocation should complete under 100ms, was ${stopwatch.elapsedMilliseconds}ms',
+      );
 
       // 結果検証
       expect(objects.length, equals(1000));

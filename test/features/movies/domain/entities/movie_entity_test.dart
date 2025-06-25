@@ -102,7 +102,9 @@ void main() {
           video: false,
         );
 
-        final fullUrl = movieWithoutBackdrop.getFullBackdropUrl('https://base.url');
+        final fullUrl = movieWithoutBackdrop.getFullBackdropUrl(
+          'https://base.url',
+        );
         expect(fullUrl, isNull);
       });
     });

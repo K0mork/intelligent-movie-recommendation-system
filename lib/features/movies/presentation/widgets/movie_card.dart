@@ -7,11 +7,7 @@ class MovieCard extends StatelessWidget {
   final Movie movie;
   final VoidCallback? onTap;
 
-  const MovieCard({
-    super.key,
-    required this.movie,
-    this.onTap,
-  });
+  const MovieCard({super.key, required this.movie, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -28,22 +24,22 @@ class MovieCard extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 color: Colors.grey[300],
-                child: movie.fullPosterUrl.isNotEmpty
-                    ? CachedNetworkImage(
-                        imageUrl: movie.fullPosterUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => const LoadingStateWidget.inline(),
-                        errorWidget: (context, url, error) => const Icon(
-                          Icons.movie,
-                          size: 50,
-                          color: Colors.grey,
-                        ),
-                      )
-                    : const Icon(
-                        Icons.movie,
-                        size: 50,
-                        color: Colors.grey,
-                      ),
+                child:
+                    movie.fullPosterUrl.isNotEmpty
+                        ? CachedNetworkImage(
+                          imageUrl: movie.fullPosterUrl,
+                          fit: BoxFit.cover,
+                          placeholder:
+                              (context, url) =>
+                                  const LoadingStateWidget.inline(),
+                          errorWidget:
+                              (context, url, error) => const Icon(
+                                Icons.movie,
+                                size: 50,
+                                color: Colors.grey,
+                              ),
+                        )
+                        : const Icon(Icons.movie, size: 50, color: Colors.grey),
               ),
             ),
             Expanded(
@@ -56,27 +52,24 @@ class MovieCard extends StatelessWidget {
                     Text(
                       movie.title,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
-                    if (movie.releaseDate != null && movie.releaseDate!.isNotEmpty)
+                    if (movie.releaseDate != null &&
+                        movie.releaseDate!.isNotEmpty)
                       Text(
                         movie.releaseDate!.split('-')[0],
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                          color: Colors.grey[600],
+                        ),
                       ),
                     const Spacer(),
                     Row(
                       children: [
-                        const Icon(
-                          Icons.star,
-                          size: 16,
-                          color: Colors.amber,
-                        ),
+                        const Icon(Icons.star, size: 16, color: Colors.amber),
                         const SizedBox(width: 4),
                         Text(
                           movie.voteAverage.toStringAsFixed(1),

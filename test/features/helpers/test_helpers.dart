@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 
 class TestHelpers {
   /// テスト用のWidgetを作成するヘルパーメソッド
-  static Widget createTestWidget({
-    required Widget child,
-    ThemeData? theme,
-  }) {
+  static Widget createTestWidget({required Widget child, ThemeData? theme}) {
     return MaterialApp(
       theme: theme ?? ThemeData.light(),
-      home: Scaffold(
-        body: child,
-      ),
+      home: Scaffold(body: child),
     );
   }
 
@@ -22,9 +17,7 @@ class TestHelpers {
   }) {
     return MaterialApp(
       theme: theme ?? ThemeData.light(),
-      home: Scaffold(
-        body: child,
-      ),
+      home: Scaffold(body: child),
     );
   }
 }

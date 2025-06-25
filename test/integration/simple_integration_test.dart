@@ -9,9 +9,7 @@ void main() {
     testWidgets('App launches successfully', (WidgetTester tester) async {
       // アプリケーションを起動
       await tester.pumpWidget(
-        ProviderScope(
-          child: MyApp(firebaseAvailable: false),
-        ),
+        ProviderScope(child: MyApp(firebaseAvailable: false)),
       );
 
       await tester.pumpAndSettle(const Duration(seconds: 3));
@@ -29,9 +27,7 @@ void main() {
 
     testWidgets('Basic navigation works', (WidgetTester tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          child: MyApp(firebaseAvailable: false),
-        ),
+        ProviderScope(child: MyApp(firebaseAvailable: false)),
       );
 
       await tester.pumpAndSettle(const Duration(seconds: 3));
@@ -57,25 +53,28 @@ void main() {
       debugPrint('InkWell: ${inkWells.evaluate().length}');
 
       // 何らかのインタラクティブ要素が存在することを確認
-      final hasInteractiveElements = buttons.evaluate().isNotEmpty ||
-                                   textButtons.evaluate().isNotEmpty ||
-                                   iconButtons.evaluate().isNotEmpty ||
-                                   gestureDetectors.evaluate().isNotEmpty ||
-                                   inkWells.evaluate().isNotEmpty;
+      final hasInteractiveElements =
+          buttons.evaluate().isNotEmpty ||
+          textButtons.evaluate().isNotEmpty ||
+          iconButtons.evaluate().isNotEmpty ||
+          gestureDetectors.evaluate().isNotEmpty ||
+          inkWells.evaluate().isNotEmpty;
 
       // インタラクティブ要素がない場合は、少なくともScaffoldが存在することで合格とする
       if (!hasInteractiveElements) {
         expect(find.byType(Scaffold), findsAtLeastNWidgets(1));
       } else {
-        expect(hasInteractiveElements, isTrue, reason: 'At least one interactive element should be present');
+        expect(
+          hasInteractiveElements,
+          isTrue,
+          reason: 'At least one interactive element should be present',
+        );
       }
     });
 
     testWidgets('App handles errors gracefully', (WidgetTester tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          child: MyApp(firebaseAvailable: false),
-        ),
+        ProviderScope(child: MyApp(firebaseAvailable: false)),
       );
 
       await tester.pumpAndSettle(const Duration(seconds: 2));

@@ -5,14 +5,14 @@ import '../datasources/recommendation_remote_datasource.dart';
 class RecommendationRepositoryImpl implements RecommendationRepository {
   final RecommendationRemoteDataSource remoteDataSource;
 
-  RecommendationRepositoryImpl({
-    required this.remoteDataSource,
-  });
+  RecommendationRepositoryImpl({required this.remoteDataSource});
 
   @override
   Future<List<Recommendation>> getRecommendations(String userId) async {
     try {
-      final recommendationModels = await remoteDataSource.getRecommendations(userId);
+      final recommendationModels = await remoteDataSource.getRecommendations(
+        userId,
+      );
       return recommendationModels.map((model) => model.toEntity()).toList();
     } catch (e) {
       rethrow;
@@ -22,7 +22,8 @@ class RecommendationRepositoryImpl implements RecommendationRepository {
   @override
   Future<List<Recommendation>> generateRecommendations(String userId) async {
     try {
-      final recommendationModels = await remoteDataSource.generateRecommendations(userId);
+      final recommendationModels = await remoteDataSource
+          .generateRecommendations(userId);
       return recommendationModels.map((model) => model.toEntity()).toList();
     } catch (e) {
       rethrow;
@@ -30,7 +31,10 @@ class RecommendationRepositoryImpl implements RecommendationRepository {
   }
 
   @override
-  Future<void> saveRecommendation(String userId, String recommendationId) async {
+  Future<void> saveRecommendation(
+    String userId,
+    String recommendationId,
+  ) async {
     try {
       await remoteDataSource.saveRecommendation(userId, recommendationId);
     } catch (e) {
@@ -41,7 +45,8 @@ class RecommendationRepositoryImpl implements RecommendationRepository {
   @override
   Future<List<Recommendation>> getSavedRecommendations(String userId) async {
     try {
-      final recommendationModels = await remoteDataSource.getSavedRecommendations(userId);
+      final recommendationModels = await remoteDataSource
+          .getSavedRecommendations(userId);
       return recommendationModels.map((model) => model.toEntity()).toList();
     } catch (e) {
       rethrow;
@@ -49,7 +54,10 @@ class RecommendationRepositoryImpl implements RecommendationRepository {
   }
 
   @override
-  Future<void> deleteRecommendation(String userId, String recommendationId) async {
+  Future<void> deleteRecommendation(
+    String userId,
+    String recommendationId,
+  ) async {
     try {
       await remoteDataSource.deleteRecommendation(userId, recommendationId);
     } catch (e) {
@@ -65,7 +73,12 @@ class RecommendationRepositoryImpl implements RecommendationRepository {
     String? feedback,
   ) async {
     try {
-      await remoteDataSource.submitFeedback(userId, recommendationId, isHelpful, feedback);
+      await remoteDataSource.submitFeedback(
+        userId,
+        recommendationId,
+        isHelpful,
+        feedback,
+      );
     } catch (e) {
       rethrow;
     }

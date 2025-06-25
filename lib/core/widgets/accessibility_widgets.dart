@@ -26,10 +26,7 @@ class AccessibleButton extends StatelessWidget {
     );
 
     if (tooltip != null) {
-      button = Tooltip(
-        message: tooltip!,
-        child: button,
-      );
+      button = Tooltip(message: tooltip!, child: button);
     }
 
     if (semanticLabel != null) {
@@ -104,9 +101,7 @@ class AccessibleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget card = Card(
       margin: margin,
-      child: padding != null
-          ? Padding(padding: padding!, child: child)
-          : child,
+      child: padding != null ? Padding(padding: padding!, child: child) : child,
     );
 
     if (onTap != null) {
@@ -177,11 +172,7 @@ class AccessibleTextField extends StatelessWidget {
     );
 
     if (semanticLabel != null) {
-      return Semantics(
-        label: semanticLabel,
-        textField: true,
-        child: field,
-      );
+      return Semantics(label: semanticLabel, textField: true, child: field);
     }
 
     return field;
@@ -223,10 +214,11 @@ class AccessibleImage extends StatelessWidget {
           return loadingWidget ??
               Center(
                 child: CircularProgressIndicator(
-                  value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
-                      : null,
+                  value:
+                      loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
                 ),
               );
         },
@@ -236,10 +228,7 @@ class AccessibleImage extends StatelessWidget {
                 width: width,
                 height: height,
                 color: Colors.grey[300],
-                child: const Icon(
-                  Icons.error,
-                  color: Colors.grey,
-                ),
+                child: const Icon(Icons.error, color: Colors.grey),
               );
         },
       ),
@@ -296,14 +285,15 @@ class AccessibleTabBar extends StatelessWidget {
       label: semanticLabel ?? 'タブバー',
       child: TabBar(
         controller: controller,
-        tabs: tabs.map((tab) {
-          return Semantics(
-            label: tab.text ?? 'タブ',
-            button: true,
-            selected: controller.index == tabs.indexOf(tab),
-            child: tab,
-          );
-        }).toList(),
+        tabs:
+            tabs.map((tab) {
+              return Semantics(
+                label: tab.text ?? 'タブ',
+                button: true,
+                selected: controller.index == tabs.indexOf(tab),
+                child: tab,
+              );
+            }).toList(),
       ),
     );
   }
@@ -313,18 +303,11 @@ class ScreenReaderText extends StatelessWidget {
   final String text;
   final Widget? child;
 
-  const ScreenReaderText({
-    super.key,
-    required this.text,
-    this.child,
-  });
+  const ScreenReaderText({super.key, required this.text, this.child});
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      label: text,
-      child: child ?? const SizedBox.shrink(),
-    );
+    return Semantics(label: text, child: child ?? const SizedBox.shrink());
   }
 }
 
@@ -396,15 +379,16 @@ class _FocusableContainerState extends State<FocusableContainer> {
             widget.onTap?.call();
           },
           child: Container(
-            decoration: _isFocused
-                ? BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).primaryColor,
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(4),
-                  )
-                : null,
+            decoration:
+                _isFocused
+                    ? BoxDecoration(
+                      border: Border.all(
+                        color: Theme.of(context).primaryColor,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(4),
+                    )
+                    : null,
             child: widget.child,
           ),
         ),

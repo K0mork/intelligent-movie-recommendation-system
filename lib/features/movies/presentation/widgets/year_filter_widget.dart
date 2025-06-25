@@ -27,9 +27,10 @@ class YearFilterWidget extends StatelessWidget {
       child: PopupMenuButton<String>(
         icon: Icon(
           Icons.date_range,
-          color: selectedYear != null
-              ? (iconColor ?? theme.colorScheme.primary)
-              : null,
+          color:
+              selectedYear != null
+                  ? (iconColor ?? theme.colorScheme.primary)
+                  : null,
         ),
         tooltip: tooltip,
         onSelected: (year) {
@@ -45,26 +46,21 @@ class YearFilterWidget extends StatelessWidget {
     final yearOptions = YearFilterOptions.getYearOptions();
 
     return yearOptions.map((yearOption) {
-      final isSelected = selectedYear == yearOption.value ||
-          (selectedYear == null && yearOption.value == YearFilterOptions.allYears);
+      final isSelected =
+          selectedYear == yearOption.value ||
+          (selectedYear == null &&
+              yearOption.value == YearFilterOptions.allYears);
 
       return PopupMenuItem<String>(
         value: yearOption.value,
         child: Row(
           children: [
-            Icon(
-              yearOption.icon,
-              color: theme.colorScheme.onSurface,
-            ),
+            Icon(yearOption.icon, color: theme.colorScheme.onSurface),
             const SizedBox(width: 8),
             Text(yearOption.label),
             if (isSelected) ...[
               const Spacer(),
-              Icon(
-                Icons.check,
-                size: 16,
-                color: theme.colorScheme.primary,
-              ),
+              Icon(Icons.check, size: 16, color: theme.colorScheme.primary),
             ],
           ],
         ),
@@ -94,11 +90,7 @@ class YearFilterOptions {
   static List<YearFilterOption> getYearOptions() {
     final currentYear = DateTime.now().year;
     final options = <YearFilterOption>[
-      const YearFilterOption(
-        value: allYears,
-        label: '全ての年',
-        icon: Icons.clear,
-      ),
+      const YearFilterOption(value: allYears, label: '全ての年', icon: Icons.clear),
     ];
 
     // 現在の年から1900年まで5年間隔で生成
@@ -161,10 +153,7 @@ class YearRange {
   final int start;
   final int end;
 
-  const YearRange({
-    required this.start,
-    required this.end,
-  });
+  const YearRange({required this.start, required this.end});
 
   bool contains(int year) {
     return year >= start && year <= end;

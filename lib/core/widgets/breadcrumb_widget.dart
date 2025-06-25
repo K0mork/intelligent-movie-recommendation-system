@@ -5,11 +5,7 @@ class BreadcrumbItem {
   final VoidCallback? onTap;
   final IconData? icon;
 
-  const BreadcrumbItem({
-    required this.label,
-    this.onTap,
-    this.icon,
-  });
+  const BreadcrumbItem({required this.label, this.onTap, this.icon});
 }
 
 class BreadcrumbWidget extends StatelessWidget {
@@ -92,9 +88,10 @@ class BreadcrumbWidget extends StatelessWidget {
                     fontSize: fontSize,
                     color: isLast ? textColor : textColor.withOpacity(0.7),
                     fontWeight: isLast ? FontWeight.w500 : FontWeight.normal,
-                    decoration: item.onTap != null && !isLast
-                        ? TextDecoration.underline
-                        : TextDecoration.none,
+                    decoration:
+                        item.onTap != null && !isLast
+                            ? TextDecoration.underline
+                            : TextDecoration.none,
                   ),
                 ),
               ],
@@ -108,11 +105,7 @@ class BreadcrumbWidget extends StatelessWidget {
         widgets.add(
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: Icon(
-              separatorIcon,
-              size: fontSize,
-              color: separatorColor,
-            ),
+            child: Icon(separatorIcon, size: fontSize, color: separatorColor),
           ),
         );
       }
@@ -133,10 +126,10 @@ class BreadcrumbHelper {
       BreadcrumbItem(
         label: 'ホーム',
         icon: Icons.home,
-        onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
-          '/',
-          (route) => false,
-        ),
+        onTap:
+            () => Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil('/', (route) => false),
       ),
       BreadcrumbItem(
         label: '映画',
@@ -159,9 +152,10 @@ class BreadcrumbHelper {
     if (movieTitle != null) {
       breadcrumbs.add(
         BreadcrumbItem(
-          label: movieTitle.length > 20
-              ? '${movieTitle.substring(0, 20)}...'
-              : movieTitle,
+          label:
+              movieTitle.length > 20
+                  ? '${movieTitle.substring(0, 20)}...'
+                  : movieTitle,
         ),
       );
     }
@@ -177,10 +171,10 @@ class BreadcrumbHelper {
       BreadcrumbItem(
         label: 'ホーム',
         icon: Icons.home,
-        onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
-          '/',
-          (route) => false,
-        ),
+        onTap:
+            () => Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil('/', (route) => false),
       ),
       BreadcrumbItem(
         label: 'マイ映画',
@@ -189,11 +183,7 @@ class BreadcrumbHelper {
     ];
 
     if (reviewType != null) {
-      breadcrumbs.add(
-        BreadcrumbItem(
-          label: reviewType,
-        ),
-      );
+      breadcrumbs.add(BreadcrumbItem(label: reviewType));
     }
 
     return breadcrumbs;
@@ -206,14 +196,12 @@ class BreadcrumbHelper {
       BreadcrumbItem(
         label: 'ホーム',
         icon: Icons.home,
-        onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
-          '/',
-          (route) => false,
-        ),
+        onTap:
+            () => Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil('/', (route) => false),
       ),
-      BreadcrumbItem(
-        label: 'AI映画推薦',
-      ),
+      BreadcrumbItem(label: 'AI映画推薦'),
     ];
   }
 }

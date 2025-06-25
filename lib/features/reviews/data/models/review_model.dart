@@ -40,15 +40,24 @@ class ReviewModel extends Review {
       moviePosterUrl: map['moviePosterUrl'],
       rating: (map['rating'] ?? 0.0).toDouble(),
       comment: map['comment'],
-      watchedDate: map['watchedDate'] is Timestamp
-          ? (map['watchedDate'] as Timestamp).toDate()
-          : (map['watchedDate'] != null ? DateTime.parse(map['watchedDate']) : null),
-      createdAt: map['createdAt'] is Timestamp
-          ? (map['createdAt'] as Timestamp).toDate()
-          : DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt: map['updatedAt'] is Timestamp
-          ? (map['updatedAt'] as Timestamp).toDate()
-          : DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
+      watchedDate:
+          map['watchedDate'] is Timestamp
+              ? (map['watchedDate'] as Timestamp).toDate()
+              : (map['watchedDate'] != null
+                  ? DateTime.parse(map['watchedDate'])
+                  : null),
+      createdAt:
+          map['createdAt'] is Timestamp
+              ? (map['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(
+                map['createdAt'] ?? DateTime.now().toIso8601String(),
+              ),
+      updatedAt:
+          map['updatedAt'] is Timestamp
+              ? (map['updatedAt'] as Timestamp).toDate()
+              : DateTime.parse(
+                map['updatedAt'] ?? DateTime.now().toIso8601String(),
+              ),
     );
   }
 
@@ -60,7 +69,8 @@ class ReviewModel extends Review {
       'moviePosterUrl': moviePosterUrl,
       'rating': rating,
       'comment': comment,
-      'watchedDate': watchedDate != null ? Timestamp.fromDate(watchedDate!) : null,
+      'watchedDate':
+          watchedDate != null ? Timestamp.fromDate(watchedDate!) : null,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
     };

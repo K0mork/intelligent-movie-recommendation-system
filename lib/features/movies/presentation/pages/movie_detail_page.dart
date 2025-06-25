@@ -26,15 +26,17 @@ class MovieDetailPage extends ConsumerWidget {
 
     return Scaffold(
       body: movieAsync.when(
-        data: (movie) => _MovieDetailView(
-          movie: movie,
-          showReviewButton: showReviewButton,
-        ),
+        data:
+            (movie) => _MovieDetailView(
+              movie: movie,
+              showReviewButton: showReviewButton,
+            ),
         loading: () => const _LoadingView(),
-        error: (error, stackTrace) => _ErrorView(
-          error: error,
-          onRetry: () => ref.refresh(movieDetailsProvider(movieId)),
-        ),
+        error:
+            (error, stackTrace) => _ErrorView(
+              error: error,
+              onRetry: () => ref.refresh(movieDetailsProvider(movieId)),
+            ),
       ),
     );
   }
@@ -45,10 +47,7 @@ class _MovieDetailView extends StatelessWidget {
   final Movie movie;
   final bool showReviewButton;
 
-  const _MovieDetailView({
-    required this.movie,
-    this.showReviewButton = false,
-  });
+  const _MovieDetailView({required this.movie, this.showReviewButton = false});
 
   @override
   Widget build(BuildContext context) {
@@ -93,16 +92,11 @@ class _MovieDetailView extends StatelessWidget {
 
         // 関連映画セクション
         SliverToBoxAdapter(
-          child: RelatedMoviesSection(
-            movieId: movie.id,
-            title: 'この映画に関連する作品',
-          ),
+          child: RelatedMoviesSection(movieId: movie.id, title: 'この映画に関連する作品'),
         ),
 
         // 下部スペース
-        const SliverToBoxAdapter(
-          child: SizedBox(height: 32),
-        ),
+        const SliverToBoxAdapter(child: SizedBox(height: 32)),
       ],
     );
   }
@@ -114,9 +108,7 @@ class _LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
+    return const Center(child: CircularProgressIndicator());
   }
 }
 
@@ -125,10 +117,7 @@ class _ErrorView extends StatelessWidget {
   final Object error;
   final VoidCallback onRetry;
 
-  const _ErrorView({
-    required this.error,
-    required this.onRetry,
-  });
+  const _ErrorView({required this.error, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -138,11 +127,7 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red[300],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
             const SizedBox(height: 16),
             Text(
               'エラーが発生しました',
@@ -156,10 +141,7 @@ class _ErrorView extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: onRetry,
-              child: const Text('再試行'),
-            ),
+            ElevatedButton(onPressed: onRetry, child: const Text('再試行')),
           ],
         ),
       ),

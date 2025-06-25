@@ -26,17 +26,11 @@ class _FadeInWidgetState extends State<FadeInWidget>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _animation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -53,10 +47,7 @@ class _FadeInWidgetState extends State<FadeInWidget>
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _animation,
-      child: widget.child,
-    );
+    return FadeTransition(opacity: _animation, child: widget.child);
   }
 }
 
@@ -88,17 +79,11 @@ class _SlideInWidgetState extends State<SlideInWidget>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _animation = Tween<Offset>(
       begin: widget.begin,
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -115,10 +100,7 @@ class _SlideInWidgetState extends State<SlideInWidget>
 
   @override
   Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _animation,
-      child: widget.child,
-    );
+    return SlideTransition(position: _animation, child: widget.child);
   }
 }
 
@@ -150,17 +132,11 @@ class _ScaleInWidgetState extends State<ScaleInWidget>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _animation = Tween<double>(
       begin: widget.begin,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -177,10 +153,7 @@ class _ScaleInWidgetState extends State<ScaleInWidget>
 
   @override
   Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _animation,
-      child: widget.child,
-    );
+    return ScaleTransition(scale: _animation, child: widget.child);
   }
 }
 
@@ -201,23 +174,25 @@ class StaggeredListAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: children.asMap().entries.map((entry) {
-        final index = entry.key;
-        final child = entry.value;
+      children:
+          children.asMap().entries.map((entry) {
+            final index = entry.key;
+            final child = entry.value;
 
-        return SlideInWidget(
-          delay: Duration(milliseconds: index * itemDelay.inMilliseconds),
-          duration: itemDuration,
-          begin: direction == Axis.vertical
-              ? const Offset(0.0, 0.3)
-              : const Offset(0.3, 0.0),
-          child: FadeInWidget(
-            delay: Duration(milliseconds: index * itemDelay.inMilliseconds),
-            duration: itemDuration,
-            child: child,
-          ),
-        );
-      }).toList(),
+            return SlideInWidget(
+              delay: Duration(milliseconds: index * itemDelay.inMilliseconds),
+              duration: itemDuration,
+              begin:
+                  direction == Axis.vertical
+                      ? const Offset(0.0, 0.3)
+                      : const Offset(0.3, 0.0),
+              child: FadeInWidget(
+                delay: Duration(milliseconds: index * itemDelay.inMilliseconds),
+                duration: itemDuration,
+                child: child,
+              ),
+            );
+          }).toList(),
     );
   }
 }
@@ -248,17 +223,11 @@ class _PulseAnimationState extends State<PulseAnimation>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _animation = Tween<double>(
       begin: widget.minScale,
       end: widget.maxScale,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _controller.repeat(reverse: true);
   }
 
@@ -270,10 +239,7 @@ class _PulseAnimationState extends State<PulseAnimation>
 
   @override
   Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _animation,
-      child: widget.child,
-    );
+    return ScaleTransition(scale: _animation, child: widget.child);
   }
 }
 
@@ -301,14 +267,8 @@ class _ShakeAnimationState extends State<ShakeAnimation>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
-    _animation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(_controller);
+    _controller = AnimationController(duration: widget.duration, vsync: this);
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
   }
 
   void shake() {
@@ -327,11 +287,17 @@ class _ShakeAnimationState extends State<ShakeAnimation>
       animation: _animation,
       child: widget.child,
       builder: (context, child) {
-        final sineValue =
-            (4 * _animation.value * (1 - _animation.value)).clamp(0.0, 1.0);
+        final sineValue = (4 * _animation.value * (1 - _animation.value)).clamp(
+          0.0,
+          1.0,
+        );
         return Transform.translate(
-          offset: Offset(widget.offset * sineValue *
-              ((_animation.value * 4).round() % 2 == 0 ? 1 : -1), 0),
+          offset: Offset(
+            widget.offset *
+                sineValue *
+                ((_animation.value * 4).round() % 2 == 0 ? 1 : -1),
+            0,
+          ),
           child: child,
         );
       },
@@ -375,17 +341,11 @@ class _FloatingActionButtonWithAnimationState
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.9,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _rotationAnimation = Tween<double>(
       begin: 0.0,
       end: 0.1,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

@@ -96,48 +96,40 @@ class RecommendationCard extends StatelessWidget {
       height: 200,
       decoration: BoxDecoration(
         color: Colors.grey[300],
-        image: recommendation.posterPath != null
-            ? DecorationImage(
-                image: NetworkImage(_getFullPosterUrl()),
-                fit: BoxFit.cover,
-                onError: (error, stackTrace) {
-                  // エラー時は何もしない（デフォルトの背景色を表示）
-                },
-              )
-            : null,
+        image:
+            recommendation.posterPath != null
+                ? DecorationImage(
+                  image: NetworkImage(_getFullPosterUrl()),
+                  fit: BoxFit.cover,
+                  onError: (error, stackTrace) {
+                    // エラー時は何もしない（デフォルトの背景色を表示）
+                  },
+                )
+                : null,
       ),
-      child: recommendation.posterPath == null
-          ? const Icon(
-              Icons.movie,
-              size: 40,
-              color: Colors.grey,
-            )
-          : null,
+      child:
+          recommendation.posterPath == null
+              ? const Icon(Icons.movie, size: 40, color: Colors.grey)
+              : null,
     );
   }
 
   Widget _buildConfidenceScore(BuildContext context) {
     final score = recommendation.confidenceScore;
-    final color = score >= 0.8
-        ? Colors.green
-        : score >= 0.6
+    final color =
+        score >= 0.8
+            ? Colors.green
+            : score >= 0.6
             ? Colors.orange
             : Colors.red;
 
     return Row(
       children: [
-        Icon(
-          Icons.trending_up,
-          size: 16,
-          color: color,
-        ),
+        Icon(Icons.trending_up, size: 16, color: color),
         const SizedBox(width: 4),
         Text(
           '信頼度: ${(score * 100).toInt()}%',
-          style: TextStyle(
-            color: color,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: color, fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -147,16 +139,14 @@ class RecommendationCard extends StatelessWidget {
     return Wrap(
       spacing: 4,
       runSpacing: 4,
-      children: recommendation.reasonCategories.take(3).map((category) {
-        return Chip(
-          label: Text(
-            category,
-            style: const TextStyle(fontSize: 12),
-          ),
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-        );
-      }).toList(),
+      children:
+          recommendation.reasonCategories.take(3).map((category) {
+            return Chip(
+              label: Text(category, style: const TextStyle(fontSize: 12)),
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+            );
+          }).toList(),
     );
   }
 
@@ -168,9 +158,9 @@ class RecommendationCard extends StatelessWidget {
         children: [
           Text(
             '推薦理由',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
@@ -223,9 +213,9 @@ class RecommendationCard extends StatelessWidget {
   void _showReasonDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => RecommendationReasonDialog(
-        recommendation: recommendation,
-      ),
+      builder:
+          (context) =>
+              RecommendationReasonDialog(recommendation: recommendation),
     );
   }
 
@@ -234,10 +224,11 @@ class RecommendationCard extends StatelessWidget {
 
     showDialog(
       context: context,
-      builder: (context) => FeedbackDialog(
-        movieTitle: recommendation.movieTitle,
-        onSubmit: onFeedback!,
-      ),
+      builder:
+          (context) => FeedbackDialog(
+            movieTitle: recommendation.movieTitle,
+            onSubmit: onFeedback!,
+          ),
     );
   }
 

@@ -18,11 +18,7 @@ class ReviewHistoryTabView extends ConsumerWidget {
   final String sortBy;
   final VoidCallback? onRefresh;
 
-  const ReviewHistoryTabView({
-    super.key,
-    required this.sortBy,
-    this.onRefresh,
-  });
+  const ReviewHistoryTabView({super.key, required this.sortBy, this.onRefresh});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,14 +38,19 @@ class ReviewHistoryTabView extends ConsumerWidget {
         return _buildHistoryContent(context, ref, user.uid);
       },
       loading: () => const LoadingStateWidget.fullScreen(),
-      error: (error, stackTrace) => ErrorDisplay(
-        message: 'ユーザー情報の取得に失敗しました',
-        onRetry: () => ref.refresh(authStateProvider),
-      ),
+      error:
+          (error, stackTrace) => ErrorDisplay(
+            message: 'ユーザー情報の取得に失敗しました',
+            onRetry: () => ref.refresh(authStateProvider),
+          ),
     );
   }
 
-  Widget _buildHistoryContent(BuildContext context, WidgetRef ref, String userId) {
+  Widget _buildHistoryContent(
+    BuildContext context,
+    WidgetRef ref,
+    String userId,
+  ) {
     final reviewsState = ref.watch(userReviewsProvider(userId));
     final theme = Theme.of(context);
 
@@ -61,10 +62,11 @@ class ReviewHistoryTabView extends ConsumerWidget {
       child: reviewsState.when(
         data: (reviews) => _buildReviewsList(context, ref, reviews, theme),
         loading: () => const LoadingStateWidget.fullScreen(),
-        error: (error, stackTrace) => ErrorDisplay(
-          message: 'レビューの取得に失敗しました',
-          onRetry: () => ref.refresh(userReviewsProvider(userId)),
-        ),
+        error:
+            (error, stackTrace) => ErrorDisplay(
+              message: 'レビューの取得に失敗しました',
+              onRetry: () => ref.refresh(userReviewsProvider(userId)),
+            ),
       ),
     );
   }
@@ -110,13 +112,18 @@ class ReviewHistoryTabView extends ConsumerWidget {
                 padding: const EdgeInsets.only(bottom: 12.0),
                 child: ReviewCard(
                   review: sortedReviews[index],
-                  onTap: () => _navigateToMovieDetail(context, sortedReviews[index]),
-                  onEdit: () => _navigateToEditReview(context, sortedReviews[index]),
-                  onDelete: () => _showDeleteConfirmation(
-                    context,
-                    ref,
-                    sortedReviews[index],
-                  ),
+                  onTap:
+                      () =>
+                          _navigateToMovieDetail(context, sortedReviews[index]),
+                  onEdit:
+                      () =>
+                          _navigateToEditReview(context, sortedReviews[index]),
+                  onDelete:
+                      () => _showDeleteConfirmation(
+                        context,
+                        ref,
+                        sortedReviews[index],
+                      ),
                 ),
               ),
               childCount: sortedReviews.length,
@@ -125,9 +132,7 @@ class ReviewHistoryTabView extends ConsumerWidget {
         ),
 
         // フッター
-        const SliverToBoxAdapter(
-          child: SizedBox(height: 24),
-        ),
+        const SliverToBoxAdapter(child: SizedBox(height: 24)),
       ],
     );
   }
@@ -138,11 +143,7 @@ class ReviewHistoryTabView extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Icon(
-              Icons.history,
-              size: 28,
-              color: theme.colorScheme.primary,
-            ),
+            Icon(Icons.history, size: 28, color: theme.colorScheme.primary),
             const SizedBox(width: 12),
             Text(
               'レビュー履歴',
@@ -224,10 +225,7 @@ class ReviewHistoryTabView extends ConsumerWidget {
             const SizedBox(height: 24),
             BreadcrumbWidget(
               items: const [
-                BreadcrumbItem(
-                  label: '新規レビュータブに移動',
-                  icon: Icons.arrow_back,
-                ),
+                BreadcrumbItem(label: '新規レビュータブに移動', icon: Icons.arrow_back),
               ],
             ),
           ],
@@ -300,9 +298,8 @@ class ReviewHistoryTabView extends ConsumerWidget {
   ) async {
     final result = await showDialog<bool>(
       context: context,
-      builder: (context) => _DeleteConfirmationDialog(
-        movieTitle: review.movieTitle,
-      ),
+      builder:
+          (context) => _DeleteConfirmationDialog(movieTitle: review.movieTitle),
     );
 
     if (result == true && context.mounted) {
@@ -338,9 +335,7 @@ class ReviewHistoryTabView extends ConsumerWidget {
 class _DeleteConfirmationDialog extends StatelessWidget {
   final String movieTitle;
 
-  const _DeleteConfirmationDialog({
-    required this.movieTitle,
-  });
+  const _DeleteConfirmationDialog({required this.movieTitle});
 
   @override
   Widget build(BuildContext context) {

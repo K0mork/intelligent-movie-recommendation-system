@@ -7,19 +7,13 @@ class ApiSetupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('API設定が必要です'),
-      ),
+      appBar: AppBar(title: const Text('API設定が必要です')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(
-              Icons.settings,
-              size: 64,
-              color: Colors.orange,
-            ),
+            const Icon(Icons.settings, size: 64, color: Colors.orange),
             const SizedBox(height: 16),
             Text(
               'TMDb APIキーが必要です',
@@ -57,12 +51,7 @@ class ApiSetupPage extends StatelessWidget {
               null,
             ),
             const SizedBox(height: 12),
-            _buildStep(
-              '4.',
-              'アプリを再起動',
-              'アプリを再起動して変更を反映してください。',
-              null,
-            ),
+            _buildStep('4.', 'アプリを再起動', 'アプリを再起動して変更を反映してください。', null),
             const Spacer(),
             const Card(
               color: Colors.blue,
@@ -88,7 +77,12 @@ class ApiSetupPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStep(String number, String title, String description, VoidCallback? onTap) {
+  Widget _buildStep(
+    String number,
+    String title,
+    String description,
+    VoidCallback? onTap,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -99,7 +93,10 @@ class ApiSetupPage extends StatelessWidget {
               radius: 12,
               child: Text(
                 number,
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -115,10 +112,7 @@ class ApiSetupPage extends StatelessWidget {
                   Text(description),
                   if (onTap != null) ...[
                     const SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: onTap,
-                      child: const Text('開く'),
-                    ),
+                    ElevatedButton(onPressed: onTap, child: const Text('開く')),
                   ],
                 ],
               ),

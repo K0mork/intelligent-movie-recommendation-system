@@ -30,8 +30,11 @@ class MovieSearchResultsWidget extends ConsumerWidget {
     // 検索を実行
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (query.isNotEmpty) {
-        final yearInt = selectedYear != null ? int.tryParse(selectedYear!) : null;
-        ref.read(movieControllerProvider.notifier).searchMovies(query, year: yearInt);
+        final yearInt =
+            selectedYear != null ? int.tryParse(selectedYear!) : null;
+        ref
+            .read(movieControllerProvider.notifier)
+            .searchMovies(query, year: yearInt);
       }
     });
 
@@ -46,18 +49,14 @@ class MovieSearchResultsWidget extends ConsumerWidget {
             resultCount: movieState.searchResults.length,
           ),
         // 検索結果
-        Expanded(
-          child: _buildSearchResults(context, movieState),
-        ),
+        Expanded(child: _buildSearchResults(context, movieState)),
       ],
     );
   }
 
   Widget _buildSearchResults(BuildContext context, movieState) {
     if (movieState.isSearching) {
-      return const LoadingStateWidget.fullScreen(
-        message: '映画を検索中...',
-      );
+      return const LoadingStateWidget.fullScreen(message: '映画を検索中...');
     }
 
     if (movieState.errorMessage != null) {
@@ -74,9 +73,13 @@ class MovieSearchResultsWidget extends ConsumerWidget {
 
     // 年フィルタリング処理
     if (selectedYear != null && movies.isNotEmpty) {
-      movies = movies.where((movie) {
-        return YearFilterOptions.isInYearRange(movie.releaseDate, selectedYear);
-      }).toList();
+      movies =
+          movies.where((movie) {
+            return YearFilterOptions.isInYearRange(
+              movie.releaseDate,
+              selectedYear,
+            );
+          }).toList();
     }
 
     if (movies.isEmpty && query.isNotEmpty) {
@@ -92,34 +95,33 @@ class MovieSearchResultsWidget extends ConsumerWidget {
   Widget _buildEmptyResults(BuildContext context) {
     return EmptyStateWidget(
       title: '検索結果が見つかりませんでした',
-      message: selectedYear != null
-          ? '$selectedYear年代の「$query」に該当する映画が見つかりませんでした'
-          : '「$query」に該当する映画が見つかりませんでした',
+      message:
+          selectedYear != null
+              ? '$selectedYear年代の「$query」に該当する映画が見つかりませんでした'
+              : '「$query」に該当する映画が見つかりませんでした',
       icon: Icons.movie_outlined,
-      action: selectedYear != null
-          ? Column(
-              children: [
-                const Text(
-                  '年代フィルターを解除して再度お試しください',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
+      action:
+          selectedYear != null
+              ? Column(
+                children: [
+                  const Text(
+                    '年代フィルターを解除して再度お試しください',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton.icon(
-                  onPressed: onRetry,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('再検索'),
-                ),
-              ],
-            )
-          : ElevatedButton.icon(
-              onPressed: onRetry,
-              icon: const Icon(Icons.refresh),
-              label: const Text('再試行'),
-            ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: onRetry,
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('再検索'),
+                  ),
+                ],
+              )
+              : ElevatedButton.icon(
+                onPressed: onRetry,
+                icon: const Icon(Icons.refresh),
+                label: const Text('再試行'),
+              ),
     );
   }
 }
@@ -178,10 +180,7 @@ class MovieSearchResultItem extends StatelessWidget {
       ),
       subtitle: _buildSubtitle(context),
       onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 8,
-      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     );
   }
 
@@ -206,11 +205,7 @@ class MovieSearchResultItem extends StatelessWidget {
           const SizedBox(height: 4),
           Row(
             children: [
-              Icon(
-                Icons.star,
-                size: 16,
-                color: Colors.amber[600],
-              ),
+              Icon(Icons.star, size: 16, color: Colors.amber[600]),
               const SizedBox(width: 4),
               Text(
                 movie.voteAverage.toStringAsFixed(1),
@@ -251,10 +246,7 @@ class MovieSearchResultItem extends StatelessWidget {
 class MovieSearchInitialState extends StatelessWidget {
   final String? selectedYear;
 
-  const MovieSearchInitialState({
-    super.key,
-    this.selectedYear,
-  });
+  const MovieSearchInitialState({super.key, this.selectedYear});
 
   @override
   Widget build(BuildContext context) {
@@ -286,9 +278,7 @@ class MovieSearchInitialState extends StatelessWidget {
           ),
           if (selectedYear != null) ...[
             const SizedBox(height: 16),
-            YearFilterIndicator(
-              selectedYear: selectedYear,
-            ),
+            YearFilterIndicator(selectedYear: selectedYear),
           ],
         ],
       ),
@@ -351,11 +341,7 @@ class MovieSearchHints extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: 20,
-            color: theme.colorScheme.primary,
-          ),
+          Icon(icon, size: 20, color: theme.colorScheme.primary),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

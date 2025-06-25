@@ -12,7 +12,8 @@ class RecommendationsPage extends ConsumerStatefulWidget {
   const RecommendationsPage({super.key});
 
   @override
-  ConsumerState<RecommendationsPage> createState() => _RecommendationsPageState();
+  ConsumerState<RecommendationsPage> createState() =>
+      _RecommendationsPageState();
 }
 
 class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
@@ -50,10 +51,7 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
     if (user == null) {
       return const Scaffold(
         body: Center(
-          child: Text(
-            'ログインして推薦機能をご利用ください',
-            style: TextStyle(fontSize: 18),
-          ),
+          child: Text('ログインして推薦機能をご利用ください', style: TextStyle(fontSize: 18)),
         ),
       );
     }
@@ -64,26 +62,21 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(
-              icon: Icon(Icons.recommend),
-              text: '推薦結果',
-            ),
-            Tab(
-              icon: Icon(Icons.bookmark),
-              text: '保存済み',
-            ),
+            Tab(icon: Icon(Icons.recommend), text: '推薦結果'),
+            Tab(icon: Icon(Icons.bookmark), text: '保存済み'),
           ],
         ),
         actions: [
           IconButton(
             onPressed: isLoading ? null : _generateNewRecommendations,
-            icon: isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.refresh),
+            icon:
+                isLoading
+                    ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                    : const Icon(Icons.refresh),
             tooltip: '新しい推薦を生成',
           ),
         ],
@@ -114,13 +107,16 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
     final recommendationsAsync = ref.watch(recommendationsProvider);
 
     return recommendationsAsync.when(
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
-      error: (error, stackTrace) => RecommendationErrorWidget(
-        error: error.toString(),
-        onRetry: () => ref.read(recommendationControllerProvider).loadRecommendations(),
-      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error:
+          (error, stackTrace) => RecommendationErrorWidget(
+            error: error.toString(),
+            onRetry:
+                () =>
+                    ref
+                        .read(recommendationControllerProvider)
+                        .loadRecommendations(),
+          ),
       data: (recommendations) {
         if (recommendations.isEmpty) {
           return RecommendationEmptyState(
@@ -131,7 +127,11 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
         }
 
         return RefreshIndicator(
-          onRefresh: () => ref.read(recommendationControllerProvider).loadRecommendations(),
+          onRefresh:
+              () =>
+                  ref
+                      .read(recommendationControllerProvider)
+                      .loadRecommendations(),
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: recommendations.length,
@@ -142,11 +142,12 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
                 child: RecommendationCard(
                   recommendation: recommendation,
                   onSave: () => _saveRecommendation(recommendation.id),
-                  onFeedback: (isHelpful, feedback) => _submitFeedback(
-                    recommendation.id,
-                    isHelpful,
-                    feedback,
-                  ),
+                  onFeedback:
+                      (isHelpful, feedback) => _submitFeedback(
+                        recommendation.id,
+                        isHelpful,
+                        feedback,
+                      ),
                 ),
               );
             },
@@ -160,13 +161,16 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
     final savedRecommendationsAsync = ref.watch(savedRecommendationsProvider);
 
     return savedRecommendationsAsync.when(
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
-      error: (error, stackTrace) => RecommendationErrorWidget(
-        error: error.toString(),
-        onRetry: () => ref.read(recommendationControllerProvider).loadSavedRecommendations(),
-      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error:
+          (error, stackTrace) => RecommendationErrorWidget(
+            error: error.toString(),
+            onRetry:
+                () =>
+                    ref
+                        .read(recommendationControllerProvider)
+                        .loadSavedRecommendations(),
+          ),
       data: (savedRecommendations) {
         if (savedRecommendations.isEmpty) {
           return const RecommendationEmptyState(
@@ -176,7 +180,11 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
         }
 
         return RefreshIndicator(
-          onRefresh: () => ref.read(recommendationControllerProvider).loadSavedRecommendations(),
+          onRefresh:
+              () =>
+                  ref
+                      .read(recommendationControllerProvider)
+                      .loadSavedRecommendations(),
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: savedRecommendations.length,
@@ -188,11 +196,12 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
                   recommendation: recommendation,
                   isSaved: true,
                   onDelete: () => _deleteSavedRecommendation(recommendation.id),
-                  onFeedback: (isHelpful, feedback) => _submitFeedback(
-                    recommendation.id,
-                    isHelpful,
-                    feedback,
-                  ),
+                  onFeedback:
+                      (isHelpful, feedback) => _submitFeedback(
+                        recommendation.id,
+                        isHelpful,
+                        feedback,
+                      ),
                 ),
               );
             },
@@ -204,7 +213,9 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
 
   Future<void> _generateNewRecommendations() async {
     try {
-      await ref.read(recommendationControllerProvider).generateRecommendations();
+      await ref
+          .read(recommendationControllerProvider)
+          .generateRecommendations();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -227,7 +238,9 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
 
   Future<void> _saveRecommendation(String recommendationId) async {
     try {
-      await ref.read(recommendationControllerProvider).saveRecommendation(recommendationId);
+      await ref
+          .read(recommendationControllerProvider)
+          .saveRecommendation(recommendationId);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -239,10 +252,7 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('保存に失敗しました: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('保存に失敗しました: $e'), backgroundColor: Colors.red),
         );
       }
     }
@@ -251,25 +261,28 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
   Future<void> _deleteSavedRecommendation(String recommendationId) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('削除確認'),
-        content: const Text('この推薦結果を削除しますか？'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('キャンセル'),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('削除確認'),
+            content: const Text('この推薦結果を削除しますか？'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('キャンセル'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('削除'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('削除'),
-          ),
-        ],
-      ),
     );
 
     if (confirmed == true) {
       try {
-        await ref.read(recommendationControllerProvider).deleteSavedRecommendation(recommendationId);
+        await ref
+            .read(recommendationControllerProvider)
+            .deleteSavedRecommendation(recommendationId);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -297,11 +310,9 @@ class _RecommendationsPageState extends ConsumerState<RecommendationsPage>
     String? feedback,
   ) async {
     try {
-      await ref.read(recommendationControllerProvider).submitFeedback(
-        recommendationId,
-        isHelpful,
-        feedback,
-      );
+      await ref
+          .read(recommendationControllerProvider)
+          .submitFeedback(recommendationId, isHelpful, feedback);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

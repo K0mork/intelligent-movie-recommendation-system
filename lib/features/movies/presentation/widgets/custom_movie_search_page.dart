@@ -6,7 +6,8 @@ class CustomMovieSearchPage extends ConsumerStatefulWidget {
   const CustomMovieSearchPage({super.key});
 
   @override
-  ConsumerState<CustomMovieSearchPage> createState() => _CustomMovieSearchPageState();
+  ConsumerState<CustomMovieSearchPage> createState() =>
+      _CustomMovieSearchPageState();
 }
 
 class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
@@ -22,7 +23,9 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
   void _onSearch(String query) {
     if (query.isNotEmpty) {
       final yearInt = selectedYear != null ? int.tryParse(selectedYear!) : null;
-      ref.read(movieControllerProvider.notifier).searchMovies(query, year: yearInt);
+      ref
+          .read(movieControllerProvider.notifier)
+          .searchMovies(query, year: yearInt);
     }
   }
 
@@ -176,9 +179,7 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
             const SizedBox(height: 8),
 
             // 検索結果
-            Expanded(
-              child: _buildSearchResults(context, movieState),
-            ),
+            Expanded(child: _buildSearchResults(context, movieState)),
           ],
         ),
       ),
@@ -193,23 +194,19 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.search,
-              size: 64,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.search, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             const Text(
               '映画を検索してください',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
             if (selectedYear != null) ...[
               const SizedBox(height: 12),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(16),
@@ -229,9 +226,7 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
     }
 
     if (movieState.isSearching) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (movieState.errorMessage != null) {
@@ -239,16 +234,9 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
-            ),
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
-            Text(
-              'エラーが発生しました',
-              style: theme.textTheme.titleLarge,
-            ),
+            Text('エラーが発生しました', style: theme.textTheme.titleLarge),
             const SizedBox(height: 8),
             Text(
               movieState.errorMessage!,
@@ -266,18 +254,21 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
     if (selectedYear != null && movies.isNotEmpty) {
       final yearInt = int.tryParse(selectedYear!);
       if (yearInt != null) {
-        movies = movies.where((movie) {
-          if (movie.releaseDate?.isNotEmpty == true) {
-            try {
-              final movieYear = int.parse(movie.releaseDate!.substring(0, 4));
-              // 年代範囲での絞り込み（例：2020年代 = 2020-2024）
-              return movieYear >= yearInt && movieYear < yearInt + 5;
-            } catch (e) {
+        movies =
+            movies.where((movie) {
+              if (movie.releaseDate?.isNotEmpty == true) {
+                try {
+                  final movieYear = int.parse(
+                    movie.releaseDate!.substring(0, 4),
+                  );
+                  // 年代範囲での絞り込み（例：2020年代 = 2020-2024）
+                  return movieYear >= yearInt && movieYear < yearInt + 5;
+                } catch (e) {
+                  return false;
+                }
+              }
               return false;
-            }
-          }
-          return false;
-        }).toList();
+            }).toList();
       }
     }
 
@@ -286,30 +277,20 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.movie_outlined,
-              size: 64,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.movie_outlined, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             Text(
               selectedYear != null
-                ? '$selectedYear年代の検索結果が見つかりませんでした'
-                : '検索結果が見つかりませんでした',
-              style: const TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
+                  ? '$selectedYear年代の検索結果が見つかりませんでした'
+                  : '検索結果が見つかりませんでした',
+              style: const TextStyle(fontSize: 18, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
             if (selectedYear != null) ...[
               const SizedBox(height: 8),
               const Text(
                 '年代フィルターを解除して再度お試しください',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -339,36 +320,34 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
             itemBuilder: (context, index) {
               final movie = movies[index];
               return ListTile(
-                leading: movie.posterPath != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: Image.network(
-                          'https://image.tmdb.org/t/p/w92${movie.posterPath}',
+                leading:
+                    movie.posterPath != null
+                        ? ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: Image.network(
+                            'https://image.tmdb.org/t/p/w92${movie.posterPath}',
+                            width: 46,
+                            height: 69,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: 46,
+                                height: 69,
+                                color: Colors.grey[300],
+                                child: const Icon(
+                                  Icons.movie,
+                                  color: Colors.grey,
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                        : Container(
                           width: 46,
                           height: 69,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: 46,
-                              height: 69,
-                              color: Colors.grey[300],
-                              child: const Icon(
-                                Icons.movie,
-                                color: Colors.grey,
-                              ),
-                            );
-                          },
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.movie, color: Colors.grey),
                         ),
-                      )
-                    : Container(
-                        width: 46,
-                        height: 69,
-                        color: Colors.grey[300],
-                        child: const Icon(
-                          Icons.movie,
-                          color: Colors.grey,
-                        ),
-                      ),
                 title: Text(
                   movie.title,
                   maxLines: 2,
@@ -385,11 +364,7 @@ class _CustomMovieSearchPageState extends ConsumerState<CustomMovieSearchPage> {
                     if (movie.voteAverage > 0)
                       Row(
                         children: [
-                          const Icon(
-                            Icons.star,
-                            size: 16,
-                            color: Colors.amber,
-                          ),
+                          const Icon(Icons.star, size: 16, color: Colors.amber),
                           const SizedBox(width: 4),
                           Text(
                             movie.voteAverage.toStringAsFixed(1),

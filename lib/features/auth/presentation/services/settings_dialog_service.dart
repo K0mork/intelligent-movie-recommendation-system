@@ -8,7 +8,6 @@ import '../../domain/entities/app_user.dart';
 /// settings_page.dartからダイアログロジックを分離し、
 /// 再利用可能で保守しやすい形にする。
 class SettingsDialogService {
-
   /// プロフィール編集ダイアログを表示
   static Future<void> showEditProfileDialog(
     BuildContext context,
@@ -21,20 +20,18 @@ class SettingsDialogService {
 
     final result = await showDialog<bool>(
       context: context,
-      builder: (context) => EditProfileDialog(
-        displayNameController: displayNameController,
-      ),
+      builder:
+          (context) =>
+              EditProfileDialog(displayNameController: displayNameController),
     );
 
     displayNameController.dispose();
 
     if (result == true && context.mounted) {
       // 将来実装: プロフィール更新処理
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('プロフィール更新機能は将来実装予定です'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('プロフィール更新機能は将来実装予定です')));
     }
   }
 
@@ -45,21 +42,22 @@ class SettingsDialogService {
   ) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('ログアウト'),
-        content: const Text('本当にログアウトしますか？'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('キャンセル'),
+      builder:
+          (BuildContext context) => AlertDialog(
+            title: const Text('ログアウト'),
+            content: const Text('本当にログアウトしますか？'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('キャンセル'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                child: const Text('ログアウト'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('ログアウト'),
-          ),
-        ],
-      ),
     );
 
     if (confirmed == true && context.mounted) {
@@ -82,11 +80,9 @@ class SettingsDialogService {
 
     if (confirmed == true && context.mounted) {
       // 将来実装: アカウント削除処理
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('アカウント削除機能は将来実装予定です'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('アカウント削除機能は将来実装予定です')));
     }
   }
 
@@ -97,29 +93,28 @@ class SettingsDialogService {
   ) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('データエクスポート'),
-        content: const Text('あなたのレビューデータをダウンロードしますか？'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('キャンセル'),
+      builder:
+          (BuildContext context) => AlertDialog(
+            title: const Text('データエクスポート'),
+            content: const Text('あなたのレビューデータをダウンロードしますか？'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('キャンセル'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('ダウンロード'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('ダウンロード'),
-          ),
-        ],
-      ),
     );
 
     if (confirmed == true && context.mounted) {
       // 将来実装: データエクスポート処理
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('データエクスポート機能は将来実装予定です'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('データエクスポート機能は将来実装予定です')));
     }
   }
 
@@ -152,10 +147,7 @@ class SettingsDialogService {
 class EditProfileDialog extends StatelessWidget {
   final TextEditingController displayNameController;
 
-  const EditProfileDialog({
-    super.key,
-    required this.displayNameController,
-  });
+  const EditProfileDialog({super.key, required this.displayNameController});
 
   @override
   Widget build(BuildContext context) {
@@ -198,10 +190,7 @@ class DeleteAccountDialog extends StatelessWidget {
     return AlertDialog(
       title: Row(
         children: [
-          Icon(
-            Icons.warning,
-            color: Colors.red[700],
-          ),
+          Icon(Icons.warning, color: Colors.red[700]),
           const SizedBox(width: 8),
           const Text('アカウント削除'),
         ],
@@ -261,20 +250,14 @@ class HelpDialog extends StatelessWidget {
           children: [
             Text(
               'FilmFlowの使い方',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             SizedBox(height: 16),
             HelpSection(
               title: '映画検索',
               content: '映画タイトルや出演者名で検索できます。年代での絞り込みも可能です。',
             ),
-            HelpSection(
-              title: 'レビュー投稿',
-              content: '観た映画に星評価とコメントを付けて記録できます。',
-            ),
+            HelpSection(title: 'レビュー投稿', content: '観た映画に星評価とコメントを付けて記録できます。'),
             HelpSection(
               title: 'AI推薦',
               content: 'あなたのレビュー履歴を分析して、おすすめの映画を提案します。',
@@ -369,11 +352,7 @@ class HelpSection extends StatelessWidget {
   final String title;
   final String content;
 
-  const HelpSection({
-    super.key,
-    required this.title,
-    required this.content,
-  });
+  const HelpSection({super.key, required this.title, required this.content});
 
   @override
   Widget build(BuildContext context) {
@@ -384,16 +363,10 @@ class HelpSection extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
           ),
           const SizedBox(height: 4),
-          Text(
-            content,
-            style: const TextStyle(fontSize: 14),
-          ),
+          Text(content, style: const TextStyle(fontSize: 14)),
         ],
       ),
     );

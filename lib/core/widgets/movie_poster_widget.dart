@@ -82,9 +82,10 @@ class MoviePosterWidget extends StatelessWidget {
 
     if (posterPath != null && posterPath!.isNotEmpty) {
       // TMDb APIのベースURL
-      final imageUrl = posterPath!.startsWith('http')
-          ? posterPath!
-          : 'https://image.tmdb.org/t/p/w500$posterPath';
+      final imageUrl =
+          posterPath!.startsWith('http')
+              ? posterPath!
+              : 'https://image.tmdb.org/t/p/w500$posterPath';
 
       posterWidget = CachedNetworkImage(
         imageUrl: imageUrl,
@@ -109,27 +110,18 @@ class MoviePosterWidget extends StatelessWidget {
     // オーバーレイ適用
     if (overlay != null) {
       posterWidget = Stack(
-        children: [
-          posterWidget,
-          Positioned.fill(child: overlay!),
-        ],
+        children: [posterWidget, Positioned.fill(child: overlay!)],
       );
     }
 
     // Hero animation適用
     if (heroTag != null) {
-      posterWidget = Hero(
-        tag: heroTag!,
-        child: posterWidget,
-      );
+      posterWidget = Hero(tag: heroTag!, child: posterWidget);
     }
 
     // タップ処理
     if (onTap != null) {
-      posterWidget = GestureDetector(
-        onTap: onTap,
-        child: posterWidget,
-      );
+      posterWidget = GestureDetector(onTap: onTap, child: posterWidget);
     }
 
     return Container(
@@ -158,10 +150,11 @@ class MoviePosterWidget extends StatelessWidget {
         child: TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.5, end: 1.0),
           duration: const Duration(milliseconds: 800),
-          builder: (context, value, child) => Transform.scale(
-            scale: value,
-            child: const CircularProgressIndicator.adaptive(),
-          ),
+          builder:
+              (context, value, child) => Transform.scale(
+                scale: value,
+                child: const CircularProgressIndicator.adaptive(),
+              ),
         ),
       ),
     );
@@ -211,7 +204,7 @@ class MoviePosterGrid extends StatelessWidget {
     super.key,
     required this.posterPaths,
     this.crossAxisCount = 3,
-    this.aspectRatio = 2/3,
+    this.aspectRatio = 2 / 3,
     this.spacing = 8.0,
     this.padding,
     this.onTap,

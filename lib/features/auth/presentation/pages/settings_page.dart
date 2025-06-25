@@ -19,9 +19,11 @@ class SettingsPage extends ConsumerWidget {
     final authController = ref.watch(authControllerProvider);
 
     return authState.when(
-      data: (user) => user != null
-          ? _buildSettingsContent(context, ref, user, authController)
-          : _buildLoginRequired(context),
+      data:
+          (user) =>
+              user != null
+                  ? _buildSettingsContent(context, ref, user, authController)
+                  : _buildLoginRequired(context),
       loading: () => _buildLoadingState(),
       error: (error, stackTrace) => _buildErrorState(error),
     );
@@ -42,11 +44,12 @@ class SettingsPage extends ConsumerWidget {
         // プロフィール情報セクション
         ProfileSection(
           user: user,
-          onEditProfile: () => SettingsDialogService.showEditProfileDialog(
-            context,
-            ref,
-            user,
-          ),
+          onEditProfile:
+              () => SettingsDialogService.showEditProfileDialog(
+                context,
+                ref,
+                user,
+              ),
         ),
 
         // 表示設定セクション
@@ -65,21 +68,19 @@ class SettingsPage extends ConsumerWidget {
 
         // データ管理セクション
         DataManagementSection(
-          onExportData: () => SettingsDialogService.showDataExportDialog(
-            context,
-            ref,
-          ),
-          onDeleteAccount: () => SettingsDialogService.showDeleteAccountDialog(
-            context,
-            ref,
-          ),
+          onExportData:
+              () => SettingsDialogService.showDataExportDialog(context, ref),
+          onDeleteAccount:
+              () => SettingsDialogService.showDeleteAccountDialog(context, ref),
         ),
 
         // アプリ情報セクション
         AppInfoSection(
           onHelp: () => SettingsDialogService.showHelpDialog(context),
-          onTermsOfService: () => SettingsDialogService.showTermsDialog(context),
-          onPrivacyPolicy: () => SettingsDialogService.showPrivacyPolicyDialog(context),
+          onTermsOfService:
+              () => SettingsDialogService.showTermsDialog(context),
+          onPrivacyPolicy:
+              () => SettingsDialogService.showPrivacyPolicyDialog(context),
           appVersion: '1.0.0',
         ),
 
@@ -94,9 +95,7 @@ class SettingsPage extends ConsumerWidget {
 
   Widget _buildLoginRequired(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('設定'),
-      ),
+      appBar: AppBar(title: const Text('設定')),
       body: const Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -113,20 +112,14 @@ class SettingsPage extends ConsumerWidget {
 
   Widget _buildLoadingState() {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('設定'),
-      ),
-      body: const LoadingStateWidget.fullScreen(
-        message: '設定を読み込み中...',
-      ),
+      appBar: AppBar(title: const Text('設定')),
+      body: const LoadingStateWidget.fullScreen(message: '設定を読み込み中...'),
     );
   }
 
   Widget _buildErrorState(Object error) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('設定'),
-      ),
+      appBar: AppBar(title: const Text('設定')),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

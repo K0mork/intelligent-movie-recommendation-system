@@ -39,11 +39,7 @@ class RelatedMoviesSection extends ConsumerWidget {
         const SizedBox(height: 16),
 
         if (showSimilar) ...[
-          _RelatedMoviesList(
-            movieId: movieId,
-            title: '類似映画',
-            isSimilar: true,
-          ),
+          _RelatedMoviesList(movieId: movieId, title: '類似映画', isSimilar: true),
           const SizedBox(height: 20),
         ],
 
@@ -73,9 +69,10 @@ class _RelatedMoviesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final moviesAsync = isSimilar
-        ? ref.watch(similarMoviesProvider(movieId))
-        : ref.watch(recommendedMoviesProvider(movieId));
+    final moviesAsync =
+        isSimilar
+            ? ref.watch(similarMoviesProvider(movieId))
+            : ref.watch(recommendedMoviesProvider(movieId));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,7 +128,8 @@ class _RelatedMoviesList extends ConsumerWidget {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => MovieDetailPage(movieId: movie.id),
+                          builder:
+                              (context) => MovieDetailPage(movieId: movie.id),
                         ),
                       );
                     },
@@ -139,23 +137,22 @@ class _RelatedMoviesList extends ConsumerWidget {
                 },
               );
             },
-            loading: () => const Center(
-              child: CircularWaveLoading(
-                color: Colors.blue,
-                size: 40,
-              ),
-            ),
-            error: (error, stackTrace) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Center(
-                child: Text(
-                  '読み込みに失敗しました',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.error,
+            loading:
+                () => const Center(
+                  child: CircularWaveLoading(color: Colors.blue, size: 40),
+                ),
+            error:
+                (error, stackTrace) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Center(
+                    child: Text(
+                      '読み込みに失敗しました',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.error,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
           ),
         ),
       ],
@@ -167,10 +164,7 @@ class _RelatedMovieCard extends StatelessWidget {
   final models.Movie movie;
   final VoidCallback onTap;
 
-  const _RelatedMovieCard({
-    required this.movie,
-    required this.onTap,
-  });
+  const _RelatedMovieCard({required this.movie, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -194,33 +188,36 @@ class _RelatedMovieCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainer,
                 ),
-                child: movie.fullPosterUrl.isNotEmpty
-                    ? CachedNetworkImage(
-                        imageUrl: movie.fullPosterUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Container(
-                          color: theme.colorScheme.surfaceContainer,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
+                child:
+                    movie.fullPosterUrl.isNotEmpty
+                        ? CachedNetworkImage(
+                          imageUrl: movie.fullPosterUrl,
+                          fit: BoxFit.cover,
+                          placeholder:
+                              (context, url) => Container(
+                                color: theme.colorScheme.surfaceContainer,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                ),
+                              ),
+                          errorWidget:
+                              (context, url, error) => Container(
+                                color: theme.colorScheme.surfaceContainer,
+                                child: Icon(
+                                  Icons.movie,
+                                  size: 40,
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                        )
+                        : Icon(
+                          Icons.movie,
+                          size: 40,
+                          color: theme.colorScheme.onSurfaceVariant,
                         ),
-                        errorWidget: (context, url, error) => Container(
-                          color: theme.colorScheme.surfaceContainer,
-                          child: Icon(
-                            Icons.movie,
-                            size: 40,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      )
-                    : Icon(
-                        Icons.movie,
-                        size: 40,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
               ),
             ),
 
@@ -242,11 +239,7 @@ class _RelatedMovieCard extends StatelessWidget {
             if (movie.voteAverage > 0)
               Row(
                 children: [
-                  Icon(
-                    Icons.star,
-                    size: 12,
-                    color: Colors.amber,
-                  ),
+                  Icon(Icons.star, size: 12, color: Colors.amber),
                   const SizedBox(width: 2),
                   Text(
                     movie.voteAverage.toStringAsFixed(1),

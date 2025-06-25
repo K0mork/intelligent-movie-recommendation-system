@@ -13,7 +13,8 @@ class IntegratedReviewsPage extends ConsumerStatefulWidget {
   const IntegratedReviewsPage({super.key});
 
   @override
-  ConsumerState<IntegratedReviewsPage> createState() => _IntegratedReviewsPageState();
+  ConsumerState<IntegratedReviewsPage> createState() =>
+      _IntegratedReviewsPageState();
 }
 
 class _IntegratedReviewsPageState extends ConsumerState<IntegratedReviewsPage>
@@ -37,10 +38,7 @@ class _IntegratedReviewsPageState extends ConsumerState<IntegratedReviewsPage>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: _buildAppBar(theme),
-      body: _buildBody(),
-    );
+    return Scaffold(appBar: _buildAppBar(theme), body: _buildBody());
   }
 
   PreferredSizeWidget _buildAppBar(ThemeData theme) {
@@ -50,19 +48,11 @@ class _IntegratedReviewsPageState extends ConsumerState<IntegratedReviewsPage>
       bottom: TabBar(
         controller: _tabController,
         tabs: const [
-          Tab(
-            icon: Icon(Icons.add_box_outlined),
-            text: '新規レビュー',
-          ),
-          Tab(
-            icon: Icon(Icons.history),
-            text: 'レビュー履歴',
-          ),
+          Tab(icon: Icon(Icons.add_box_outlined), text: '新規レビュー'),
+          Tab(icon: Icon(Icons.history), text: 'レビュー履歴'),
         ],
       ),
-      actions: [
-        _buildSortButton(),
-      ],
+      actions: [_buildSortButton()],
     );
   }
 
@@ -91,9 +81,7 @@ class _IntegratedReviewsPageState extends ConsumerState<IntegratedReviewsPage>
       children: [
         // パンくずナビゲーション
         BreadcrumbWidget(
-          items: BreadcrumbHelper.createReviewBreadcrumbs(
-            context: context,
-          ),
+          items: BreadcrumbHelper.createReviewBreadcrumbs(context: context),
         ),
 
         // タブビュー
@@ -102,10 +90,7 @@ class _IntegratedReviewsPageState extends ConsumerState<IntegratedReviewsPage>
             controller: _tabController,
             children: [
               const NewReviewTabView(),
-              ReviewHistoryTabView(
-                sortBy: _sortBy,
-                onRefresh: _onRefresh,
-              ),
+              ReviewHistoryTabView(sortBy: _sortBy, onRefresh: _onRefresh),
             ],
           ),
         ),

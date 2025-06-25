@@ -53,7 +53,9 @@ class _MoviesPageState extends ConsumerState<MoviesPage>
 
   void _onSearchChanged(String query) {
     final yearInt = _selectedYear != null ? int.tryParse(_selectedYear!) : null;
-    ref.read(movieControllerProvider.notifier).searchMovies(query, year: yearInt);
+    ref
+        .read(movieControllerProvider.notifier)
+        .searchMovies(query, year: yearInt);
   }
 
   void _onYearFilterChanged(String? year) {
@@ -78,19 +80,14 @@ class _MoviesPageState extends ConsumerState<MoviesPage>
         title: const Text('映画'),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: '人気'),
-            Tab(text: '検索'),
-          ],
+          tabs: const [Tab(text: '人気'), Tab(text: '検索')],
         ),
       ),
       body: Column(
         children: [
           // パンくずナビゲーション
           BreadcrumbWidget(
-            items: BreadcrumbHelper.createMovieBreadcrumbs(
-              context: context,
-            ),
+            items: BreadcrumbHelper.createMovieBreadcrumbs(context: context),
           ),
           Expanded(
             child: TabBarView(
@@ -102,8 +99,11 @@ class _MoviesPageState extends ConsumerState<MoviesPage>
                   errorMessage: movieState.errorMessage,
                   onMovieTap: _onMovieTap,
                   onLoadMore: () {
-                    final currentPage = (movieState.popularMovies.length / 20).ceil();
-                    ref.read(movieControllerProvider.notifier).loadPopularMovies(page: currentPage + 1);
+                    final currentPage =
+                        (movieState.popularMovies.length / 20).ceil();
+                    ref
+                        .read(movieControllerProvider.notifier)
+                        .loadPopularMovies(page: currentPage + 1);
                   },
                   scrollController: _popularScrollController,
                 ),
@@ -151,11 +151,7 @@ class _PopularMoviesTab extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red[300],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
             const SizedBox(height: 16),
             Text(
               'エラーが発生しました',
@@ -168,10 +164,7 @@ class _PopularMoviesTab extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('再試行'),
-            ),
+            ElevatedButton(onPressed: () {}, child: const Text('再試行')),
           ],
         ),
       );
@@ -240,13 +233,18 @@ class _SearchMoviesTab extends StatelessWidget {
               // 年指定フィルター
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Theme.of(context).colorScheme.outline),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: PopupMenuButton<String>(
                   icon: Icon(
                     Icons.date_range,
-                    color: selectedYear != null ? Theme.of(context).colorScheme.primary : null,
+                    color:
+                        selectedYear != null
+                            ? Theme.of(context).colorScheme.primary
+                            : null,
                   ),
                   tooltip: '公開年で絞り込み',
                   onSelected: (year) {
@@ -273,7 +271,8 @@ class _SearchMoviesTab extends StatelessWidget {
                               const SizedBox(width: 8),
                               Text('$year年代'),
                             ],
-                            if (selectedYear == year || (selectedYear == null && year == 'all'))
+                            if (selectedYear == year ||
+                                (selectedYear == null && year == 'all'))
                               Container(
                                 margin: const EdgeInsets.only(left: 8),
                                 child: Icon(
@@ -327,14 +326,15 @@ class _SearchMoviesTab extends StatelessWidget {
                   ),
                   onPressed: () => onYearFilterChanged(null),
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(maxWidth: 24, maxHeight: 24),
+                  constraints: const BoxConstraints(
+                    maxWidth: 24,
+                    maxHeight: 24,
+                  ),
                 ),
               ],
             ),
           ),
-        Expanded(
-          child: _buildSearchResults(context),
-        ),
+        Expanded(child: _buildSearchResults(context)),
       ],
     );
   }
@@ -345,23 +345,19 @@ class _SearchMoviesTab extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.search,
-              size: 64,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.search, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             const Text(
               '映画を検索してください',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
             if (selectedYear != null) ...[
               const SizedBox(height: 12),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(16),
@@ -385,11 +381,7 @@ class _SearchMoviesTab extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red[300],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
             const SizedBox(height: 16),
             Text(
               'エラーが発生しました',
@@ -415,30 +407,20 @@ class _SearchMoviesTab extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.movie_outlined,
-              size: 64,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.movie_outlined, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             Text(
               selectedYear != null
-                ? '$selectedYear年代の検索結果が見つかりませんでした'
-                : '検索結果が見つかりませんでした',
-              style: const TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
+                  ? '$selectedYear年代の検索結果が見つかりませんでした'
+                  : '検索結果が見つかりませんでした',
+              style: const TextStyle(fontSize: 18, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
             if (selectedYear != null) ...[
               const SizedBox(height: 8),
               const Text(
                 '年代フィルターを解除して再度お試しください',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
             ],

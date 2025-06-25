@@ -13,8 +13,9 @@ class RecommendationErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // インデックス関連のエラーを判定
-    final isIndexError = error.contains('index') &&
-                         (error.contains('building') || error.contains('create'));
+    final isIndexError =
+        error.contains('index') &&
+        (error.contains('building') || error.contains('create'));
 
     return Center(
       child: Padding(
@@ -27,9 +28,10 @@ class RecommendationErrorWidget extends StatelessWidget {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: isIndexError
-                    ? Colors.orange.withValues(alpha: 0.1)
-                    : Colors.red.withValues(alpha: 0.1),
+                color:
+                    isIndexError
+                        ? Colors.orange.withValues(alpha: 0.1)
+                        : Colors.red.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -56,9 +58,9 @@ class RecommendationErrorWidget extends StatelessWidget {
               isIndexError
                   ? 'データベースインデックスを構築中です。数分お待ちください。\nまたは「新しい推薦を生成」ボタンをお試しください。'
                   : error,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Colors.grey[600],
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
 

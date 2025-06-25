@@ -41,7 +41,9 @@ class AppInitializationService {
       // 5. Firebase初期化
       _log('Step 5/5: Firebase initialization...');
       final firebaseResult = await _initializeFirebase();
-      _log('Step 5/5: ✅ COMPLETED - Firebase available: ${firebaseResult.success}');
+      _log(
+        'Step 5/5: ✅ COMPLETED - Firebase available: ${firebaseResult.success}',
+      );
 
       _log('=== INITIALIZATION PROCESS SUCCESS ===');
 
@@ -50,7 +52,6 @@ class AppInitializationService {
         firebaseAvailable: firebaseResult.success,
         errorMessage: null,
       );
-
     } catch (error, stackTrace) {
       _log('=== INITIALIZATION PROCESS FAILED ===');
       _logError('❌ Fatal error during initialization', error, stackTrace);
@@ -77,7 +78,10 @@ class AppInitializationService {
         SemanticsBinding.instance.ensureSemantics();
         _log('✅ Web semantics initialized successfully');
       } catch (error) {
-        _logError('⚠️ Web semantics initialization failed (non-critical)', error);
+        _logError(
+          '⚠️ Web semantics initialization failed (non-critical)',
+          error,
+        );
       }
     }
   }
@@ -96,7 +100,10 @@ class AppInitializationService {
       await dotenv.load(fileName: ".env");
       _log('✅ Environment variables loaded successfully');
     } catch (error) {
-      _logError('⚠️ .env file not found or failed to load (using defaults)', error);
+      _logError(
+        '⚠️ .env file not found or failed to load (using defaults)',
+        error,
+      );
     }
   }
 
@@ -110,7 +117,9 @@ class AppInitializationService {
       // ignore: avoid_print
       print('FilmFlow - Web environment validation starting...');
       // ignore: avoid_print
-      print('Firebase API Key available: ${EnvConfig.firebaseApiKey.isNotEmpty}');
+      print(
+        'Firebase API Key available: ${EnvConfig.firebaseApiKey.isNotEmpty}',
+      );
       // ignore: avoid_print
       print('TMDb API Key available: ${EnvConfig.tmdbApiKey.isNotEmpty}');
     }
@@ -123,13 +132,17 @@ class AppInitializationService {
 
       _log('🔍 EnvConfig.validateEnvironment() completed');
       _log('🔍 ValidationResult - isFatal: ${validationResult.isFatal}');
-      _log('🔍 ValidationResult - hasWarnings: ${validationResult.hasWarnings}');
+      _log(
+        '🔍 ValidationResult - hasWarnings: ${validationResult.hasWarnings}',
+      );
 
       if (validationResult.isFatal) {
         // Web環境では内蔵設定を使用するため、追加ログを出力
         if (kIsWeb) {
           _log('⚠️ Web環境でのバリデーションエラー、内蔵設定確認中...');
-          _log('Firebase API Key: ${EnvConfig.firebaseApiKey.isNotEmpty ? "✅" : "❌"}');
+          _log(
+            'Firebase API Key: ${EnvConfig.firebaseApiKey.isNotEmpty ? "✅" : "❌"}',
+          );
           _log('TMDb API Key: ${EnvConfig.tmdbApiKey.isNotEmpty ? "✅" : "❌"}');
         }
 
@@ -144,14 +157,15 @@ class AppInitializationService {
       // 警告がある場合はログに出力
       if (validationResult.hasWarnings) {
         _log('⚠️ ${validationResult.userFriendlyMessage}');
-        _log('Missing optional variables: ${validationResult.missingOptional.join(', ')}');
+        _log(
+          'Missing optional variables: ${validationResult.missingOptional.join(', ')}',
+        );
       }
 
       // デバッグ時は詳細な環境変数状態を表示
       if (kDebugMode) {
         _log('\n${validationResult.debugMessage}');
       }
-
     } catch (error) {
       _logError('❌ Environment variable validation failed', error);
 
@@ -162,17 +176,32 @@ class AppInitializationService {
         _log('kReleaseMode: $kReleaseMode');
         _log('Firebase configured: ${EnvConfig.isFirebaseConfigured}');
         _log('TMDb configured: ${EnvConfig.isTmdbConfigured}');
-        _log('Firebase API Key: ${EnvConfig.firebaseApiKey.length > 10 ? '${EnvConfig.firebaseApiKey.substring(0, 10)}...' : EnvConfig.firebaseApiKey.isEmpty ? 'empty' : EnvConfig.firebaseApiKey}');
-        _log('TMDb API Key: ${EnvConfig.tmdbApiKey.length > 10 ? '${EnvConfig.tmdbApiKey.substring(0, 10)}...' : EnvConfig.tmdbApiKey.isEmpty ? 'empty' : EnvConfig.tmdbApiKey}');
+        _log(
+          'Firebase API Key: ${EnvConfig.firebaseApiKey.length > 10
+              ? '${EnvConfig.firebaseApiKey.substring(0, 10)}...'
+              : EnvConfig.firebaseApiKey.isEmpty
+              ? 'empty'
+              : EnvConfig.firebaseApiKey}',
+        );
+        _log(
+          'TMDb API Key: ${EnvConfig.tmdbApiKey.length > 10
+              ? '${EnvConfig.tmdbApiKey.substring(0, 10)}...'
+              : EnvConfig.tmdbApiKey.isEmpty
+              ? 'empty'
+              : EnvConfig.tmdbApiKey}',
+        );
         // 強制的にコンソールにも出力
         // ignore: avoid_print
-        print('FilmFlow Debug - Firebase: ${EnvConfig.isFirebaseConfigured}, TMDb: ${EnvConfig.isTmdbConfigured}');
+        print(
+          'FilmFlow Debug - Firebase: ${EnvConfig.isFirebaseConfigured}, TMDb: ${EnvConfig.isTmdbConfigured}',
+        );
       }
 
       // Web本番環境では最小限の設定で継続を試行
       if (kIsWeb && kReleaseMode) {
         // Firebase/TMDbのAPIキーが存在すれば継続
-        if (EnvConfig.firebaseApiKey.isNotEmpty && EnvConfig.tmdbApiKey.isNotEmpty) {
+        if (EnvConfig.firebaseApiKey.isNotEmpty &&
+            EnvConfig.tmdbApiKey.isNotEmpty) {
           _log('⚠️ バリデーションエラーがありますが、最小限設定で継続します');
           return;
         } else {
@@ -199,12 +228,24 @@ class AppInitializationService {
       if (kIsWeb) {
         _log('🌐 Web環境でのFirebase初期化を開始...');
         _log('🔧 Firebase設定値確認:');
-        _log('  - API Key: ${EnvConfig.firebaseApiKey.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}');
-        _log('  - Project ID: ${EnvConfig.firebaseProjectId.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}');
-        _log('  - App ID: ${EnvConfig.firebaseAppId.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}');
-        _log('  - Auth Domain: ${EnvConfig.firebaseAuthDomain.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}');
-        _log('  - Storage Bucket: ${EnvConfig.firebaseStorageBucket.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}');
-        _log('  - Messaging Sender ID: ${EnvConfig.firebaseMessagingSenderId.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}');
+        _log(
+          '  - API Key: ${EnvConfig.firebaseApiKey.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}',
+        );
+        _log(
+          '  - Project ID: ${EnvConfig.firebaseProjectId.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}',
+        );
+        _log(
+          '  - App ID: ${EnvConfig.firebaseAppId.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}',
+        );
+        _log(
+          '  - Auth Domain: ${EnvConfig.firebaseAuthDomain.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}',
+        );
+        _log(
+          '  - Storage Bucket: ${EnvConfig.firebaseStorageBucket.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}',
+        );
+        _log(
+          '  - Messaging Sender ID: ${EnvConfig.firebaseMessagingSenderId.isNotEmpty ? '✅ 設定済み' : '❌ 未設定'}',
+        );
 
         if (EnvConfig.firebaseApiKey.isEmpty) {
           throw InitializationError(
@@ -242,7 +283,6 @@ class AppInitializationService {
         success: true,
         errorMessage: null,
       );
-
     } catch (error, stackTrace) {
       _logError('❌ Firebase initialization failed', error, stackTrace);
 
@@ -267,14 +307,23 @@ class AppInitializationService {
       debugPrint('[$_tag] $message');
     }
     // Web本番環境でも重要なログはコンソールに出力
-    if (kIsWeb && (message.contains('===') || message.contains('Step') || message.contains('🔍') || message.contains('🔧') || message.contains('🚨'))) {
+    if (kIsWeb &&
+        (message.contains('===') ||
+            message.contains('Step') ||
+            message.contains('🔍') ||
+            message.contains('🔧') ||
+            message.contains('🚨'))) {
       // ignore: avoid_print
       print('[$_tag] $message');
     }
   }
 
   /// エラーログ出力
-  static void _logError(String message, Object? error, [StackTrace? stackTrace]) {
+  static void _logError(
+    String message,
+    Object? error, [
+    StackTrace? stackTrace,
+  ]) {
     if (kDebugMode) {
       debugPrint('[$_tag] $message: $error');
       if (stackTrace != null) {
@@ -308,7 +357,8 @@ class AppInitializationResult {
   bool get hasError => !success || errorMessage != null;
 
   @override
-  String toString() => 'AppInitializationResult('
+  String toString() =>
+      'AppInitializationResult('
       'success: $success, '
       'firebaseAvailable: $firebaseAvailable, '
       'errorMessage: $errorMessage)';
@@ -325,18 +375,14 @@ class FirebaseInitializationResult {
   });
 
   @override
-  String toString() => 'FirebaseInitializationResult('
+  String toString() =>
+      'FirebaseInitializationResult('
       'success: $success, '
       'errorMessage: $errorMessage)';
 }
 
 /// アプリケーション初期化状態の列挙型
-enum InitializationState {
-  notStarted,
-  inProgress,
-  completed,
-  failed,
-}
+enum InitializationState { notStarted, inProgress, completed, failed }
 
 /// 初期化の進行状況を追跡するためのクラス
 class InitializationProgress {
@@ -371,7 +417,8 @@ class InitializationProgress {
   }
 
   @override
-  String toString() => 'InitializationProgress('
+  String toString() =>
+      'InitializationProgress('
       'state: $state, '
       'currentStep: $currentStep, '
       'progress: $progress, '
@@ -402,7 +449,8 @@ class InitializationError implements Exception {
   });
 
   @override
-  String toString() => 'InitializationError('
+  String toString() =>
+      'InitializationError('
       'type: $type, '
       'message: $message, '
       'originalError: $originalError)';

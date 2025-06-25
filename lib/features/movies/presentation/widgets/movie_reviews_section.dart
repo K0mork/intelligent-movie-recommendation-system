@@ -33,18 +33,14 @@ class MovieReviewsSection extends ConsumerWidget {
         // セクションタイトル
         Text(
           'レビュー',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
 
         // レビューボタン
-        if (showReviewButton)
-          _ReviewButton(
-            movie: movie,
-            authState: authState,
-          ),
+        if (showReviewButton) _ReviewButton(movie: movie, authState: authState),
 
         const SizedBox(height: 16),
 
@@ -64,10 +60,7 @@ class _ReviewButton extends StatelessWidget {
   final Movie movie;
   final AsyncValue<dynamic> authState;
 
-  const _ReviewButton({
-    required this.movie,
-    required this.authState,
-  });
+  const _ReviewButton({required this.movie, required this.authState});
 
   @override
   Widget build(BuildContext context) {
@@ -88,39 +81,28 @@ class _ReviewButton extends StatelessWidget {
             ),
           );
         } else {
-          return const AuthRequiredWidget(
-            type: AuthRequiredType.reviews,
-          );
+          return const AuthRequiredWidget(type: AuthRequiredType.reviews);
         }
       },
       loading: () => const LoadingStateWidget.inline(),
-      error: (error, stackTrace) => _ErrorView(
-        theme: theme,
-        error: error,
-      ),
+      error: (error, stackTrace) => _ErrorView(theme: theme, error: error),
     );
   }
 
   void _navigateToAddReview(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => AddReviewPage(movie: movie),
-      ),
+      MaterialPageRoute(builder: (context) => AddReviewPage(movie: movie)),
     );
   }
 }
-
 
 /// エラー表示ビュー
 class _ErrorView extends StatelessWidget {
   final ThemeData theme;
   final Object error;
 
-  const _ErrorView({
-    required this.theme,
-    required this.error,
-  });
+  const _ErrorView({required this.theme, required this.error});
 
   @override
   Widget build(BuildContext context) {
@@ -173,17 +155,20 @@ class _ReviewsList extends ConsumerWidget {
           theme: theme,
         );
       },
-      loading: () => const Center(
-        child: Padding(
-          padding: EdgeInsets.all(32),
-          child: CircularProgressIndicator(),
-        ),
-      ),
-      error: (error, stackTrace) => _ReviewsErrorView(
-        theme: theme,
-        error: error,
-        onRetry: () => ref.refresh(movieReviewsProvider(movie.id.toString())),
-      ),
+      loading:
+          () => const Center(
+            child: Padding(
+              padding: EdgeInsets.all(32),
+              child: CircularProgressIndicator(),
+            ),
+          ),
+      error:
+          (error, stackTrace) => _ReviewsErrorView(
+            theme: theme,
+            error: error,
+            onRetry:
+                () => ref.refresh(movieReviewsProvider(movie.id.toString())),
+          ),
     );
   }
 }
@@ -201,11 +186,7 @@ class _EmptyReviewsView extends StatelessWidget {
       padding: const EdgeInsets.all(32),
       child: Column(
         children: [
-          Icon(
-            Icons.rate_review_outlined,
-            size: 64,
-            color: Colors.grey[400],
-          ),
+          Icon(Icons.rate_review_outlined, size: 64, color: Colors.grey[400]),
           const SizedBox(height: 16),
           Text(
             'まだレビューがありません',
@@ -261,7 +242,10 @@ class _ReviewsListView extends StatelessWidget {
               review: review,
               showMovieInfo: false,
               onEdit: isOwnReview ? () => _editReview(context, review) : null,
-              onDelete: isOwnReview ? () => _showDeleteConfirmation(context, review) : null,
+              onDelete:
+                  isOwnReview
+                      ? () => _showDeleteConfirmation(context, review)
+                      : null,
             ),
           );
         }),
@@ -272,32 +256,31 @@ class _ReviewsListView extends StatelessWidget {
   void _editReview(BuildContext context, Review review) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => EditReviewPage(review: review),
-      ),
+      MaterialPageRoute(builder: (context) => EditReviewPage(review: review)),
     );
   }
 
   void _showDeleteConfirmation(BuildContext context, Review review) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('レビューを削除'),
-        content: const Text('このレビューを削除しますか？'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('キャンセル'),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('レビューを削除'),
+            content: const Text('このレビューを削除しますか？'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('キャンセル'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  // TODO: レビュー削除処理の実装
+                },
+                child: const Text('削除'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // TODO: レビュー削除処理の実装
-            },
-            child: const Text('削除'),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -321,16 +304,9 @@ class _ReviewsErrorView extends StatelessWidget {
       padding: const EdgeInsets.all(32),
       child: Column(
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: Colors.red[300],
-          ),
+          Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
           const SizedBox(height: 16),
-          Text(
-            'レビューの読み込みに失敗しました',
-            style: theme.textTheme.titleMedium,
-          ),
+          Text('レビューの読み込みに失敗しました', style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
             error.toString(),
@@ -338,10 +314,7 @@ class _ReviewsErrorView extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: onRetry,
-            child: const Text('再試行'),
-          ),
+          ElevatedButton(onPressed: onRetry, child: const Text('再試行')),
         ],
       ),
     );

@@ -8,10 +8,7 @@ import '../../../../core/widgets/loading_state_widget.dart';
 class AuthWrapper extends ConsumerWidget {
   final Widget child;
 
-  const AuthWrapper({
-    super.key,
-    required this.child,
-  });
+  const AuthWrapper({super.key, required this.child});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,42 +23,41 @@ class AuthWrapper extends ConsumerWidget {
         // サインインしていない場合はサインイン画面を表示
         return const SignInPage();
       },
-      loading: () => const Scaffold(
-        body: LoadingStateWidget.fullScreen(),
-      ),
-      error: (error, stack) => Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Theme.of(context).colorScheme.error,
+      loading: () => const Scaffold(body: LoadingStateWidget.fullScreen()),
+      error:
+          (error, stack) => Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    '認証エラーが発生しました',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    error.toString(),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      // 認証状態を再読み込み
+                      ref.invalidate(authStateProvider);
+                    },
+                    child: const Text('再試行'),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              Text(
-                '認証エラーが発生しました',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                error.toString(),
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  // 認証状態を再読み込み
-                  ref.invalidate(authStateProvider);
-                },
-                child: const Text('再試行'),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
 }

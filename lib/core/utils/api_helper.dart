@@ -36,9 +36,7 @@ class ApiHelper {
     int? limit,
     Map<String, dynamic>? additionalParams,
   }) {
-    final params = <String, dynamic>{
-      'page': page,
-    };
+    final params = <String, dynamic>{'page': page};
 
     if (limit != null) {
       params['limit'] = limit;
@@ -71,7 +69,10 @@ class ApiHelper {
   }
 
   /// JSON レスポンスから安全に値を取得
-  static T? getSafeValue<T extends Object>(Map<String, dynamic> json, String key) {
+  static T? getSafeValue<T extends Object>(
+    Map<String, dynamic> json,
+    String key,
+  ) {
     try {
       final value = json[key];
       return value is T ? value : null;

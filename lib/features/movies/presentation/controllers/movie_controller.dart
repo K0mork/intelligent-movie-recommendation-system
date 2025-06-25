@@ -37,7 +37,8 @@ class MovieState {
     return MovieState(
       popularMovies: popularMovies ?? this.popularMovies,
       searchResults: searchResults ?? this.searchResults,
-      selectedMovie: clearSelectedMovie ? null : selectedMovie ?? this.selectedMovie,
+      selectedMovie:
+          clearSelectedMovie ? null : selectedMovie ?? this.selectedMovie,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
       isSearching: isSearching ?? this.isSearching,
@@ -55,10 +56,10 @@ class MovieController extends StateNotifier<MovieState> {
     required GetPopularMoviesUseCase getPopularMoviesUseCase,
     required SearchMoviesUseCase searchMoviesUseCase,
     required GetMovieDetailsUseCase getMovieDetailsUseCase,
-  })  : _getPopularMoviesUseCase = getPopularMoviesUseCase,
-        _searchMoviesUseCase = searchMoviesUseCase,
-        _getMovieDetailsUseCase = getMovieDetailsUseCase,
-        super(const MovieState());
+  }) : _getPopularMoviesUseCase = getPopularMoviesUseCase,
+       _searchMoviesUseCase = searchMoviesUseCase,
+       _getMovieDetailsUseCase = getMovieDetailsUseCase,
+       super(const MovieState());
 
   Future<void> loadPopularMovies({int page = 1}) async {
     if (page == 1) {
@@ -69,10 +70,7 @@ class MovieController extends StateNotifier<MovieState> {
       final movies = await _getPopularMoviesUseCase.call(page: page);
 
       if (page == 1) {
-        state = state.copyWith(
-          popularMovies: movies,
-          isLoading: false,
-        );
+        state = state.copyWith(popularMovies: movies, isLoading: false);
       } else {
         state = state.copyWith(
           popularMovies: [...state.popularMovies, ...movies],
@@ -80,10 +78,7 @@ class MovieController extends StateNotifier<MovieState> {
         );
       }
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
   }
 
@@ -107,13 +102,14 @@ class MovieController extends StateNotifier<MovieState> {
     }
 
     try {
-      final movies = await _searchMoviesUseCase.call(query, page: page, year: year);
+      final movies = await _searchMoviesUseCase.call(
+        query,
+        page: page,
+        year: year,
+      );
 
       if (page == 1) {
-        state = state.copyWith(
-          searchResults: movies,
-          isSearching: false,
-        );
+        state = state.copyWith(searchResults: movies, isSearching: false);
       } else {
         state = state.copyWith(
           searchResults: [...state.searchResults, ...movies],
@@ -121,10 +117,7 @@ class MovieController extends StateNotifier<MovieState> {
         );
       }
     } catch (e) {
-      state = state.copyWith(
-        isSearching: false,
-        errorMessage: e.toString(),
-      );
+      state = state.copyWith(isSearching: false, errorMessage: e.toString());
     }
   }
 
@@ -133,15 +126,9 @@ class MovieController extends StateNotifier<MovieState> {
 
     try {
       final movie = await _getMovieDetailsUseCase.call(movieId);
-      state = state.copyWith(
-        selectedMovie: movie,
-        isLoading: false,
-      );
+      state = state.copyWith(selectedMovie: movie, isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
   }
 

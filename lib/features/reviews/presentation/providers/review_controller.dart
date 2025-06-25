@@ -43,15 +43,9 @@ class ReviewController extends StateNotifier<ReviewState> {
         userId: userId,
         movieId: movieId,
       );
-      state = state.copyWith(
-        isLoading: false,
-        reviews: reviews,
-      );
+      state = state.copyWith(isLoading: false, reviews: reviews);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -84,10 +78,7 @@ class ReviewController extends StateNotifier<ReviewState> {
 
       return reviewId;
     } catch (e) {
-      state = state.copyWith(
-        isSubmitting: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isSubmitting: false, error: e.toString());
       return null;
     }
   }
@@ -102,10 +93,7 @@ class ReviewController extends StateNotifier<ReviewState> {
       // Refresh reviews after update
       await loadReviews();
     } catch (e) {
-      state = state.copyWith(
-        isSubmitting: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isSubmitting: false, error: e.toString());
     }
   }
 
@@ -119,10 +107,7 @@ class ReviewController extends StateNotifier<ReviewState> {
       // Refresh reviews after deletion
       await loadReviews();
     } catch (e) {
-      state = state.copyWith(
-        isSubmitting: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isSubmitting: false, error: e.toString());
     }
   }
 
@@ -131,15 +116,9 @@ class ReviewController extends StateNotifier<ReviewState> {
 
     try {
       final reviews = await repository.getUserReviews(userId);
-      state = state.copyWith(
-        isLoading: false,
-        reviews: reviews,
-      );
+      state = state.copyWith(isLoading: false, reviews: reviews);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 

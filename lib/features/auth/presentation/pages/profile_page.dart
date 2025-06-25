@@ -35,18 +35,11 @@ class ProfilePage extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.login,
-                    size: 64,
-                    color: Colors.grey,
-                  ),
+                  Icon(Icons.login, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text(
                     'プロフィールを見るにはログインが必要です',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                 ],
               ),
@@ -56,29 +49,23 @@ class ProfilePage extends ConsumerWidget {
           return _ProfileContent(user: user);
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.red,
+        error:
+            (error, stackTrace) => Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text('エラーが発生しました', style: theme.textTheme.titleLarge),
+                  const SizedBox(height: 8),
+                  Text(
+                    error.toString(),
+                    style: theme.textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              Text(
-                'エラーが発生しました',
-                style: theme.textTheme.titleLarge,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                error.toString(),
-                style: theme.textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
+            ),
       ),
     );
   }
@@ -108,11 +95,7 @@ class _ProfileContent extends ConsumerWidget {
               child: Column(
                 children: [
                   // アバター
-                  UserAvatar(
-                    size: 80,
-                    user: user,
-                    showBorder: true,
-                  ),
+                  UserAvatar(size: 80, user: user, showBorder: true),
                   const SizedBox(height: 16),
 
                   // ユーザー名
@@ -137,7 +120,10 @@ class _ProfileContent extends ConsumerWidget {
 
                   // メンバーステータス
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primaryContainer,
                       borderRadius: BorderRadius.circular(12),
@@ -159,70 +145,78 @@ class _ProfileContent extends ConsumerWidget {
 
           // レビュー統計
           userReviewsAsync.when(
-            data: (reviews) => Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+            data:
+                (reviews) => Card(
+                  elevation: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.analytics_outlined,
-                          color: theme.colorScheme.primary,
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.analytics_outlined,
+                              color: theme.colorScheme.primary,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'レビュー統計',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'レビュー統計',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
+                        const SizedBox(height: 16),
 
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _StatCard(
-                            icon: Icons.rate_review,
-                            label: '総レビュー数',
-                            value: '${reviews.length}件',
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _StatCard(
-                            icon: Icons.star,
-                            label: '平均評価',
-                            value: reviews.isEmpty
-                              ? '0.0'
-                              : (reviews.map((r) => r.rating).reduce((a, b) => a + b) / reviews.length).toStringAsFixed(1),
-                            color: theme.colorScheme.secondary,
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _StatCard(
+                                icon: Icons.rate_review,
+                                label: '総レビュー数',
+                                value: '${reviews.length}件',
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _StatCard(
+                                icon: Icons.star,
+                                label: '平均評価',
+                                value:
+                                    reviews.isEmpty
+                                        ? '0.0'
+                                        : (reviews
+                                                    .map((r) => r.rating)
+                                                    .reduce((a, b) => a + b) /
+                                                reviews.length)
+                                            .toStringAsFixed(1),
+                                color: theme.colorScheme.secondary,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            loading: () => const Card(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Center(child: CircularProgressIndicator()),
-              ),
-            ),
-            error: (error, stackTrace) => const Card(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text('統計情報の読み込みに失敗しました'),
-              ),
-            ),
+            loading:
+                () => const Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                ),
+            error:
+                (error, stackTrace) => const Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text('統計情報の読み込みに失敗しました'),
+                  ),
+                ),
           ),
 
           const SizedBox(height: 20),
@@ -299,23 +293,24 @@ class _ProfileContent extends ConsumerWidget {
               onPressed: () async {
                 final shouldSignOut = await showDialog<bool>(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('サインアウト'),
-                    content: const Text('サインアウトしますか？'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(false),
-                        child: const Text('キャンセル'),
+                  builder:
+                      (context) => AlertDialog(
+                        title: const Text('サインアウト'),
+                        content: const Text('サインアウトしますか？'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: const Text('キャンセル'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.red,
+                            ),
+                            child: const Text('サインアウト'),
+                          ),
+                        ],
                       ),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(true),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.red,
-                        ),
-                        child: const Text('サインアウト'),
-                      ),
-                    ],
-                  ),
                 );
 
                 if (shouldSignOut == true) {
@@ -326,10 +321,7 @@ class _ProfileContent extends ConsumerWidget {
                 }
               },
               icon: const Icon(Icons.logout, color: Colors.red),
-              label: const Text(
-                'サインアウト',
-                style: TextStyle(color: Colors.red),
-              ),
+              label: const Text('サインアウト', style: TextStyle(color: Colors.red)),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.red),
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -366,19 +358,12 @@ class _StatCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-          width: 1,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            color: color,
-            size: 20,
-          ),
+          Icon(icon, color: color, size: 20),
           const SizedBox(height: 8),
           Text(
             value,

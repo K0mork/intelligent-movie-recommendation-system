@@ -17,7 +17,10 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
   ReviewRemoteDataSourceImpl({required this.firestore});
 
   @override
-  Future<List<ReviewModel>> getReviews({String? userId, String? movieId}) async {
+  Future<List<ReviewModel>> getReviews({
+    String? userId,
+    String? movieId,
+  }) async {
     try {
       Query query = firestore.collection('reviews');
 
@@ -44,10 +47,8 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
   @override
   Future<ReviewModel> getReview(String reviewId) async {
     try {
-      final docSnapshot = await firestore
-          .collection('reviews')
-          .doc(reviewId)
-          .get();
+      final docSnapshot =
+          await firestore.collection('reviews').doc(reviewId).get();
 
       if (!docSnapshot.exists) {
         throw APIException('Review not found');
@@ -88,10 +89,7 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
   @override
   Future<void> deleteReview(String reviewId) async {
     try {
-      await firestore
-          .collection('reviews')
-          .doc(reviewId)
-          .delete();
+      await firestore.collection('reviews').doc(reviewId).delete();
     } catch (e) {
       throw APIException('Failed to delete review: ${e.toString()}');
     }
@@ -100,11 +98,12 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
   @override
   Future<List<ReviewModel>> getUserReviews(String userId) async {
     try {
-      final querySnapshot = await firestore
-          .collection('reviews')
-          .where('userId', isEqualTo: userId)
-          .orderBy('createdAt', descending: true)
-          .get();
+      final querySnapshot =
+          await firestore
+              .collection('reviews')
+              .where('userId', isEqualTo: userId)
+              .orderBy('createdAt', descending: true)
+              .get();
 
       return querySnapshot.docs
           .map((doc) => ReviewModel.fromFirestore(doc))

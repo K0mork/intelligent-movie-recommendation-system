@@ -5,9 +5,8 @@ import '../datasources/auth_remote_datasource.dart';
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;
 
-  AuthRepositoryImpl({
-    required AuthRemoteDataSource remoteDataSource,
-  }) : _remoteDataSource = remoteDataSource;
+  AuthRepositoryImpl({required AuthRemoteDataSource remoteDataSource})
+    : _remoteDataSource = remoteDataSource;
 
   @override
   AppUser? getCurrentUser() {

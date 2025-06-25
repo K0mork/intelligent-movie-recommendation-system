@@ -6,9 +6,8 @@ import 'package:filmflow/features/movies/data/models/movie.dart';
 class MovieRepositoryImpl implements MovieRepository {
   final MovieRemoteDataSource _remoteDataSource;
 
-  MovieRepositoryImpl({
-    required MovieRemoteDataSource remoteDataSource,
-  }) : _remoteDataSource = remoteDataSource;
+  MovieRepositoryImpl({required MovieRemoteDataSource remoteDataSource})
+    : _remoteDataSource = remoteDataSource;
 
   @override
   Future<List<Movie>> getPopularMovies({int page = 1}) async {
@@ -24,9 +23,17 @@ class MovieRepositoryImpl implements MovieRepository {
   }
 
   @override
-  Future<List<Movie>> searchMovies(String query, {int page = 1, int? year}) async {
+  Future<List<Movie>> searchMovies(
+    String query, {
+    int page = 1,
+    int? year,
+  }) async {
     try {
-      return await _remoteDataSource.searchMovies(query, page: page, year: year);
+      return await _remoteDataSource.searchMovies(
+        query,
+        page: page,
+        year: year,
+      );
     } catch (e) {
       throw Exception('Failed to search movies: $e');
     }

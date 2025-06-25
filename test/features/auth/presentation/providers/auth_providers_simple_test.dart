@@ -90,9 +90,7 @@ void main() {
         final testContainer = ProviderContainer(
           overrides: [
             firebaseAuthProvider.overrideWithValue(mockFirebaseAuth),
-            authStateProvider.overrideWith(
-              (ref) => Stream.value(null),
-            ),
+            authStateProvider.overrideWith((ref) => Stream.value(null)),
           ],
         );
 
@@ -106,11 +104,17 @@ void main() {
     group('Provider Dependencies Tests', () {
       test('should maintain provider dependencies correctly', () {
         // Verify that all providers can be instantiated without circular dependencies
-        expect(() => container.read(authRemoteDataSourceProvider), returnsNormally);
+        expect(
+          () => container.read(authRemoteDataSourceProvider),
+          returnsNormally,
+        );
         expect(() => container.read(authRepositoryProvider), returnsNormally);
         expect(() => container.read(signInUseCaseProvider), returnsNormally);
         expect(() => container.read(signOutUseCaseProvider), returnsNormally);
-        expect(() => container.read(getCurrentUserUseCaseProvider), returnsNormally);
+        expect(
+          () => container.read(getCurrentUserUseCaseProvider),
+          returnsNormally,
+        );
       });
 
       test('should return same instance for multiple reads', () {
@@ -143,11 +147,12 @@ void main() {
 
         // After disposal, creating new container should work
         final newContainer = ProviderContainer(
-          overrides: [
-            firebaseAuthProvider.overrideWithValue(mockFirebaseAuth),
-          ],
+          overrides: [firebaseAuthProvider.overrideWithValue(mockFirebaseAuth)],
         );
-        expect(() => newContainer.read(authRepositoryProvider), returnsNormally);
+        expect(
+          () => newContainer.read(authRepositoryProvider),
+          returnsNormally,
+        );
         newContainer.dispose();
       });
     });
@@ -175,7 +180,9 @@ void main() {
         final repository = container.read(authRepositoryProvider);
         final signInUseCase = container.read(signInUseCaseProvider);
         final signOutUseCase = container.read(signOutUseCaseProvider);
-        final getCurrentUserUseCase = container.read(getCurrentUserUseCaseProvider);
+        final getCurrentUserUseCase = container.read(
+          getCurrentUserUseCaseProvider,
+        );
 
         expect(firebaseAuth, isA<FirebaseAuth>());
         expect(firebaseAuth, same(mockFirebaseAuth));

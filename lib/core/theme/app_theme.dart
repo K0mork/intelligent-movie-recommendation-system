@@ -29,9 +29,8 @@ class AppTheme {
 
   /// フォントテーマの構築
   static TextTheme _buildTextTheme(bool isDark) {
-    final baseTextTheme = isDark
-        ? ThemeData.dark().textTheme
-        : ThemeData.light().textTheme;
+    final baseTextTheme =
+        isDark ? ThemeData.dark().textTheme : ThemeData.light().textTheme;
 
     return TextTheme(
       // 大見出し（タイトル用）- SemiBold 600

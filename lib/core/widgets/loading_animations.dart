@@ -24,17 +24,11 @@ class _PulsingDotState extends State<PulsingDot>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _animation = Tween<double>(
       begin: 0.6,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _controller.repeat(reverse: true);
   }
 
@@ -96,15 +90,12 @@ class _ThreeDotsLoadingState extends State<ThreeDotsLoading>
         vsync: this,
       ),
     );
-    _animations = _controllers.map((controller) {
-      return Tween<double>(
-        begin: 0.4,
-        end: 1.0,
-      ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.easeInOut,
-      ));
-    }).toList();
+    _animations =
+        _controllers.map((controller) {
+          return Tween<double>(begin: 0.4, end: 1.0).animate(
+            CurvedAnimation(parent: controller, curve: Curves.easeInOut),
+          );
+        }).toList();
 
     for (int i = 0; i < _controllers.length; i++) {
       Future.delayed(Duration(milliseconds: i * 200), () {
@@ -156,11 +147,7 @@ class CircularWaveLoading extends StatefulWidget {
   final Color color;
   final double size;
 
-  const CircularWaveLoading({
-    super.key,
-    required this.color,
-    this.size = 40.0,
-  });
+  const CircularWaveLoading({super.key, required this.color, this.size = 40.0});
 
   @override
   State<CircularWaveLoading> createState() => _CircularWaveLoadingState();
@@ -188,18 +175,12 @@ class _CircularWaveLoadingState extends State<CircularWaveLoading>
     _animation1 = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller1,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller1, curve: Curves.easeOut));
 
     _animation2 = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller2,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller2, curve: Curves.easeOut));
 
     _controller1.repeat();
     Future.delayed(const Duration(milliseconds: 600), () {
@@ -301,10 +282,7 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
     _animation = Tween<double>(
       begin: -1.0,
       end: 2.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _controller.repeat();
   }
 

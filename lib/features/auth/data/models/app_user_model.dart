@@ -66,10 +66,8 @@ class AppUserModel extends AppUser {
   }
 
   /// Firebase User のメタデータとの互換性のため
-  UserMetadata get metadata => UserMetadata(
-    creationTime: createdAt,
-    lastSignInTime: lastSignInAt,
-  );
+  UserMetadata get metadata =>
+      UserMetadata(creationTime: createdAt, lastSignInTime: lastSignInAt);
 }
 
 /// Firebase User metadata との互換性を保つためのクラス
