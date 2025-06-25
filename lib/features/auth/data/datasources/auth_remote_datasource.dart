@@ -53,11 +53,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       if (kIsWeb) {
         // Web用の処理: まず silent sign-in を試す
-        googleUser = await _googleSignIn.signInSilently();
-        if (googleUser == null) {
-          // Silent sign-in が失敗した場合は通常のサインイン
-          googleUser = await _googleSignIn.signIn();
-        }
+        // Silent sign-in を試し、失敗した場合は通常のサインイン
+        googleUser = await _googleSignIn.signInSilently() ??
+                    await _googleSignIn.signIn();
       } else {
         // モバイル用の処理
         googleUser = await _googleSignIn.signIn();

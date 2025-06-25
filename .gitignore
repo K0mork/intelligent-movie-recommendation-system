@@ -59,7 +59,7 @@ firebase-debug.log
 ui-debug.log
 
 # Generated files
-*.g.dart
+# *.g.dart  # 一時的にコメントアウト - JSON serialization用
 *.freezed.dart
 
 # Web

@@ -284,7 +284,7 @@ extension ResultStateUtils<T> on ResultState<T> {
   }
 }
 
-/// Future<T> から ResultState<T> への変換ユーティリティ
+/// Future\<T\> から ResultState\<T\> への変換ユーティリティ
 extension FutureResultState<T> on Future<T> {
   /// Future を ResultState に変換
   Future<ResultState<T>> toResultState() async {
