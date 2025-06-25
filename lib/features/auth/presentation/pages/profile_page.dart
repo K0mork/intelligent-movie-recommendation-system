@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart'; // 未使用のため削除
 import '../providers/auth_providers.dart';
 import '../providers/auth_controller.dart';
 import '../widgets/user_avatar.dart';
@@ -80,7 +80,7 @@ class _ProfileContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final userReviewsAsync = ref.watch(userReviewsProvider(user.uid));
-    final dateFormat = DateFormat('yyyy年MM月dd日');
+    // final dateFormat = DateFormat('yyyy年MM月dd日'); // 未使用のため削除
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),

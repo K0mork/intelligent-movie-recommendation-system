@@ -224,12 +224,12 @@ class MovieSearchResultItem extends StatelessWidget {
           ),
         ],
         // 概要（最初の100文字）
-        if (movie.overview?.isNotEmpty == true) ...[
+        if (movie.overview.isNotEmpty) ...[
           const SizedBox(height: 4),
           Text(
-            movie.overview!.length > 100
-                ? '${movie.overview!.substring(0, 100)}...'
-                : movie.overview!,
+            movie.overview.length > 100
+                ? '${movie.overview.substring(0, 100)}...'
+                : movie.overview,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),

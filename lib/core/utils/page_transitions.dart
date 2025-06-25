@@ -11,9 +11,8 @@ class SlidePageRoute<T> extends PageRouteBuilder<T> {
     this.begin = const Offset(1.0, 0.0),
     this.end = Offset.zero,
     this.duration = const Duration(milliseconds: 300),
-    RouteSettings? settings,
+    super.settings,
   }) : super(
-         settings: settings,
          transitionDuration: duration,
          pageBuilder: (context, animation, secondaryAnimation) => child,
        );
@@ -42,9 +41,8 @@ class FadePageRoute<T> extends PageRouteBuilder<T> {
   FadePageRoute({
     required this.child,
     this.duration = const Duration(milliseconds: 300),
-    RouteSettings? settings,
+    super.settings,
   }) : super(
-         settings: settings,
          transitionDuration: duration,
          pageBuilder: (context, animation, secondaryAnimation) => child,
        );
@@ -67,9 +65,8 @@ class ScalePageRoute<T> extends PageRouteBuilder<T> {
   ScalePageRoute({
     required this.child,
     this.duration = const Duration(milliseconds: 300),
-    RouteSettings? settings,
+    super.settings,
   }) : super(
-         settings: settings,
          transitionDuration: duration,
          pageBuilder: (context, animation, secondaryAnimation) => child,
        );
@@ -102,9 +99,8 @@ class SlideFadePageRoute<T> extends PageRouteBuilder<T> {
     this.begin = const Offset(0.0, 0.3),
     this.end = Offset.zero,
     this.duration = const Duration(milliseconds: 400),
-    RouteSettings? settings,
+    super.settings,
   }) : super(
-         settings: settings,
          transitionDuration: duration,
          pageBuilder: (context, animation, secondaryAnimation) => child,
        );

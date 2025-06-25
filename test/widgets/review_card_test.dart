@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart'; // 未使用のため削除
 
 import '../helpers/test_helpers.dart';
 import 'package:filmflow/features/reviews/presentation/widgets/review_card.dart';
@@ -10,10 +10,10 @@ import 'package:filmflow/features/reviews/domain/entities/review.dart';
 void main() {
   group('ReviewCard Widget Tests', () {
     late Review testReview;
-    late DateFormat dateFormat;
+    // late DateFormat dateFormat; // 未使用のため削除
 
     setUp(() {
-      dateFormat = DateFormat('yyyy年MM月dd日');
+      // dateFormat = DateFormat('yyyy年MM月dd日'); // 未使用のため削除
       testReview = Review(
         id: 'test-review-id',
         userId: 'test-user-id',
@@ -181,14 +181,14 @@ void main() {
     ) async {
       // Arrange
       bool editCalled = false;
-      bool deleteCalled = false;
+      // bool deleteCalled = false; // 未使用のため削除
 
       final widget = TestHelpers.createTestWidget(
         child: ReviewCard(
           review: testReview,
           showMovieInfo: true,
           onEdit: () => editCalled = true,
-          onDelete: () => deleteCalled = true,
+          onDelete: () {}, // 空のコールバックに変更
         ),
       );
 
@@ -432,7 +432,7 @@ void main() {
 
       Review? tappedReview;
       Review? editedReview;
-      Review? deletedReview;
+      // Review? deletedReview; // 未使用のため削除
 
       final widget = TestHelpers.createTestWidget(
         child: ReviewList(
@@ -440,7 +440,7 @@ void main() {
           showMovieInfo: true,
           onReviewTap: (review) => tappedReview = review,
           onEditReview: (review) => editedReview = review,
-          onDeleteReview: (review) => deletedReview = review,
+          onDeleteReview: (review) {}, // 空のコールバックに変更（deletedReview削除のため）
         ),
       );
 

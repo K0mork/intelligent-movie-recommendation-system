@@ -161,8 +161,13 @@ jobs:
 
         # pre-commit が非ゼロ，または custom scan が failure ならエラー終了
         if [[ "${PRECOMMIT_EXIT}" != "0" || "${CUSTOM_SCAN_RESULT}" == "failure" ]]; then
-          echo "::error title=Security Violation::API keys or secrets detected in the codebase"
-          echo "::error::Remove hard-coded secrets，rewrite history if necessary，and store them in GitHub Secrets or environment variables．"
+          if [[ "${CUSTOM_SCAN_RESULT}" == "failure" ]]; then
+            echo "::error title=Security Violation::API keys or secrets detected in the codebase"
+            echo "::error::Remove hard-coded secrets, rewrite history if necessary, and store them in GitHub Secrets or environment variables."
+          else
+            echo "::error title=Pre-commit Failed::Pre-commit hooks failed. Check the logs for details."
+            echo "::error::Run 'pre-commit run --all-files' locally to see and fix the issues."
+          fi
           exit 1
         fi
 

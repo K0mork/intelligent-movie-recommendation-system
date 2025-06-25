@@ -77,7 +77,7 @@ class ProfileSection extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        user.email ?? '',
+                        user.email,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),

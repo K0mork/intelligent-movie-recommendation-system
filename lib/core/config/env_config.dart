@@ -110,18 +110,21 @@ class EnvConfig {
     if (firebaseApiKey.isEmpty) missingRequired.add('FIREBASE_API_KEY');
     if (firebaseAuthDomain.isEmpty) missingRequired.add('FIREBASE_AUTH_DOMAIN');
     if (firebaseProjectId.isEmpty) missingRequired.add('FIREBASE_PROJECT_ID');
-    if (firebaseStorageBucket.isEmpty)
+    if (firebaseStorageBucket.isEmpty) {
       missingRequired.add('FIREBASE_STORAGE_BUCKET');
-    if (firebaseMessagingSenderId.isEmpty)
+    }
+    if (firebaseMessagingSenderId.isEmpty) {
       missingRequired.add('FIREBASE_MESSAGING_SENDER_ID');
+    }
     if (firebaseAppId.isEmpty) missingRequired.add('FIREBASE_APP_ID');
 
     // TMDb API設定チェック（必須）
     if (tmdbApiKey.isEmpty) missingRequired.add('TMDB_API_KEY');
 
     // オプション設定チェック
-    if (googleCloudProjectId.isEmpty)
+    if (googleCloudProjectId.isEmpty) {
       missingOptional.add('GOOGLE_CLOUD_PROJECT_ID');
+    }
     if (omdbApiKey.isEmpty) missingOptional.add('OMDB_API_KEY');
 
     return ValidationResult(
@@ -135,8 +138,9 @@ class EnvConfig {
     final List<String> missingOptionals = [];
 
     // Google Cloud設定（AI推薦機能用）
-    if (googleCloudProjectId.isEmpty)
+    if (googleCloudProjectId.isEmpty) {
       missingOptionals.add('GOOGLE_CLOUD_PROJECT_ID');
+    }
 
     // OMDB API設定（補助的な映画情報用）
     if (omdbApiKey.isEmpty) missingOptionals.add('OMDB_API_KEY');

@@ -12,8 +12,11 @@ abstract class AppException implements Exception {
 
 /// ネットワーク関連の例外
 class NetworkException extends AppException {
-  const NetworkException(String message, {String? code, dynamic details})
-    : super(message, code: code, details: details);
+  const NetworkException(
+    super.message, {
+    super.code,
+    super.details,
+  });
 
   @override
   String toString() => 'NetworkException: $message';
@@ -24,11 +27,11 @@ class APIException extends AppException {
   final int? statusCode;
 
   const APIException(
-    String message, {
+    super.message, {
     this.statusCode,
-    String? code,
-    dynamic details,
-  }) : super(message, code: code, details: details);
+    super.code,
+    super.details,
+  });
 
   @override
   String toString() =>
@@ -37,8 +40,11 @@ class APIException extends AppException {
 
 /// 認証関連の例外
 class AuthException extends AppException {
-  const AuthException(String message, {String? code, dynamic details})
-    : super(message, code: code, details: details);
+  const AuthException(
+    super.message, {
+    super.code,
+    super.details,
+  });
 
   @override
   String toString() => 'AuthException: $message';
@@ -46,8 +52,11 @@ class AuthException extends AppException {
 
 /// データ変換関連の例外
 class DataParsingException extends AppException {
-  const DataParsingException(String message, {String? code, dynamic details})
-    : super(message, code: code, details: details);
+  const DataParsingException(
+    super.message, {
+    super.code,
+    super.details,
+  });
 
   @override
   String toString() => 'DataParsingException: $message';
@@ -55,8 +64,11 @@ class DataParsingException extends AppException {
 
 /// 設定関連の例外
 class ConfigurationException extends AppException {
-  const ConfigurationException(String message, {String? code, dynamic details})
-    : super(message, code: code, details: details);
+  const ConfigurationException(
+    super.message, {
+    super.code,
+    super.details,
+  });
 
   @override
   String toString() => 'ConfigurationException: $message';
@@ -64,8 +76,11 @@ class ConfigurationException extends AppException {
 
 /// キャッシュ関連の例外
 class CacheException extends AppException {
-  const CacheException(String message, {String? code, dynamic details})
-    : super(message, code: code, details: details);
+  const CacheException(
+    super.message, {
+    super.code,
+    super.details,
+  });
 
   @override
   String toString() => 'CacheException: $message';

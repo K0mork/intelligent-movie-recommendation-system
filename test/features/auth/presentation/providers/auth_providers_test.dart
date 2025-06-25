@@ -27,14 +27,14 @@ void main() {
     late MockGoogleSignIn mockGoogleSignIn;
     late MockAuthRemoteDataSource mockAuthRemoteDataSource;
     late MockAuthRepository mockAuthRepository;
-    late MockUser mockUser;
+    // late MockUser mockUser; // 未使用のため削除
 
     setUp(() {
       mockFirebaseAuth = MockFirebaseAuth();
       mockGoogleSignIn = MockGoogleSignIn();
       mockAuthRemoteDataSource = MockAuthRemoteDataSource();
       mockAuthRepository = MockAuthRepository();
-      mockUser = MockUser();
+      // mockUser = MockUser(); // 未使用のため削除
 
       container = ProviderContainer(
         overrides: [

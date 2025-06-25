@@ -314,10 +314,10 @@ void main() {
       });
 
       test('should track authentication state changes', () {
-        var callCount = 0;
+        // var callCount = 0; // 未使用のため削除
 
         container.listen(isAuthenticatedProvider, (previous, next) {
-          callCount++;
+          // callCount++; // 未使用のため削除
         });
 
         // Initially not authenticated

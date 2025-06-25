@@ -25,14 +25,15 @@ repos:
       #   pass_filenames: true
       #   stages: [pre-commit, pre-push]
 
-      # Flutter 静的解析（警告以上を無視）
+      # Flutter 静的解析（CI環境最適化 - auto-fix無効）
       - id: flutter-analyze
         name: "🔍 Flutter Analyze"
-        description: "Dart静的解析（warnings/info を無視）"
+        description: "Dart静的解析（CI環境安定性向上）"
         exclude: "\\.g\\.dart$|\\.freezed\\.dart$|\\.mocks\\.dart$|^test/"
         entry: flutter analyze --no-fatal-warnings --no-fatal-infos
         language: system
         pass_filenames: false
+        always_run: false
         stages: [pre-commit, pre-push]
 
   # ────────── 共通ユーティリティ ──────────

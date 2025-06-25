@@ -4,8 +4,6 @@ import '../../../auth/presentation/providers/auth_providers.dart';
 import '../../../movies/presentation/widgets/custom_movie_search_page.dart';
 import '../../../../core/widgets/error_widgets.dart';
 import '../../../../core/widgets/loading_state_widget.dart';
-import '../../../../core/widgets/loading_state_widget.dart';
-import '../../../../core/widgets/error_widgets.dart';
 
 /// 新規レビュータブのビュー
 ///

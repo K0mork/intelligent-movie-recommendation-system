@@ -214,7 +214,7 @@ class _CircularWaveLoadingState extends State<CircularWaveLoading>
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: widget.color.withOpacity(1.0 - _animation1.value),
+                    color: widget.color.withValues(alpha: 1.0 - _animation1.value),
                     width: 2.0,
                   ),
                 ),
@@ -230,7 +230,7 @@ class _CircularWaveLoadingState extends State<CircularWaveLoading>
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: widget.color.withOpacity(1.0 - _animation2.value),
+                    color: widget.color.withValues(alpha: 1.0 - _animation2.value),
                     width: 2.0,
                   ),
                 ),

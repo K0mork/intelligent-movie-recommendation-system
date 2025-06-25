@@ -78,7 +78,7 @@ class BreadcrumbWidget extends StatelessWidget {
                   Icon(
                     item.icon,
                     size: fontSize,
-                    color: isLast ? textColor : textColor.withOpacity(0.7),
+                    color: isLast ? textColor : textColor.withValues(alpha: 0.7),
                   ),
                   const SizedBox(width: 4),
                 ],
@@ -86,7 +86,7 @@ class BreadcrumbWidget extends StatelessWidget {
                   item.label,
                   style: TextStyle(
                     fontSize: fontSize,
-                    color: isLast ? textColor : textColor.withOpacity(0.7),
+                    color: isLast ? textColor : textColor.withValues(alpha: 0.7),
                     fontWeight: isLast ? FontWeight.w500 : FontWeight.normal,
                     decoration:
                         item.onTap != null && !isLast

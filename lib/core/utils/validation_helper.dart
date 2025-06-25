@@ -138,12 +138,12 @@ class ValidationHelper {
 
       // 危険なスキームをチェック
       final dangerousSchemes = ['javascript', 'data', 'file', 'ftp'];
-      if (dangerousSchemes.contains(uri.scheme?.toLowerCase())) {
+      if (dangerousSchemes.contains(uri.scheme.toLowerCase())) {
         return false;
       }
 
       // HTTPSのみ許可（HTTP は開発環境を除いて危険）
-      if (uri.scheme?.toLowerCase() != 'https') {
+      if (uri.scheme.toLowerCase() != 'https') {
         return false;
       }
 
