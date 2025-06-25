@@ -155,6 +155,7 @@ class _UserReviewHistoryContent extends ConsumerWidget {
 
         return RefreshIndicator(
           onRefresh: () async {
+            // ignore: unused_result
             ref.refresh(userReviewsProvider(userId));
           },
           child: CustomScrollView(
@@ -272,6 +273,7 @@ class _UserReviewHistoryContent extends ConsumerWidget {
                             );
 
                             if (result == true) {
+                              // ignore: unused_result
                               ref.refresh(userReviewsProvider(userId));
                             }
                           },
@@ -308,6 +310,7 @@ class _UserReviewHistoryContent extends ConsumerWidget {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
+                    // ignore: unused_result
                     ref.refresh(userReviewsProvider(userId));
                   },
                   child: const Text('再試行'),
@@ -344,6 +347,7 @@ class _UserReviewHistoryContent extends ConsumerWidget {
                           backgroundColor: Colors.green,
                         ),
                       );
+                      // ignore: unused_result
                       ref.refresh(userReviewsProvider(userId));
                     }
                   } catch (e) {

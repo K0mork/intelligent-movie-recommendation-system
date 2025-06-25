@@ -12,7 +12,6 @@ import 'features/auth/presentation/pages/settings_page.dart';
 import 'features/auth/presentation/widgets/user_avatar.dart';
 import 'features/auth/presentation/providers/auth_controller.dart';
 import 'features/movies/presentation/pages/movies_page.dart';
-import 'features/reviews/presentation/pages/reviews_page.dart';
 import 'features/reviews/presentation/pages/user_review_history_page.dart';
 import 'features/reviews/presentation/pages/integrated_reviews_page.dart';
 import 'features/recommendations/presentation/pages/recommendations_page.dart';

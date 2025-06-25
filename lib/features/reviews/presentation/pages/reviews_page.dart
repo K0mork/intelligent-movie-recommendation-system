@@ -88,6 +88,7 @@ class _MyReviewsTab extends ConsumerWidget {
       data: (reviews) {
         return RefreshIndicator(
           onRefresh: () async {
+            // ignore: unused_result
             ref.refresh(userReviewsProvider(userId));
           },
           child: Padding(
@@ -112,6 +113,7 @@ class _MyReviewsTab extends ConsumerWidget {
                 );
 
                 if (result == true) {
+                  // ignore: unused_result
                   ref.refresh(userReviewsProvider(userId));
                 }
               },
@@ -139,6 +141,7 @@ class _MyReviewsTab extends ConsumerWidget {
             message: 'レビューデータの取得に失敗しました',
             icon: Icons.rate_review_outlined,
             onRetry: () {
+              // ignore: unused_result
               ref.refresh(userReviewsProvider(userId));
             },
           ),
@@ -165,6 +168,7 @@ class _MyReviewsTab extends ConsumerWidget {
             .deleteReview(review.id);
         if (context.mounted) {
           SnackBarHelper.showSuccess(context, 'レビューを削除しました');
+          // ignore: unused_result
           ref.refresh(userReviewsProvider(userId));
         }
       } catch (e) {

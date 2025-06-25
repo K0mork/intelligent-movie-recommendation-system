@@ -23,7 +23,6 @@ class ReviewHistoryTabView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
-    final theme = Theme.of(context);
 
     return authState.when(
       data: (user) {
@@ -56,6 +55,7 @@ class ReviewHistoryTabView extends ConsumerWidget {
 
     return RefreshIndicator(
       onRefresh: () async {
+        // ignore: unused_result
         ref.refresh(userReviewsProvider(userId));
         onRefresh?.call();
       },
@@ -171,7 +171,7 @@ class ReviewHistoryTabView extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer.withOpacity(0.5),
+        color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -310,6 +310,7 @@ class ReviewHistoryTabView extends ConsumerWidget {
   Future<void> _deleteReview(WidgetRef ref, dynamic review) async {
     try {
       await ref.read(reviewRepositoryProvider).deleteReview(review.id);
+      // ignore: unused_result
       ref.refresh(userReviewsProvider(review.userId));
     } catch (e) {
       // エラーハンドリングは上位で処理

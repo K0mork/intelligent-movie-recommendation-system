@@ -25,8 +25,13 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: subtype_of_sealed_class
 
 class _FakeMovie_0 extends _i1.SmartFake implements _i2.Movie {
-  _FakeMovie_0(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+  _FakeMovie_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
 }
 
 /// A class which mocks [MovieRepository].
@@ -40,10 +45,13 @@ class MockMovieRepository extends _i1.Mock implements _i3.MovieRepository {
   @override
   _i4.Future<List<_i2.Movie>> getPopularMovies({int? page = 1}) =>
       (super.noSuchMethod(
-            Invocation.method(#getPopularMovies, [], {#page: page}),
-            returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
-          )
-          as _i4.Future<List<_i2.Movie>>);
+        Invocation.method(
+          #getPopularMovies,
+          [],
+          {#page: page},
+        ),
+        returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
+      ) as _i4.Future<List<_i2.Movie>>);
 
   @override
   _i4.Future<List<_i2.Movie>> searchMovies(
@@ -52,59 +60,78 @@ class MockMovieRepository extends _i1.Mock implements _i3.MovieRepository {
     int? year,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(
-              #searchMovies,
-              [query],
-              {#page: page, #year: year},
-            ),
-            returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
-          )
-          as _i4.Future<List<_i2.Movie>>);
+        Invocation.method(
+          #searchMovies,
+          [query],
+          {
+            #page: page,
+            #year: year,
+          },
+        ),
+        returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
+      ) as _i4.Future<List<_i2.Movie>>);
 
   @override
-  _i4.Future<_i2.Movie> getMovieDetails(int? movieId) =>
-      (super.noSuchMethod(
-            Invocation.method(#getMovieDetails, [movieId]),
-            returnValue: _i4.Future<_i2.Movie>.value(
-              _FakeMovie_0(
-                this,
-                Invocation.method(#getMovieDetails, [movieId]),
-              ),
-            ),
-          )
-          as _i4.Future<_i2.Movie>);
+  _i4.Future<_i2.Movie> getMovieDetails(int? movieId) => (super.noSuchMethod(
+        Invocation.method(
+          #getMovieDetails,
+          [movieId],
+        ),
+        returnValue: _i4.Future<_i2.Movie>.value(_FakeMovie_0(
+          this,
+          Invocation.method(
+            #getMovieDetails,
+            [movieId],
+          ),
+        )),
+      ) as _i4.Future<_i2.Movie>);
 
   @override
   _i4.Future<List<_i2.Movie>> getTopRatedMovies({int? page = 1}) =>
       (super.noSuchMethod(
-            Invocation.method(#getTopRatedMovies, [], {#page: page}),
-            returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
-          )
-          as _i4.Future<List<_i2.Movie>>);
+        Invocation.method(
+          #getTopRatedMovies,
+          [],
+          {#page: page},
+        ),
+        returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
+      ) as _i4.Future<List<_i2.Movie>>);
 
   @override
   _i4.Future<List<_i2.Movie>> getNowPlayingMovies({int? page = 1}) =>
       (super.noSuchMethod(
-            Invocation.method(#getNowPlayingMovies, [], {#page: page}),
-            returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
-          )
-          as _i4.Future<List<_i2.Movie>>);
+        Invocation.method(
+          #getNowPlayingMovies,
+          [],
+          {#page: page},
+        ),
+        returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
+      ) as _i4.Future<List<_i2.Movie>>);
 
   @override
   _i4.Future<List<_i2.Movie>> getUpcomingMovies({int? page = 1}) =>
       (super.noSuchMethod(
-            Invocation.method(#getUpcomingMovies, [], {#page: page}),
-            returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
-          )
-          as _i4.Future<List<_i2.Movie>>);
+        Invocation.method(
+          #getUpcomingMovies,
+          [],
+          {#page: page},
+        ),
+        returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
+      ) as _i4.Future<List<_i2.Movie>>);
 
   @override
-  _i4.Future<List<_i2.Movie>> getSimilarMovies(int? movieId, {int? page = 1}) =>
+  _i4.Future<List<_i2.Movie>> getSimilarMovies(
+    int? movieId, {
+    int? page = 1,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#getSimilarMovies, [movieId], {#page: page}),
-            returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
-          )
-          as _i4.Future<List<_i2.Movie>>);
+        Invocation.method(
+          #getSimilarMovies,
+          [movieId],
+          {#page: page},
+        ),
+        returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
+      ) as _i4.Future<List<_i2.Movie>>);
 
   @override
   _i4.Future<List<_i2.Movie>> getRecommendedMovies(
@@ -112,8 +139,11 @@ class MockMovieRepository extends _i1.Mock implements _i3.MovieRepository {
     int? page = 1,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#getRecommendedMovies, [movieId], {#page: page}),
-            returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
-          )
-          as _i4.Future<List<_i2.Movie>>);
+        Invocation.method(
+          #getRecommendedMovies,
+          [movieId],
+          {#page: page},
+        ),
+        returnValue: _i4.Future<List<_i2.Movie>>.value(<_i2.Movie>[]),
+      ) as _i4.Future<List<_i2.Movie>>);
 }

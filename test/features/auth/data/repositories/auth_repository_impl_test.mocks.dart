@@ -34,56 +34,67 @@ class MockAuthRemoteDataSource extends _i1.Mock
   }
 
   @override
-  _i3.Stream<_i4.AppUser?> authStateChanges() =>
-      (super.noSuchMethod(
-            Invocation.method(#authStateChanges, []),
-            returnValue: _i3.Stream<_i4.AppUser?>.empty(),
-          )
-          as _i3.Stream<_i4.AppUser?>);
+  _i3.Stream<_i4.AppUser?> authStateChanges() => (super.noSuchMethod(
+        Invocation.method(
+          #authStateChanges,
+          [],
+        ),
+        returnValue: _i3.Stream<_i4.AppUser?>.empty(),
+      ) as _i3.Stream<_i4.AppUser?>);
 
   @override
-  _i3.Future<_i4.AppUser?> signInWithGoogle() =>
-      (super.noSuchMethod(
-            Invocation.method(#signInWithGoogle, []),
-            returnValue: _i3.Future<_i4.AppUser?>.value(),
-          )
-          as _i3.Future<_i4.AppUser?>);
+  _i3.Future<_i4.AppUser?> signInWithGoogle() => (super.noSuchMethod(
+        Invocation.method(
+          #signInWithGoogle,
+          [],
+        ),
+        returnValue: _i3.Future<_i4.AppUser?>.value(),
+      ) as _i3.Future<_i4.AppUser?>);
 
   @override
-  _i3.Future<_i4.AppUser?> signInAnonymously() =>
-      (super.noSuchMethod(
-            Invocation.method(#signInAnonymously, []),
-            returnValue: _i3.Future<_i4.AppUser?>.value(),
-          )
-          as _i3.Future<_i4.AppUser?>);
+  _i3.Future<_i4.AppUser?> signInAnonymously() => (super.noSuchMethod(
+        Invocation.method(
+          #signInAnonymously,
+          [],
+        ),
+        returnValue: _i3.Future<_i4.AppUser?>.value(),
+      ) as _i3.Future<_i4.AppUser?>);
 
   @override
-  _i3.Future<void> signOut() =>
-      (super.noSuchMethod(
-            Invocation.method(#signOut, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> signOut() => (super.noSuchMethod(
+        Invocation.method(
+          #signOut,
+          [],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> deleteAccount() =>
-      (super.noSuchMethod(
-            Invocation.method(#deleteAccount, []),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> deleteAccount() => (super.noSuchMethod(
+        Invocation.method(
+          #deleteAccount,
+          [],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> updateProfile({String? displayName, String? photoURL}) =>
+  _i3.Future<void> updateProfile({
+    String? displayName,
+    String? photoURL,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#updateProfile, [], {
-              #displayName: displayName,
-              #photoURL: photoURL,
-            }),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+        Invocation.method(
+          #updateProfile,
+          [],
+          {
+            #displayName: displayName,
+            #photoURL: photoURL,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }

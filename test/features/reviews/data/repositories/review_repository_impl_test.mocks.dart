@@ -26,8 +26,13 @@ import 'package:mockito/src/dummies.dart' as _i5;
 // ignore_for_file: subtype_of_sealed_class
 
 class _FakeReviewModel_0 extends _i1.SmartFake implements _i2.ReviewModel {
-  _FakeReviewModel_0(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+  _FakeReviewModel_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
 }
 
 /// A class which mocks [ReviewRemoteDataSource].
@@ -45,67 +50,78 @@ class MockReviewRemoteDataSource extends _i1.Mock
     String? movieId,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#getReviews, [], {
-              #userId: userId,
-              #movieId: movieId,
-            }),
-            returnValue: _i4.Future<List<_i2.ReviewModel>>.value(
-              <_i2.ReviewModel>[],
-            ),
-          )
-          as _i4.Future<List<_i2.ReviewModel>>);
+        Invocation.method(
+          #getReviews,
+          [],
+          {
+            #userId: userId,
+            #movieId: movieId,
+          },
+        ),
+        returnValue:
+            _i4.Future<List<_i2.ReviewModel>>.value(<_i2.ReviewModel>[]),
+      ) as _i4.Future<List<_i2.ReviewModel>>);
 
   @override
   _i4.Future<_i2.ReviewModel> getReview(String? reviewId) =>
       (super.noSuchMethod(
-            Invocation.method(#getReview, [reviewId]),
-            returnValue: _i4.Future<_i2.ReviewModel>.value(
-              _FakeReviewModel_0(
-                this,
-                Invocation.method(#getReview, [reviewId]),
-              ),
-            ),
-          )
-          as _i4.Future<_i2.ReviewModel>);
+        Invocation.method(
+          #getReview,
+          [reviewId],
+        ),
+        returnValue: _i4.Future<_i2.ReviewModel>.value(_FakeReviewModel_0(
+          this,
+          Invocation.method(
+            #getReview,
+            [reviewId],
+          ),
+        )),
+      ) as _i4.Future<_i2.ReviewModel>);
 
   @override
   _i4.Future<String> createReview(_i2.ReviewModel? review) =>
       (super.noSuchMethod(
-            Invocation.method(#createReview, [review]),
-            returnValue: _i4.Future<String>.value(
-              _i5.dummyValue<String>(
-                this,
-                Invocation.method(#createReview, [review]),
-              ),
-            ),
-          )
-          as _i4.Future<String>);
+        Invocation.method(
+          #createReview,
+          [review],
+        ),
+        returnValue: _i4.Future<String>.value(_i5.dummyValue<String>(
+          this,
+          Invocation.method(
+            #createReview,
+            [review],
+          ),
+        )),
+      ) as _i4.Future<String>);
 
   @override
-  _i4.Future<void> updateReview(_i2.ReviewModel? review) =>
-      (super.noSuchMethod(
-            Invocation.method(#updateReview, [review]),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
-          )
-          as _i4.Future<void>);
+  _i4.Future<void> updateReview(_i2.ReviewModel? review) => (super.noSuchMethod(
+        Invocation.method(
+          #updateReview,
+          [review],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  _i4.Future<void> deleteReview(String? reviewId) =>
-      (super.noSuchMethod(
-            Invocation.method(#deleteReview, [reviewId]),
-            returnValue: _i4.Future<void>.value(),
-            returnValueForMissingStub: _i4.Future<void>.value(),
-          )
-          as _i4.Future<void>);
+  _i4.Future<void> deleteReview(String? reviewId) => (super.noSuchMethod(
+        Invocation.method(
+          #deleteReview,
+          [reviewId],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
   _i4.Future<List<_i2.ReviewModel>> getUserReviews(String? userId) =>
       (super.noSuchMethod(
-            Invocation.method(#getUserReviews, [userId]),
-            returnValue: _i4.Future<List<_i2.ReviewModel>>.value(
-              <_i2.ReviewModel>[],
-            ),
-          )
-          as _i4.Future<List<_i2.ReviewModel>>);
+        Invocation.method(
+          #getUserReviews,
+          [userId],
+        ),
+        returnValue:
+            _i4.Future<List<_i2.ReviewModel>>.value(<_i2.ReviewModel>[]),
+      ) as _i4.Future<List<_i2.ReviewModel>>);
 }
