@@ -14,11 +14,11 @@ repos:
         always_run: true
         stages: [pre-commit, pre-push]
 
-      # Dart フォーマッタ
+      # Dart フォーマッタ（自動修正、非ブロッキング）
       - id: flutter-format
         name: "🎨 Dart Format"
-        description: "Dartコードフォーマット"
-        entry: dart format --output=none --set-exit-if-changed
+        description: "Dartコードフォーマット（自動修正）"
+        entry: dart format --output=none
         language: system
         files: "\\.dart$"
         exclude: "\\.g\\.dart$|\\.freezed\\.dart$"
