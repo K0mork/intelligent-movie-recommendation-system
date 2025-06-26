@@ -93,6 +93,9 @@ Analytics: Firebase Analytics
 Performance: Firebase Performance Monitoring
 ```
 
+**Cloud Functions**:
+バックエンドロジックはすべてTypeScriptで実装されたCallable Functionsとして提供されます。具体的な関数の一覧と仕様については、[APIドキュメント](./API_DOCUMENTATION.md)を参照してください。
+
 **Firestore コレクション構成**:
 ```typescript
 // 本番稼働中のデータベース構造

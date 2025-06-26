@@ -1,403 +1,110 @@
-# 📚 API ドキュメント
+# 📚 API ドキュメント (v2.0.0)
 
 ## 概要
 
-インテリジェント映画レコメンドシステムのAPI仕様書です。
+インテリジェント映画レコメンドシステム「FilmFlow」のAPI仕様書です。このドキュメントは、現在のソースコードに基づいた最新の仕様を反映しています。
 
-## 🔧 技術構成
+## 🔧 アーキテクチャ
 
-### バックエンドアーキテクチャ
-- **Cloud Functions**: TypeScript実装のサーバーレス関数
-- **Firebase Authentication**: ユーザー認証管理
-- **Cloud Firestore**: NoSQLデータベース
-- **Google Gemini API**: AI分析エンジン
+- **Cloud Functions for Firebase**: バックエンドロジックはすべてTypeScriptで実装されたサーバーレス関数です。
+- **呼び出し方式**: APIはRESTエンドポイントではなく、**Firebase Callable Functions** として提供されます。クライアント（Web/Mobileアプリ）はFirebase SDKを通じて各関数を直接呼び出します。
+- **Firebase Authentication**: ユーザー認証を管理します。Callable Functionsは呼び出し時に自動的にユーザーの認証情報を検証します。
+- **Cloud Firestore**: アプリケーションのメインデータベースとして使用されます。
+- **Google Gemini API**: レビュー分析や推薦理由の生成などのAI機能に使用されます。
 
-## 🔐 認証
+### クライアントでの呼び出し例 (JavaScript)
 
-すべてのAPIエンドポイント（パブリックを除く）は Firebase Authentication トークンが必要です。
+```javascript
+import { getFunctions, httpsCallable } from "firebase/functions";
 
-```typescript
-// リクエストヘッダー例
-headers: {
-  'Authorization': 'Bearer ${idToken}',
-  'Content-Type': 'application/json'
+const functions = getFunctions();
+const searchMovies = httpsCallable(functions, 'searchMovies');
+
+try {
+  const result = await searchMovies({ query: 'Inception', page: 1 });
+  const movies = result.data.movies;
+  console.log(movies);
+} catch (error) {
+  console.error("Error calling searchMovies:", error);
 }
 ```
 
-## 📋 API エンドポイント
+## 📋 API関数一覧
 
-### 🎬 映画API
+### 👤 認証 (Auth)
 
-#### `GET /api/movies/popular`
-人気映画の一覧を取得
+`authHandlers.ts` で定義されています。
 
-**パラメータ:**
-- `page` (optional): ページ番号 (デフォルト: 1)
-- `limit` (optional): 取得件数 (デフォルト: 20)
+- **`getUserProfile`**: 呼び出し元ユーザーのプロフィール情報を取得します。
+- **`updateUserProfile`**: ユーザーのプロフィール情報（表示名、設定など）を更新します。
+- **`exportUserData`**: ユーザーに関連する全データをエクスポートする非同期タスクを開始します。
+- **`deleteUserAccount`**: ユーザーアカウントと関連データをすべて削除します。
 
-**レスポンス:**
-```json
-{
-  "movies": [
-    {
-      "id": 12345,
-      "title": "映画タイトル",
-      "overview": "映画の概要",
-      "posterPath": "/poster.jpg",
-      "backdropPath": "/backdrop.jpg",
-      "releaseDate": "2023-01-01",
-      "voteAverage": 7.5,
-      "genres": ["Action", "Adventure"]
-    }
-  ],
-  "totalPages": 100,
-  "currentPage": 1
-}
-```
+### 🎬 映画 (Movies)
 
-#### `GET /api/movies/search`
-映画検索
+`movieHandlers.ts` で定義されています。
 
-**パラメータ:**
-- `query` (required): 検索クエリ
-- `page` (optional): ページ番号
+- **`searchMovies`**: キーワードで映画を検索します。
+- **`getPopularMovies`**: 現在の人気映画一覧を取得します。
+- **`getMoviesByGenre`**: 指定されたジャンルの映画一覧を取得します。
+- **`getMovieDetails`**: 特定の映画の詳細情報を取得します。
+- **`getSimilarMovies`**: 特定の映画に類似した映画を取得します。
+- **`getMovieStats`**: 映画に関する統計情報（レビュー数など）を取得します。
+- **`getMovieTrends`**: 最近のトレンド映画を取得します。
+- **`getNewReleases`**: 最新のリリース作品を取得します。
+- **`initializeSampleMovies`**: (開発用) サンプル映画データをDBに投入します。
 
-**レスポンス:**
-```json
-{
-  "movies": [...],
-  "totalResults": 250,
-  "totalPages": 13,
-  "currentPage": 1
-}
-```
+### ⭐ レビュー (Reviews)
 
-#### `GET /api/movies/{movieId}`
-映画詳細情報取得
+`reviewHandlers.ts` で定義されています。
 
-**レスポンス:**
-```json
-{
-  "id": 12345,
-  "title": "映画タイトル",
-  "overview": "詳細な映画の概要",
-  "runtime": 120,
-  "genres": [...],
-  "cast": [...],
-  "crew": [...],
-  "videos": [...],
-  "images": [...]
-}
-```
+- **`analyzeReviewWithService`**: 投稿されたレビューをAIで分析します。（`onReviewCreated`トリガーから呼び出されるのが主）
+- **`getReviewAnalysis`**: 特定のレビューの分析結果を取得します。
+- **`getUserPreferences`**: ユーザーのレビュー履歴から推測される好みを返します。
+- **`getUserReviewStats`**: ユーザーのレビューに関する統計情報（平均評価など）を取得します。
+- **`addReviewComment`**: レビューに対してコメントを追加します。
+- **`getReviewComments`**: 特定のレビューに紐づくコメント一覧を取得します。
+- **`batchUpdateReviewAnalysis`**: (管理用) 複数のレビューをまとめて再分析します。
+- **`onReviewCreated` (Firestoreトリガー)**: 新しいレビューが作成された際に自動的に `analyzeReviewWithService` を実行します。
 
-### ⭐ レビューAPI
+### 🤖 推薦 (Recommendations)
 
-#### `POST /api/reviews`
-レビュー投稿
+`recommendationHandlers.ts` で定義されています。
 
-**認証**: 必須
+- **`generatePersonalizedRecommendations`**: ユーザーにパーソナライズされた映画の推薦リストを生成します。
+- **`getSavedRecommendations`**: ユーザーが保存した推薦リストを取得します。
+- **`recordRecommendationFeedback`**: 推薦結果に対するユーザーからのフィードバック（役に立ったかなど）を記録します。
+- **`updateRecommendationSettings`**: 推薦の生成に関するユーザー設定（好みのジャンルなど）を更新します。
+- **`getRecommendationExplanation`**: なぜその映画が推薦されたのか、理由を説明します。
+- **`getSimilarUserRecommendations`**: 類似した嗜好を持つ他のユーザーが高く評価した映画を推薦します。
+- **`getTrendingRecommendations`**: 現在、他のユーザーの間で話題になっている映画を推薦します。
+- **`getRecommendationStats`**: 推薦システムのパフォーマンスに関する統計情報を取得します。
+- **`retrainRecommendationModel`**: (管理用) 推薦モデルの再学習プロセスを開始します。
 
-**リクエストボディ:**
-```json
-{
-  "movieId": "12345",
-  "movieTitle": "映画タイトル",
-  "rating": 4.5,
-  "comment": "素晴らしい映画でした",
-  "watchedDate": "2023-12-01T00:00:00Z"
-}
-```
+### 🔧 システム (System)
 
-**レスポンス:**
-```json
-{
-  "id": "review_id_123",
-  "userId": "user_id_456",
-  "movieId": "12345",
-  "rating": 4.5,
-  "comment": "素晴らしい映画でした",
-  "watchedDate": "2023-12-01T00:00:00Z",
-  "createdAt": "2023-12-01T10:30:00Z",
-  "updatedAt": "2023-12-01T10:30:00Z"
-}
-```
+`index.ts` で定義されています。
 
-#### `GET /api/reviews/user/{userId}`
-ユーザーレビュー一覧取得
+- **`healthCheck`**: APIサーバーの稼働状況を確認するためのエンドポイントです。HTTP GETリクエストでアクセス可能です。
+- **`cleanupDatabase` (Pub/Subトリガー)**: 24時間ごとに実行され、古いログなどの不要なデータをDBから削除します。
 
-**認証**: 必須（自分のレビューのみ）
+### 🗑️ 非推奨 (Legacy)
 
-**レスポンス:**
-```json
-{
-  "reviews": [
-    {
-      "id": "review_id_123",
-      "movieId": "12345",
-      "movieTitle": "映画タイトル",
-      "rating": 4.5,
-      "comment": "素晴らしい映画でした",
-      "watchedDate": "2023-12-01T00:00:00Z",
-      "createdAt": "2023-12-01T10:30:00Z"
-    }
-  ],
-  "totalCount": 25
-}
-```
+古いクライアントとの互換性のために残されていますが、新規開発での使用は推奨されません。
 
-#### `PUT /api/reviews/{reviewId}`
-レビュー編集
-
-**認証**: 必須（レビュー作成者のみ）
-
-**リクエストボディ:**
-```json
-{
-  "rating": 5.0,
-  "comment": "更新されたレビュー内容",
-  "watchedDate": "2023-12-01T00:00:00Z"
-}
-```
-
-#### `DELETE /api/reviews/{reviewId}`
-レビュー削除
-
-**認証**: 必須（レビュー作成者のみ）
-
-### 🤖 AI推薦API
-
-#### `POST /api/recommendations/analyze`
-レビュー分析実行
-
-**認証**: 必須
-
-**リクエストボディ:**
-```json
-{
-  "reviewId": "review_id_123"
-}
-```
-
-**レスポンス:**
-```json
-{
-  "analysisId": "analysis_id_456",
-  "sentiment": {
-    "score": 0.8,
-    "magnitude": 0.9,
-    "overall": "positive"
-  },
-  "preferences": {
-    "genres": ["Action", "Adventure"],
-    "themes": ["heroic", "adventure"],
-    "mood": "uplifting"
-  },
-  "status": "completed"
-}
-```
-
-#### `GET /api/recommendations/user/{userId}`
-ユーザー向け推薦取得
-
-**認証**: 必須
-
-**レスポンス:**
-```json
-{
-  "recommendations": [
-    {
-      "movieId": "67890",
-      "movieTitle": "推薦映画",
-      "score": 0.95,
-      "reasons": [
-        "アクション映画がお気に入りのようです",
-        "冒険テーマの作品を高く評価しています"
-      ],
-      "confidence": 0.85
-    }
-  ],
-  "generatedAt": "2023-12-01T15:00:00Z",
-  "basedOnReviews": 15
-}
-```
-
-#### `POST /api/recommendations/feedback`
-推薦フィードバック送信
-
-**認証**: 必須
-
-**リクエストボディ:**
-```json
-{
-  "recommendationId": "rec_id_789",
-  "feedback": "helpful", // "helpful" | "not_helpful" | "irrelevant"
-  "reason": "とても良い推薦でした"
-}
-```
-
-### 👤 ユーザープロフィールAPI
-
-#### `GET /api/profile`
-ユーザープロフィール取得
-
-**認証**: 必須
-
-**レスポンス:**
-```json
-{
-  "userId": "user_id_456",
-  "displayName": "ユーザー名",
-  "email": "user@example.com",
-  "photoURL": "https://example.com/avatar.jpg",
-  "preferences": {
-    "favoriteGenres": ["Action", "Sci-Fi"],
-    "preferredRating": "PG-13",
-    "language": "ja"
-  },
-  "stats": {
-    "totalReviews": 25,
-    "averageRating": 4.2,
-    "favoriteGenres": ["Action", "Adventure"]
-  }
-}
-```
-
-## 📊 データモデル
-
-### Movie (映画)
-```typescript
-interface Movie {
-  id: number;
-  title: string;
-  overview: string;
-  posterPath?: string;
-  backdropPath?: string;
-  releaseDate: string;
-  voteAverage: number;
-  genres: string[];
-  runtime?: number;
-  originalLanguage: string;
-}
-```
-
-### Review (レビュー)
-```typescript
-interface Review {
-  id: string;
-  userId: string;
-  movieId: string;
-  movieTitle: string;
-  rating: number; // 1-5
-  comment?: string;
-  watchedDate?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
-
-### Recommendation (推薦)
-```typescript
-interface Recommendation {
-  id: string;
-  userId: string;
-  movieId: string;
-  score: number; // 0-1
-  reasons: string[];
-  confidence: number; // 0-1
-  basedOnReviews: string[];
-  generatedAt: Date;
-}
-```
-
-### AIAnalysis (AI分析)
-```typescript
-interface AIAnalysis {
-  id: string;
-  reviewId: string;
-  sentiment: {
-    score: number; // -1 to 1
-    magnitude: number; // 0 to 1
-    overall: 'positive' | 'negative' | 'neutral';
-  };
-  preferences: {
-    genres: string[];
-    themes: string[];
-    mood: string;
-  };
-  processedAt: Date;
-}
-```
+- **`analyzeReview`**: `analyzeReviewWithService` の古いバージョンです。
+- **`getRecommendations`**: `generatePersonalizedRecommendations` の古いバージョンです。
 
 ## 🚨 エラーハンドリング
 
-### エラーレスポンス形式
-```json
-{
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "入力データが無効です",
-    "details": {
-      "field": "rating",
-      "reason": "1-5の範囲で入力してください"
-    }
-  },
-  "timestamp": "2023-12-01T10:30:00Z"
-}
-```
+Callable Functionsでは、エラーは例外としてクライアントに返されます。エラーオブジェクトには `code` と `message` プロパティが含まれます。
 
-### エラーコード一覧
+### 主なエラーコード
 
-| コード | 説明 | HTTPステータス |
-|--------|------|----------------|
-| `UNAUTHORIZED` | 認証が必要 | 401 |
-| `FORBIDDEN` | 権限不足 | 403 |
-| `NOT_FOUND` | リソースが見つからない | 404 |
-| `VALIDATION_ERROR` | 入力検証エラー | 400 |
-| `RATE_LIMIT_EXCEEDED` | レート制限超過 | 429 |
-| `INTERNAL_ERROR` | サーバー内部エラー | 500 |
-| `SERVICE_UNAVAILABLE` | サービス利用不可 | 503 |
-
-## 📈 レート制限
-
-| エンドポイント | 制限 |
-|---------------|------|
-| 映画検索 | 100リクエスト/分 |
-| レビュー投稿 | 10リクエスト/分 |
-| AI分析 | 20リクエスト/時間 |
-| 推薦取得 | 50リクエスト/時間 |
-
-## 🔧 開発・テスト用
-
-### ローカル開発
-```bash
-# Cloud Functions エミュレーター起動
-firebase emulators:start --only functions
-
-# ベースURL
-http://localhost:5001/movie-recommendation-sys-21b5d/us-central1
-```
-
-### テスト用APIキー
-テスト環境では以下のプレフィックスを持つAPIキーを使用：
-```
-test_api_key_xxxxx
-```
-
-## 📝 変更履歴
-
-### v1.0.0 (2023-12-01)
-- 初回リリース
-- 基本的な映画・レビュー・推薦API実装
-
-### v1.1.0 (予定)
-- Cloud Functionsデプロイ対応
-- パフォーマンス最適化
-- 詳細なエラーハンドリング
-
----
-
-## 📞 サポート
-
-APIに関する質問や問題は以下で報告してください：
-- **GitHub Issues**: プロジェクトのIssuesページ
-- **ドキュメント**: [API設計書](./API_DESIGN.md)
+| code | 説明 |
+|---|---|
+| `unauthenticated` | ユーザーが認証されていません。 |
+| `permission-denied` | 呼び出し元に操作の権限がありません。 |
+| `not-found` | 要求されたリソースが見つかりません。 |
+| `invalid-argument` | 関数に渡された引数が無効です。 |
+| `internal` | サーバー内部で予期せぬエラーが発生しました。 |
