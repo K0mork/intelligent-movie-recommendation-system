@@ -13,7 +13,8 @@ export class SentimentBasedStrategy extends BaseRecommendationStrategy {
 
   constructor(weight: number = 0.2) {
     super(weight, 'sentiment_based');
-    this.genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '');
+    const apiKey = process.env.GEMINI_API_KEY || '';
+    this.genAI = new GoogleGenerativeAI(apiKey);
   }
 
   async recommend(

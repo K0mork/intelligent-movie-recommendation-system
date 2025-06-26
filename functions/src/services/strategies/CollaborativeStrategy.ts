@@ -8,7 +8,9 @@ import { MovieData, UserProfile, RecommendationResult } from '../recommendationE
  * 類似ユーザーの評価データを基に推薦を行う
  */
 export class CollaborativeStrategy extends BaseRecommendationStrategy {
-  private readonly db = getFirestore();
+  private getDb() {
+    return getFirestore();
+  }
 
   constructor(weight: number = 0.3) {
     super(weight, 'collaborative');
@@ -59,7 +61,7 @@ export class CollaborativeStrategy extends BaseRecommendationStrategy {
    * 類似ユーザーを発見
    */
   private async findSimilarUsers(targetUser: UserProfile): Promise<SimilarUser[]> {
-    const usersRef = this.db.collection('userProfiles');
+    const usersRef = this.getDb().collection('userProfiles');
     const usersSnapshot = await usersRef.limit(100).get(); // パフォーマンス考慮で制限
 
     const similarUsers: SimilarUser[] = [];
@@ -117,10 +119,11 @@ export class CollaborativeStrategy extends BaseRecommendationStrategy {
     weights += 0.2;
 
     // 評価傾向の類似度
-    const ratingDiff = Math.abs((user1.averageRating || 0) - (user2.averageRating || 0));
-    const ratingSimilarity = Math.max(0, 1 - ratingDiff / 5); // 5点差で完全非類似
-    totalSimilarity += ratingSimilarity * 0.1;
-    weights += 0.1;
+    // UserProfileにaverageRatingがないため、この部分はスキップまたは別の方法で計算
+    // const ratingDiff = Math.abs((user1.averageRating || 0) - (user2.averageRating || 0));
+    // const ratingSimilarity = Math.max(0, 1 - ratingDiff / 5); // 5点差で完全非類似
+    // totalSimilarity += ratingSimilarity * 0.1;
+    // weights += 0.1;
 
     return weights > 0 ? totalSimilarity / weights : 0;
   }
@@ -226,7 +229,7 @@ export class CollaborativeStrategy extends BaseRecommendationStrategy {
    * ユーザーのレビューデータを取得
    */
   private async getUserReviews(userId: string): Promise<UserReview[]> {
-    const reviewsRef = this.db.collection('reviews');
+    const reviewsRef = this.getDb().collection('reviews');
     const reviewsSnapshot = await reviewsRef
       .where('userId', '==', userId)
       .where('rating', '>=', 3) // 評価3以上のみ（推薦対象として）

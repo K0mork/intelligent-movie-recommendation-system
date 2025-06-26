@@ -6,10 +6,8 @@ import { MovieData } from './recommendationEngine';
  * 映画データ管理用のユーティリティクラス
  */
 export class MovieDataUtils {
-  private db: FirebaseFirestore.Firestore;
-
-  constructor() {
-    this.db = getFirestore();
+  private getDb() {
+    return getFirestore();
   }
 
   /**
@@ -122,10 +120,10 @@ export class MovieDataUtils {
       ];
 
       // 映画データをFirestoreに保存
-      const batch = this.db.batch();
+      const batch = this.getDb().batch();
 
       for (const movie of sampleMovies) {
-        const movieRef = this.db.collection('movies').doc();
+        const movieRef = this.getDb().collection('movies').doc();
         batch.set(movieRef, movie);
       }
 
@@ -144,7 +142,7 @@ export class MovieDataUtils {
   async searchMovies(query: string, limit: number = 20): Promise<MovieData[]> {
     try {
       // タイトルでの部分一致検索
-      const titleQuery = this.db.collection('movies')
+      const titleQuery = this.getDb().collection('movies')
         .where('title', '>=', query)
         .where('title', '<=', query + '\uf8ff')
         .limit(limit);
@@ -157,7 +155,7 @@ export class MovieDataUtils {
 
       // ジャンルでの検索も追加
       if (movies.length < limit) {
-        const genreQuery = this.db.collection('movies')
+        const genreQuery = this.getDb().collection('movies')
           .where('genres', 'array-contains', query.toLowerCase())
           .limit(limit - movies.length);
 
@@ -183,7 +181,7 @@ export class MovieDataUtils {
    */
   async getPopularMovies(limit: number = 20): Promise<MovieData[]> {
     try {
-      const moviesQuery = this.db.collection('movies')
+      const moviesQuery = this.getDb().collection('movies')
         .where('rating', '>=', 7.0)
         .orderBy('rating', 'desc')
         .limit(limit);
@@ -206,7 +204,7 @@ export class MovieDataUtils {
    */
   async getMoviesByGenre(genre: string, limit: number = 20): Promise<MovieData[]> {
     try {
-      const moviesQuery = this.db.collection('movies')
+      const moviesQuery = this.getDb().collection('movies')
         .where('genres', 'array-contains', genre.toLowerCase())
         .orderBy('rating', 'desc')
         .limit(limit);
@@ -229,7 +227,7 @@ export class MovieDataUtils {
    */
   async getMovie(movieId: string): Promise<MovieData | null> {
     try {
-      const movieDoc = await this.db.collection('movies').doc(movieId).get();
+      const movieDoc = await this.getDb().collection('movies').doc(movieId).get();
 
       if (!movieDoc.exists) {
         return null;
@@ -251,7 +249,7 @@ export class MovieDataUtils {
    */
   async updateMovie(movieId: string, updates: Partial<Omit<MovieData, 'id'>>): Promise<void> {
     try {
-      await this.db.collection('movies').doc(movieId).update(updates);
+      await this.getDb().collection('movies').doc(movieId).update(updates);
       logger.info('Movie updated successfully', { movieId });
 
     } catch (error: any) {
@@ -270,7 +268,7 @@ export class MovieDataUtils {
     yearDistribution: Record<string, number>;
   }> {
     try {
-      const moviesSnapshot = await this.db.collection('movies').get();
+      const moviesSnapshot = await this.getDb().collection('movies').get();
       const movies: MovieData[] = moviesSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -305,6 +303,98 @@ export class MovieDataUtils {
     } catch (error: any) {
       logger.error('Failed to get movie stats', { error: error?.message });
       throw new Error(`Failed to get movie stats: ${error?.message || 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * 類似映画を取得
+   */
+  async getSimilarMovies(movieId: string, limit: number = 10): Promise<MovieData[]> {
+    try {
+      const baseMovie = await this.getMovie(movieId);
+      if (!baseMovie) {
+        return [];
+      }
+
+      const similarMovies: MovieData[] = [];
+      const moviesQuery = this.getDb().collection('movies')
+        .where('genres', 'array-contains-any', baseMovie.genres)
+        .where('id', '!=', movieId)
+        .limit(limit * 2); // 多めに取得してフィルタリング
+
+      const snapshot = await moviesQuery.get();
+      snapshot.docs.forEach(doc => {
+        const movieData = { id: doc.id, ...doc.data() } as MovieData;
+        // 簡易的な類似度計算（ジャンルの一致度）
+        const commonGenres = movieData.genres.filter(genre => baseMovie.genres.includes(genre));
+        if (commonGenres.length > 0) {
+          similarMovies.push(movieData);
+        }
+      });
+
+      // スコア順でソート（ここではジャンル一致数が多いほど高スコア）
+      similarMovies.sort((a, b) => {
+        const aCommon = a.genres.filter(genre => baseMovie.genres.includes(genre)).length;
+        const bCommon = b.genres.filter(genre => baseMovie.genres.includes(genre)).length;
+        return bCommon - aCommon;
+      });
+
+      return similarMovies.slice(0, limit);
+
+    } catch (error: any) {
+      logger.error('Failed to get similar movies', { movieId, error: error?.message });
+      throw new Error(`Failed to get similar movies: ${error?.message || 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * トレンド映画を取得
+   */
+  async getTrendingMovies(timeWindow: 'day' | 'week' = 'week', limit: number = 20): Promise<MovieData[]> {
+    try {
+      // ここでは簡易的に、最近追加された映画や高評価の映画をトレンドとして扱う
+      // 実際には、視聴回数やレビュー数などに基づいてトレンドを計算する
+      const moviesQuery = this.getDb().collection('movies')
+        .orderBy('rating', 'desc') // 高評価順
+        .orderBy('year', 'desc') // 新しいもの優先
+        .limit(limit);
+
+      const snapshot = await moviesQuery.get();
+
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as MovieData));
+
+    } catch (error: any) {
+      logger.error('Failed to get trending movies', { timeWindow, error: error?.message });
+      throw new Error(`Failed to get trending movies: ${error?.message || 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * 新作映画を取得
+   */
+  async getNewReleases(limit: number = 20, region: string = 'JP'): Promise<MovieData[]> {
+    try {
+      // ここでは簡易的に、最新の公開年の映画を取得
+      const currentYear = new Date().getFullYear();
+      const moviesQuery = this.getDb().collection('movies')
+        .where('year', '>=', currentYear - 2) // 過去2年間の新作
+        .orderBy('year', 'desc')
+        .orderBy('rating', 'desc')
+        .limit(limit);
+
+      const snapshot = await moviesQuery.get();
+
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as MovieData));
+
+    } catch (error: any) {
+      logger.error('Failed to get new releases', { region, error: error?.message });
+      throw new Error(`Failed to get new releases: ${error?.message || 'Unknown error'}`);
     }
   }
 }

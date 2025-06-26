@@ -1,4 +1,5 @@
 import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions/v2';
 import { RecommendationEngine } from '../services/recommendationEngine';
 
@@ -89,8 +90,7 @@ export const getSavedRecommendations = functions.https.onCall(async (data: any, 
     logger.info('Getting saved recommendations', { userId, includeExpired, limit });
 
     const savedRecommendations = await recommendationEngine.getSavedRecommendations(
-      userId,
-      { includeExpired, limit }
+      userId
     );
 
     return {
@@ -338,7 +338,7 @@ export const getRecommendationStats = functions.https.onCall(async (data: any, c
 
     // 管理者権限チェック
     const userId = context.auth.uid;
-    const userDoc = await recommendationEngine.db.collection('users').doc(userId).get();
+    const userDoc = await admin.firestore().collection('users').doc(userId).get();
     const userData = userDoc.data();
 
     if (!userData?.isAdmin) {
@@ -380,7 +380,7 @@ export const retrainRecommendationModel = functions.https.onCall(async (data: an
 
     // 管理者権限チェック
     const userId = context.auth.uid;
-    const userDoc = await recommendationEngine.db.collection('users').doc(userId).get();
+    const userDoc = await admin.firestore().collection('users').doc(userId).get();
     const userData = userDoc.data();
 
     if (!userData?.isAdmin) {

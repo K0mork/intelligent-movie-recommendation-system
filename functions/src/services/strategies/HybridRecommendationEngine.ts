@@ -246,8 +246,7 @@ export class HybridRecommendationEngine {
       if (diversified.length >= maxResults) break;
 
       const movie = result.movie;
-      const hasNewGenre = movie.genres.some(genre => !usedGenres.has(genre));
-      const hasNewDirector = !usedDirectors.has(movie.director);
+
 
       // 多様性スコアを計算
       const diversityScore = this.calculateDiversityScore(

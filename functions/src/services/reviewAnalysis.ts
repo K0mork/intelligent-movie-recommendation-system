@@ -30,17 +30,20 @@ export interface ReviewAnalysisResult {
 }
 
 export class ReviewAnalysisService {
-  private genAI: GoogleGenerativeAI;
-  private db: FirebaseFirestore.Firestore;
+  private genAI?: GoogleGenerativeAI;
+
+  private getDb() {
+    return getFirestore();
+  }
 
   constructor() {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error('GEMINI_API_KEY environment variable is not set');
+    const apiKey = process.env.GEMINI_API_KEY || '';
+    if (apiKey) {
+      this.genAI = new GoogleGenerativeAI(apiKey);
+    } else {
+      // API keyが設定されていない場合は警告のみ
+      logger.warn('GEMINI_API_KEY environment variable is not set. AI analysis features will be limited.');
     }
-
-    this.genAI = new GoogleGenerativeAI(apiKey);
-    this.db = getFirestore();
   }
 
   /**
@@ -48,6 +51,9 @@ export class ReviewAnalysisService {
    */
   async analyzeSentiment(reviewText: string): Promise<SentimentAnalysis> {
     try {
+      if (!this.genAI) {
+        throw new Error('AI service is not available. Please configure GEMINI_API_KEY.');
+      }
       const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
 
       const prompt = `
@@ -99,6 +105,9 @@ export class ReviewAnalysisService {
    */
   async extractPreferences(reviewText: string, movieTitle: string): Promise<PreferenceAnalysis> {
     try {
+      if (!this.genAI) {
+        throw new Error('AI service is not available. Please configure GEMINI_API_KEY.');
+      }
       const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
 
       const prompt = `
@@ -202,7 +211,7 @@ export class ReviewAnalysisService {
    */
   async saveAnalysisResult(analysisResult: ReviewAnalysisResult): Promise<void> {
     try {
-      const analysisRef = this.db.collection('reviewAnalysis').doc(analysisResult.reviewId);
+      const analysisRef = this.getDb().collection('reviewAnalysis').doc(analysisResult.reviewId);
 
       await analysisRef.set({
         ...analysisResult,
@@ -229,7 +238,7 @@ export class ReviewAnalysisService {
    */
   private async updateUserPreferences(userId: string, newPreferences: PreferenceAnalysis): Promise<void> {
     try {
-      const userPrefsRef = this.db.collection('userPreferences').doc(userId);
+      const userPrefsRef = this.getDb().collection('userPreferences').doc(userId);
       const userPrefsDoc = await userPrefsRef.get();
 
       if (userPrefsDoc.exists) {
@@ -326,7 +335,7 @@ export class ReviewAnalysisService {
    */
   async getAnalysisResult(reviewId: string): Promise<ReviewAnalysisResult | null> {
     try {
-      const analysisRef = this.db.collection('reviewAnalysis').doc(reviewId);
+      const analysisRef = this.getDb().collection('reviewAnalysis').doc(reviewId);
       const doc = await analysisRef.get();
 
       if (!doc.exists) {
@@ -352,7 +361,7 @@ export class ReviewAnalysisService {
    */
   async getUserPreferences(userId: string): Promise<any> {
     try {
-      const userPrefsRef = this.db.collection('userPreferences').doc(userId);
+      const userPrefsRef = this.getDb().collection('userPreferences').doc(userId);
       const doc = await userPrefsRef.get();
 
       if (!doc.exists) {

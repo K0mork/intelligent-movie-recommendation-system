@@ -2,8 +2,8 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions/v2';
 
-// Cloud Firestore のインスタンス
-const db = admin.firestore();
+// Cloud Firestore のインスタンス（遅延初期化）
+const getDb = () => admin.firestore();
 
 /**
  * ユーザープロファイルを取得する機能
@@ -18,7 +18,7 @@ export const getUserProfile = functions.https.onCall(async (data: any, context: 
     const userId = context.auth.uid;
 
     // ユーザードキュメントを取得
-    const userDoc = await db.collection('users').doc(userId).get();
+    const userDoc = await getDb().collection('users').doc(userId).get();
 
     if (!userDoc.exists) {
       // ユーザードキュメントが存在しない場合は作成
@@ -32,7 +32,7 @@ export const getUserProfile = functions.https.onCall(async (data: any, context: 
         isAdmin: false, // デフォルトは管理者ではない
       };
 
-      await db.collection('users').doc(userId).set(newUserData);
+      await getDb().collection('users').doc(userId).set(newUserData);
 
       return {
         success: true,
@@ -44,7 +44,7 @@ export const getUserProfile = functions.https.onCall(async (data: any, context: 
     const userData = userDoc.data();
 
     // 最終サインイン時刻を更新
-    await db.collection('users').doc(userId).update({
+    await getDb().collection('users').doc(userId).update({
       lastSignIn: admin.firestore.FieldValue.serverTimestamp(),
     });
 
@@ -99,7 +99,7 @@ export const updateUserProfile = functions.https.onCall(async (data: any, contex
     }
 
     // プロファイル更新
-    await db.collection('users').doc(userId).update(updateData);
+    await getDb().collection('users').doc(userId).update(updateData);
 
     logger.info('User profile updated successfully', { userId });
 
@@ -137,7 +137,7 @@ export const exportUserData = functions.https.onCall(async (data: any, context: 
     logger.info('Starting user data export', { userId });
 
     // ユーザーのレビューデータを取得
-    const reviewsSnapshot = await db
+    const reviewsSnapshot = await getDb()
       .collection('reviews')
       .where('userId', '==', userId)
       .get();
@@ -148,7 +148,7 @@ export const exportUserData = functions.https.onCall(async (data: any, context: 
     }));
 
     // ユーザーの推薦履歴を取得
-    const recommendationsSnapshot = await db
+    const recommendationsSnapshot = await getDb()
       .collection('userRecommendations')
       .where('userId', '==', userId)
       .get();
@@ -159,7 +159,7 @@ export const exportUserData = functions.https.onCall(async (data: any, context: 
     }));
 
     // ユーザープロファイルを取得
-    const userDoc = await db.collection('users').doc(userId).get();
+    const userDoc = await getDb().collection('users').doc(userId).get();
     const userProfile = userDoc.data();
 
     // エクスポートデータを構築
@@ -211,10 +211,10 @@ export const deleteUserAccount = functions.https.onCall(async (data: any, contex
     logger.info('Starting user account deletion', { userId });
 
     // バッチ処理でユーザーデータを削除
-    const batch = db.batch();
+    const batch = getDb().batch();
 
     // ユーザーのレビューを削除
-    const reviewsSnapshot = await db
+    const reviewsSnapshot = await getDb()
       .collection('reviews')
       .where('userId', '==', userId)
       .get();
@@ -224,7 +224,7 @@ export const deleteUserAccount = functions.https.onCall(async (data: any, contex
     });
 
     // ユーザーの推薦データを削除
-    const recommendationsSnapshot = await db
+    const recommendationsSnapshot = await getDb()
       .collection('userRecommendations')
       .where('userId', '==', userId)
       .get();
@@ -234,7 +234,7 @@ export const deleteUserAccount = functions.https.onCall(async (data: any, contex
     });
 
     // ユーザーの分析データを削除
-    const analysisSnapshot = await db
+    const analysisSnapshot = await getDb()
       .collection('reviewAnalysis')
       .where('userId', '==', userId)
       .get();
@@ -244,7 +244,7 @@ export const deleteUserAccount = functions.https.onCall(async (data: any, contex
     });
 
     // ユーザープロファイルを削除
-    const userRef = db.collection('users').doc(userId);
+    const userRef = getDb().collection('users').doc(userId);
     batch.delete(userRef);
 
     // バッチ実行
@@ -279,7 +279,7 @@ export const deleteUserAccount = functions.https.onCall(async (data: any, contex
  */
 export async function checkAdminPermission(userId: string): Promise<boolean> {
   try {
-    const userDoc = await db.collection('users').doc(userId).get();
+    const userDoc = await getDb().collection('users').doc(userId).get();
     const userData = userDoc.data();
     return userData?.isAdmin === true;
   } catch (error) {

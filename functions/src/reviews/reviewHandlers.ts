@@ -4,8 +4,8 @@ import { logger } from 'firebase-functions/v2';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { ReviewAnalysisService } from '../services/reviewAnalysis';
 
-// Cloud Firestore のインスタンス
-const db = admin.firestore();
+// Cloud Firestore のインスタンス（遅延初期化）
+const getDb = () => admin.firestore();
 
 // レビュー分析サービスのインスタンス
 const reviewAnalysisService = new ReviewAnalysisService();
@@ -151,7 +151,7 @@ export const getUserReviewStats = functions.https.onCall(async (data: any, conte
     logger.info('Getting user review stats', { userId });
 
     // ユーザーのレビュー統計を取得
-    const reviewsSnapshot = await db
+    const reviewsSnapshot = await getDb()
       .collection('reviews')
       .where('userId', '==', userId)
       .get();
@@ -249,7 +249,7 @@ export const addReviewComment = functions.https.onCall(async (data: any, context
     };
 
     // コメントを保存
-    const commentRef = await db.collection('reviewComments').add(commentData);
+    const commentRef = await getDb().collection('reviewComments').add(commentData);
 
     return {
       success: true,
@@ -287,7 +287,7 @@ export const getReviewComments = functions.https.onCall(async (data: any, contex
     logger.info('Getting review comments', { reviewId, limit });
 
     // コメントを取得
-    const commentsSnapshot = await db
+    const commentsSnapshot = await getDb()
       .collection('reviewComments')
       .where('reviewId', '==', reviewId)
       .orderBy('createdAt', 'desc')
@@ -371,7 +371,7 @@ export const batchUpdateReviewAnalysis = functions.https.onCall(async (data: any
     }
 
     const userId = context.auth.uid;
-    const userDoc = await db.collection('users').doc(userId).get();
+    const userDoc = await getDb().collection('users').doc(userId).get();
     const userData = userDoc.data();
 
     if (!userData?.isAdmin) {
@@ -383,7 +383,7 @@ export const batchUpdateReviewAnalysis = functions.https.onCall(async (data: any
     logger.info('Starting batch review analysis update', { limit, userId });
 
     // 分析されていないレビューを取得
-    const reviewsSnapshot = await db
+    const reviewsSnapshot = await getDb()
       .collection('reviews')
       .limit(limit)
       .get();
@@ -395,7 +395,7 @@ export const batchUpdateReviewAnalysis = functions.https.onCall(async (data: any
       const reviewId = reviewDoc.id;
 
       // 既に分析済みかチェック
-      const existingAnalysis = await db
+      const existingAnalysis = await getDb()
         .collection('reviewAnalysis')
         .where('reviewId', '==', reviewId)
         .get();

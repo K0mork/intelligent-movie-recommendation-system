@@ -24,7 +24,7 @@ export const searchMovies = functions.https.onCall(async (data: any, context: an
 
     logger.info('Movie search request', { query, limit, year, genre, userId: context.auth.uid });
 
-    const movies = await movieDataUtils.searchMovies(query, limit, { year, genre });
+    const movies = await movieDataUtils.searchMovies(query, limit);
 
     logger.info('Movie search completed', {
       query,
@@ -69,7 +69,7 @@ export const getPopularMovies = functions.https.onCall(async (data: any, context
 
     logger.info('Popular movies request', { limit, page, userId: context.auth.uid });
 
-    const movies = await movieDataUtils.getPopularMovies(limit, page);
+    const movies = await movieDataUtils.getPopularMovies(limit);
 
     return {
       success: true,
@@ -107,7 +107,7 @@ export const getMoviesByGenre = functions.https.onCall(async (data: any, context
 
     logger.info('Genre movies request', { genre, limit, page, userId: context.auth.uid });
 
-    const movies = await movieDataUtils.getMoviesByGenre(genre, limit, page);
+    const movies = await movieDataUtils.getMoviesByGenre(genre, limit);
 
     return {
       success: true,

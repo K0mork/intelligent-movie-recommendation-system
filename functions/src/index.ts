@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { RecommendationEngine } from './services/recommendationEngine';
 
 // ハンドラーのインポート
 import * as authHandlers from './auth/authHandlers';
@@ -12,7 +13,9 @@ import * as recommendationHandlers from './recommendations/recommendationHandler
 admin.initializeApp();
 
 // Gemini API の初期化
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '');
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+
+const recommendationEngine = new RecommendationEngine();
 
 // ===============================
 // 認証関連の関数エクスポート
@@ -140,10 +143,13 @@ export const getRecommendations = functions.https.onCall(async (data: any, conte
       throw new functions.https.HttpsError('unauthenticated', 'ユーザーの認証が必要です。');
     }
 
-    const userId = context.auth.uid;
+
 
     // 新しい推薦システムを使用
-    return await generatePersonalizedRecommendations({ maxRecommendations: 10 }, context);
+    const userId = context.auth.uid;
+    const { maxRecommendations = 10 } = data;
+    const recommendations = await recommendationEngine.generateRecommendations(userId, { maxRecommendations });
+    return { success: true, recommendations };
 
   } catch (error) {
     console.error('推薦生成エラー:', error);
@@ -178,7 +184,7 @@ export const healthCheck = functions.https.onRequest((req, res) => {
       reviewAnalysis: 'Available',
       recommendationEngine: 'Available',
       movieDataUtils: 'Available',
-      geminiAPI: process.env.GOOGLE_AI_API_KEY ? 'Configured' : 'Not configured'
+      geminiAPI: process.env.GEMINI_API_KEY ? 'Configured' : 'Not configured'
     },
     endpoints: {
       auth: [

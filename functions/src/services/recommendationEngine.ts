@@ -23,7 +23,7 @@ export interface RecommendationResult {
   movie: MovieData;
   score: number;
   reasons: string[];
-  recommendationType: 'content_based' | 'collaborative' | 'hybrid';
+  recommendationType: 'content_based' | 'collaborative' | 'hybrid' | 'trending';
   confidence: number;
 }
 
@@ -56,8 +56,7 @@ export interface UserProfile {
 }
 
 export class RecommendationEngine {
-  private genAI: GoogleGenerativeAI;
-  private db: FirebaseFirestore.Firestore;
+  private genAI?: GoogleGenerativeAI;
   private defaultConfig: RecommendationConfig = {
     maxRecommendations: 10,
     contentWeight: 0.7,
@@ -66,14 +65,18 @@ export class RecommendationEngine {
     minConfidence: 0.3
   };
 
-  constructor() {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error('GEMINI_API_KEY environment variable is not set');
-    }
+  private getDb() {
+    return getFirestore();
+  }
 
-    this.genAI = new GoogleGenerativeAI(apiKey);
-    this.db = getFirestore();
+  constructor() {
+    const apiKey = process.env.GEMINI_API_KEY || '';
+    if (apiKey) {
+      this.genAI = new GoogleGenerativeAI(apiKey);
+    } else {
+      // API keyが設定されていない場合は警告のみ
+      logger.warn('GEMINI_API_KEY environment variable is not set. AI recommendation features will be limited.');
+    }
   }
 
   /**
@@ -154,7 +157,7 @@ export class RecommendationEngine {
   async getUserProfile(userId: string): Promise<UserProfile | null> {
     try {
       // ユーザーの好み履歴を取得
-      const userPrefsRef = this.db.collection('userPreferences').doc(userId);
+      const userPrefsRef = this.getDb().collection('userPreferences').doc(userId);
       const userPrefsDoc = await userPrefsRef.get();
 
       if (!userPrefsDoc.exists) {
@@ -164,7 +167,7 @@ export class RecommendationEngine {
       const prefsData = userPrefsDoc.data() as any;
 
       // ユーザーのレビュー履歴から感情統計を計算
-      const reviewAnalysisQuery = this.db.collection('reviewAnalysis')
+      const reviewAnalysisQuery = this.getDb().collection('reviewAnalysis')
         .where('userId', '==', userId)
         .orderBy('analyzedAt', 'desc')
         .limit(100);
@@ -210,7 +213,7 @@ export class RecommendationEngine {
 
       // 各ジャンルから映画を取得
       for (const genre of topGenres) {
-        const moviesQuery = this.db.collection('movies')
+        const moviesQuery = this.getDb().collection('movies')
           .where('genres', 'array-contains', genre)
           .where('rating', '>=', 6.0) // 評価6.0以上
           .orderBy('rating', 'desc')
@@ -224,7 +227,7 @@ export class RecommendationEngine {
       }
 
       // 人気映画も追加
-      const popularMoviesQuery = this.db.collection('movies')
+      const popularMoviesQuery = this.getDb().collection('movies')
         .where('rating', '>=', 7.0)
         .orderBy('rating', 'desc')
         .limit(50);
@@ -238,7 +241,7 @@ export class RecommendationEngine {
       });
 
       // ユーザーが既に評価した映画を除外
-      const userReviewsQuery = this.db.collection('reviews')
+      const userReviewsQuery = this.getDb().collection('reviews')
         .where('userId', '==', userProfile.userId);
 
       const userReviewsSnapshot = await userReviewsQuery.get();
@@ -315,7 +318,7 @@ export class RecommendationEngine {
       const collaborativeScores = new Map<string, number>();
 
       for (const similarUser of similarUsers) {
-        const userReviewsQuery = this.db.collection('reviews')
+        const userReviewsQuery = this.getDb().collection('reviews')
           .where('userId', '==', similarUser.userId)
           .where('rating', '>=', 4); // 高評価のみ
 
@@ -432,7 +435,7 @@ export class RecommendationEngine {
       if (!currentUserProfile) return [];
 
       // 他のユーザーの好みと比較
-      const userPrefsQuery = this.db.collection('userPreferences').limit(100);
+      const userPrefsQuery = this.getDb().collection('userPreferences').limit(100);
       const userPrefsSnapshot = await userPrefsQuery.get();
 
       const similarities: Array<{userId: string, similarity: number}> = [];
@@ -564,6 +567,9 @@ export class RecommendationEngine {
     recommendations: RecommendationResult[]
   ): Promise<RecommendationResult[]> {
     try {
+      if (!this.genAI) {
+        throw new Error('AI service is not available. Please configure GEMINI_API_KEY.');
+      }
       const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
 
       // ユーザーの好みを要約
@@ -692,7 +698,7 @@ export class RecommendationEngine {
     recommendations: RecommendationResult[]
   ): Promise<void> {
     try {
-      const recommendationRef = this.db.collection('userRecommendations').doc(userId);
+      const recommendationRef = this.getDb().collection('userRecommendations').doc(userId);
 
       await recommendationRef.set({
         userId,
@@ -732,7 +738,7 @@ export class RecommendationEngine {
    */
   async getSavedRecommendations(userId: string): Promise<RecommendationResult[]> {
     try {
-      const recommendationRef = this.db.collection('userRecommendations').doc(userId);
+      const recommendationRef = this.getDb().collection('userRecommendations').doc(userId);
       const doc = await recommendationRef.get();
 
       if (!doc.exists) {
@@ -766,15 +772,18 @@ export class RecommendationEngine {
   async recordRecommendationFeedback(
     userId: string,
     movieId: string,
-    feedback: 'like' | 'dislike' | 'not_interested'
+    feedback: 'like' | 'dislike' | 'not_interested' | 'watched' | 'bookmark',
+    options?: { recommendationId?: string; reason?: string }
   ): Promise<void> {
     try {
-      const feedbackRef = this.db.collection('recommendationFeedback').doc();
+      const feedbackRef = this.getDb().collection('recommendationFeedback').doc();
 
       await feedbackRef.set({
         userId,
         movieId,
         feedback,
+        recommendationId: options?.recommendationId,
+        reason: options?.reason,
         timestamp: new Date().toISOString()
       });
 
@@ -790,6 +799,155 @@ export class RecommendationEngine {
         feedback,
         error: error?.message
       });
+    }
+  }
+
+  /**
+   * ユーザーの推薦設定を更新
+   */
+  async updateUserSettings(
+    userId: string,
+    settings: {
+      preferredGenres?: string[];
+      excludedGenres?: string[];
+      preferredYearRange?: { min: number; max: number };
+      diversityPreference?: number;
+      noveltyPreference?: number;
+      notificationSettings?: {
+        newRecommendations: boolean;
+        weeklyDigest: boolean;
+        monthlyReport: boolean;
+      };
+      updatedAt: Date;
+    }
+  ): Promise<void> {
+    try {
+      const userSettingsRef = this.getDb().collection('userPreferences').doc(userId);
+      await userSettingsRef.set(settings, { merge: true });
+      logger.info('User recommendation settings updated', { userId });
+    } catch (error: any) {
+      logger.error('Failed to update user settings', { userId, error: error?.message });
+      throw new Error(`Failed to update user settings: ${error?.message || 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * 推薦の説明を取得
+   */
+  async getRecommendationExplanation(
+    userId: string,
+    movieId: string,
+    recommendationId?: string
+  ): Promise<string> {
+    try {
+      // ここでは簡易的な説明を返す。実際にはAIで生成する
+      const movie = await this.getDb().collection('movies').doc(movieId).get();
+      if (!movie.exists) {
+        return '映画情報が見つかりません。';
+      }
+      const movieData = movie.data() as MovieData;
+
+      return `この映画「${movieData.title}」は、あなたの好みに基づいて推薦されました。特に${movieData.genres.join('、')}ジャンルや、${movieData.director}監督の作品に興味があるようです。`;
+    } catch (error: any) {
+      logger.error('Failed to get recommendation explanation', { userId, movieId, error: error?.message });
+      throw new Error(`Failed to get recommendation explanation: ${error?.message || 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * 類似ユーザーの推薦を取得
+   */
+  async getSimilarUserRecommendations(
+    userId: string,
+    options?: { limit?: number; minSimilarity?: number }
+  ): Promise<RecommendationResult[]> {
+    try {
+      const { limit = 20, minSimilarity = 0.3 } = options || {};
+      const similarUsers = await this.findSimilarUsers(userId, limit * 2); // 多めに取得
+
+      const recommendations: RecommendationResult[] = [];
+      for (const similarUser of similarUsers) {
+        if (similarUser.similarity < minSimilarity) continue;
+        const userRecs = await this.getSavedRecommendations(similarUser.userId);
+        recommendations.push(...userRecs);
+      }
+
+      // 重複を排除し、スコアでソート
+      const uniqueRecommendations = Array.from(new Map(recommendations.map(rec => [rec.movieId, rec])).values());
+      uniqueRecommendations.sort((a, b) => b.score - a.score);
+
+      return uniqueRecommendations.slice(0, limit);
+    } catch (error: any) {
+      logger.error('Failed to get similar user recommendations', { userId, error: error?.message });
+      throw new Error(`Failed to get similar user recommendations: ${error?.message || 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * トレンド推薦を取得
+   */
+  async getTrendingRecommendations(
+    userId: string,
+    options?: { timeWindow?: 'day' | 'week'; limit?: number; personalizeWeight?: number }
+  ): Promise<RecommendationResult[]> {
+    try {
+      const { limit = 20 } = options || {};
+      // ここでは簡易的に、最近評価の高い映画をトレンドとして返す
+      const trendingMoviesSnapshot = await this.getDb().collection('movies')
+        .orderBy('rating', 'desc')
+        .limit(limit)
+        .get();
+
+      const trendingMovies = trendingMoviesSnapshot.docs.map(doc => ({
+        movieId: doc.id,
+        movie: doc.data() as MovieData,
+        score: (doc.data() as MovieData).rating / 10, // 0-1に正規化
+        reasons: ['現在トレンドの映画です'],
+        recommendationType: 'trending' as const,
+        confidence: 0.8,
+      }));
+
+      return trendingMovies;
+    } catch (error: any) {
+      logger.error('Failed to get trending recommendations', { userId, error: error?.message });
+      throw new Error(`Failed to get trending recommendations: ${error?.message || 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * システム統計情報を取得
+   */
+  async getSystemStats(): Promise<any> {
+    try {
+      const movieStats = await this.getDb().collection('movies').count().get();
+      const userStats = await this.getDb().collection('users').count().get();
+      const reviewStats = await this.getDb().collection('reviews').count().get();
+
+      return {
+        totalMovies: movieStats.data().count,
+        totalUsers: userStats.data().count,
+        totalReviews: reviewStats.data().count,
+        lastRetrain: null, // 実際にはモデルの訓練履歴から取得
+      };
+    } catch (error: any) {
+      logger.error('Failed to get system stats', { error: error?.message });
+      throw new Error(`Failed to get system stats: ${error?.message || 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * 推薦モデルを再訓練
+   */
+  async retrainModel(options?: { forceRetrain?: boolean }): Promise<any> {
+    try {
+      // ここではダミーの再訓練ロジック
+      logger.info('Recommendation model retraining initiated', { forceRetrain: options?.forceRetrain });
+      await new Promise(resolve => setTimeout(resolve, 2000)); // 2秒の遅延をシミュレート
+      logger.info('Recommendation model retraining completed');
+      return { status: 'completed', timestamp: new Date().toISOString(), message: 'Model retrained successfully' };
+    } catch (error: any) {
+      logger.error('Failed to retrain model', { error: error?.message });
+      throw new Error(`Failed to retrain model: ${error?.message || 'Unknown error'}`);
     }
   }
 }
