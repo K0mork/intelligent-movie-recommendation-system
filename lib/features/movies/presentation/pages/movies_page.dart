@@ -44,11 +44,24 @@ class _MoviesPageState extends ConsumerState<MoviesPage>
   }
 
   void _onMovieTap(Movie movie) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => MovieDetailPage(movieId: movie.id),
-      ),
-    );
+    try {
+      Navigator.of(context).push(
+        PageRouteBuilder<void>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+            MovieDetailPage(movieId: movie.id),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('映画詳細画面を開けませんでした: $e')),
+      );
+    }
   }
 
   void _onSearchChanged(String query) {
@@ -234,7 +247,7 @@ class _SearchMoviesTab extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Theme.of(context).colorScheme.outline,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),

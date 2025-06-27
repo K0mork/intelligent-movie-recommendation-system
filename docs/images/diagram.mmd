@@ -1,0 +1,28 @@
+graph TB
+    %% ── Nodes ─────────────────────────────────────
+    subgraph "Production Environment"
+        A[Flutter Web Client<br/>✅ 本番稼働]
+        A --- B[Firebase Hosting<br/>✅ CDN配信]
+        B --> C[Firebase Authentication<br/>✅ Google／匿名認証]
+        B --> D[Cloud Firestore<br/>✅ データベース]
+        B --> E[Cloud Functions<br/>✅ TypeScript]
+        E --> F[Gemini API<br/>✅ AI分析]
+        A -.-> G[TMDb API<br/>✅ 映画データ]
+    end
+
+    subgraph "Data Flow"
+        H[ユーザーレビュー] --> I[AI感情分析]
+        I --> J[推薦生成]
+        J --> K[パーソナライズ表示]
+    end
+
+    %% ── Styling ───────────────────────────────────
+    classDef frontEnd fill:#56B4E9,color:#ffffff;      %% Sky-blue
+    classDef backend  fill:#009E73,color:#ffffff;      %% Bluish-green
+    classDef external fill:#E69F00,color:#ffffff;      %% Orange
+    classDef dataFlow fill:#CC79A7,color:#ffffff;      %% Reddish-purple
+
+    class A frontEnd;
+    class B,C,D,E backend;
+    class F,G external;
+    class H,I,J,K dataFlow;

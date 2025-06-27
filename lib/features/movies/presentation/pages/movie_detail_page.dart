@@ -22,23 +22,32 @@ class MovieDetailPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final movieAsync = ref.watch(movieDetailsProvider(movieId));
+    try {
+      final movieAsync = ref.watch(movieDetailsProvider(movieId));
 
-    return Scaffold(
-      body: movieAsync.when(
-        data:
-            (movie) => _MovieDetailView(
+      return Scaffold(
+        body: movieAsync.when(
+          data: (movie) {
+            return _MovieDetailView(
               movie: movie,
               showReviewButton: showReviewButton,
-            ),
-        loading: () => const _LoadingView(),
-        error:
-            (error, stackTrace) => _ErrorView(
-              error: error,
-              onRetry: () => ref.refresh(movieDetailsProvider(movieId)),
-            ),
-      ),
-    );
+            );
+          },
+          loading: () => const _LoadingView(),
+          error: (error, _) => _ErrorView(
+            error: error,
+            onRetry: () => ref.refresh(movieDetailsProvider(movieId)),
+          ),
+        ),
+      );
+    } catch (e, _) {
+      return Scaffold(
+        body: _ErrorView(
+          error: Exception('映画詳細画面の読み込みに失敗しました: $e'),
+          onRetry: () => ref.refresh(movieDetailsProvider(movieId)),
+        ),
+      );
+    }
   }
 }
 
@@ -51,53 +60,48 @@ class _MovieDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        // ヘッダー（背景画像付きSliverAppBar）
-        MovieDetailHeader(movie: movie),
-
-        // パンくずナビゲーション
-        SliverToBoxAdapter(
-          child: BreadcrumbWidget(
-            items: BreadcrumbHelper.createMovieBreadcrumbs(
-              context: context,
-              movieTitle: movie.title,
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 映画詳細ヘッダー（ポスター、背景画像、基本情報）
+            MovieDetailHeader(
+              movie: movie,
+              showReviewButton: showReviewButton,
             ),
-          ),
-        ),
 
-        // メインコンテンツ
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 映画情報セクション
-                MovieInfoSection(movie: movie),
-
-                const SizedBox(height: 24),
-
-                // レビューセクション
-                MovieReviewsSection(
-                  movie: movie,
-                  showReviewButton: showReviewButton,
-                ),
-
-                const SizedBox(height: 32),
-              ],
+            // 映画詳細情報セクション
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: MovieInfoSection(movie: movie),
             ),
-          ),
-        ),
 
-        // 関連映画セクション
-        SliverToBoxAdapter(
-          child: RelatedMoviesSection(movieId: movie.id, title: 'この映画に関連する作品'),
-        ),
+            const SizedBox(height: 24),
 
-        // 下部スペース
-        const SliverToBoxAdapter(child: SizedBox(height: 32)),
-      ],
+            // レビューセクション（レビュー表示・追加・編集・削除）
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: MovieReviewsSection(
+                movie: movie,
+                showReviewButton: showReviewButton,
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // 関連映画セクション（類似映画・おすすめ映画）
+            RelatedMoviesSection(
+              movieId: movie.id,
+              title: '関連映画',
+              showSimilar: true,
+              showRecommended: true,
+            ),
+
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -90,20 +90,19 @@ class AppInitializationService {
   static Future<void> _loadEnvironmentVariables() async {
     _log('Loading environment variables...');
 
-    // Web環境では内蔵設定を使用するため、.envファイルの読み込みをスキップ
-    if (kIsWeb) {
-      _log('✅ Web environment detected, using built-in configuration');
-      return;
-    }
-
     try {
       await dotenv.load(fileName: ".env");
       _log('✅ Environment variables loaded successfully');
     } catch (error) {
-      _logError(
-        '⚠️ .env file not found or failed to load (using defaults)',
-        error,
-      );
+      // Web環境や.envファイルが存在しない場合のフォールバック
+      if (kIsWeb) {
+        _log('✅ Web environment detected, using built-in configuration');
+      } else {
+        _logError(
+          '⚠️ .env file not found or failed to load (using defaults)',
+          error,
+        );
+      }
     }
   }
 

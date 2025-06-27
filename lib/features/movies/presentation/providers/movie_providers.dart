@@ -100,8 +100,13 @@ final movieDetailsProvider = FutureProvider.family<Movie, int>((
   ref,
   movieId,
 ) async {
-  final useCase = ref.read(getMovieDetailsUseCaseProvider);
-  return await useCase.call(movieId);
+  try {
+    final useCase = ref.read(getMovieDetailsUseCaseProvider);
+    final movie = await useCase.call(movieId);
+    return movie;
+  } catch (e, stackTrace) {
+    throw Exception('映画詳細の取得に失敗しました: $e');
+  }
 });
 
 final similarMoviesProvider = FutureProvider.family<List<Movie>, int>((

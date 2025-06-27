@@ -66,7 +66,7 @@ class MovieDetailHeader extends StatelessWidget {
         placeholder:
             (context, url) => Container(
               color: Colors.grey[900],
-              child: const Center(child: CircularProgressIndicator.adaptive()),
+              child: const Center(child: CircularProgressIndicator()),
             ),
         errorWidget:
             (context, url, error) => Container(
@@ -168,7 +168,7 @@ class MovieDetailHeader extends StatelessWidget {
                       (context, url) => Container(
                         color: Colors.grey[800],
                         child: const Center(
-                          child: CircularProgressIndicator.adaptive(),
+                          child: CircularProgressIndicator(),
                         ),
                       ),
                   errorWidget:

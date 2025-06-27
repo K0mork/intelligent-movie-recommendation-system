@@ -27,8 +27,8 @@ class BreadcrumbWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveTextColor = textColor ?? theme.colorScheme.onSurfaceVariant;
-    final effectiveSeparatorColor = separatorColor ?? theme.colorScheme.outline;
+    final effectiveTextColor = textColor ?? theme.colorScheme.onSurface;
+    final effectiveSeparatorColor = separatorColor ?? theme.colorScheme.onSurface.withOpacity(0.12);
 
     if (items.isEmpty) return const SizedBox.shrink();
 

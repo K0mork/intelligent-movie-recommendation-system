@@ -33,8 +33,12 @@ class EnvConfig {
           defaultValue: '',
         );
         if (envValue.isNotEmpty) return envValue;
-        // fallbackとして.envファイルから取得
-        return dotenv.env[key] ?? defaultValue;
+        // fallbackとして.envファイルから取得（dotenvが初期化されている場合のみ）
+        try {
+          return dotenv.env[key] ?? defaultValue;
+        } catch (e) {
+          return defaultValue;
+        }
       }
       if (key == 'TMDB_API_KEY') {
         const envValue = String.fromEnvironment(
@@ -42,11 +46,22 @@ class EnvConfig {
           defaultValue: '',
         );
         if (envValue.isNotEmpty) return envValue;
-        // fallbackとして.envファイルから取得
-        return dotenv.env[key] ?? defaultValue;
+        // fallbackとして.envファイルから取得（dotenvが初期化されている場合のみ）
+        try {
+          return dotenv.env[key] ?? defaultValue;
+        } catch (e) {
+          return defaultValue;
+        }
       }
       // 公開可能な設定は内蔵値を使用、fallbackで.envファイル
-      return _webEnvVars[key] ?? dotenv.env[key] ?? defaultValue;
+      final builtInValue = _webEnvVars[key];
+      if (builtInValue != null) return builtInValue;
+
+      try {
+        return dotenv.env[key] ?? defaultValue;
+      } catch (e) {
+        return defaultValue;
+      }
     }
 
     // ローカル開発環境の場合は.envファイルから取得

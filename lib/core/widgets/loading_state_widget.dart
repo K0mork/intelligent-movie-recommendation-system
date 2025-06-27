@@ -90,7 +90,7 @@ class LoadingStateWidget extends StatelessWidget {
         return SizedBox(
           width: size ?? 32.0,
           height: size ?? 32.0,
-          child: CircularProgressIndicator.adaptive(
+          child: CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(color),
             strokeWidth: 2.0,
           ),

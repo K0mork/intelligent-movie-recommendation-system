@@ -131,7 +131,7 @@ class MoviePosterWidget extends StatelessWidget {
         borderRadius: effectiveBorderRadius,
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.1),
+            color: theme.colorScheme.shadow.withOpacity(0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -145,7 +145,7 @@ class MoviePosterWidget extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      color: theme.colorScheme.surfaceContainerHighest,
+      color: theme.colorScheme.surfaceVariant,
       child: Center(
         child: TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.5, end: 1.0),
@@ -153,7 +153,7 @@ class MoviePosterWidget extends StatelessWidget {
           builder:
               (context, value, child) => Transform.scale(
                 scale: value,
-                child: const CircularProgressIndicator.adaptive(),
+                child: const CircularProgressIndicator(),
               ),
         ),
       ),
@@ -168,20 +168,20 @@ class MoviePosterWidget extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      color: theme.colorScheme.surfaceContainerHighest,
+      color: theme.colorScheme.surfaceVariant,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             placeholderIcon,
             size: width * 0.3,
-            color: theme.colorScheme.onSurfaceVariant,
+            color: theme.colorScheme.onSurface,
           ),
           const SizedBox(height: 4),
           Text(
             'No Image',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+              color: theme.colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
