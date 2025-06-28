@@ -238,16 +238,27 @@ class NewReviewTabView extends ConsumerWidget {
   }
 
   void _navigateToMovieSearch(BuildContext context) async {
-    final Movie? selectedMovie = await Navigator.of(context).push<Movie>(
-      MaterialPageRoute(builder: (context) => const CustomMovieSearchPage()),
-    );
-
-    if (selectedMovie != null && context.mounted) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => AddReviewPage(movie: selectedMovie),
-        ),
+    try {
+      final Movie? selectedMovie = await Navigator.of(context).push<Movie>(
+        MaterialPageRoute(builder: (context) => const CustomMovieSearchPage()),
       );
+
+      if (selectedMovie != null && context.mounted) {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => AddReviewPage(movie: selectedMovie),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('映画選択でエラーが発生しました: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
     }
   }
 }

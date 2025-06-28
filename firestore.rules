@@ -22,8 +22,9 @@ service cloud.firestore {
     }
 
     // Recommendations are user-specific
-    match /recommendations/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
+    match /recommendations/{recommendationId} {
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
       allow write: if false; // Only Cloud Functions can write
     }
 
