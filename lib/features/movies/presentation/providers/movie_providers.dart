@@ -104,7 +104,7 @@ final movieDetailsProvider = FutureProvider.family<Movie, int>((
     final useCase = ref.read(getMovieDetailsUseCaseProvider);
     final movie = await useCase.call(movieId);
     return movie;
-  } catch (e, stackTrace) {
+  } catch (e) {
     throw Exception('映画詳細の取得に失敗しました: $e');
   }
 });

@@ -6,7 +6,6 @@ import '../widgets/movie_detail_header.dart';
 import '../widgets/movie_info_section.dart';
 import '../widgets/movie_reviews_section.dart';
 import '../widgets/related_movies_section.dart';
-import '../../../../core/widgets/breadcrumb_widget.dart';
 
 /// 映画詳細画面
 /// 映画の詳細情報、レビュー、関連映画を表示
@@ -71,10 +70,10 @@ class _MovieDetailView extends StatelessWidget {
               showReviewButton: showReviewButton,
             ),
 
-            // 映画詳細情報セクション
+            // 映画あらすじセクション
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: MovieInfoSection(movie: movie),
+              child: MovieOverviewSection(movie: movie),
             ),
 
             const SizedBox(height: 24),

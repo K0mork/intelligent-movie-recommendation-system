@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 import '../../../movies/presentation/widgets/custom_movie_search_page.dart';
+import '../../../movies/data/models/movie.dart';
+import '../pages/add_review_page.dart';
 import '../../../../core/widgets/error_widgets.dart';
 import '../../../../core/widgets/loading_state_widget.dart';
 
@@ -235,9 +237,17 @@ class NewReviewTabView extends ConsumerWidget {
     );
   }
 
-  void _navigateToMovieSearch(BuildContext context) {
-    Navigator.of(context).push(
+  void _navigateToMovieSearch(BuildContext context) async {
+    final Movie? selectedMovie = await Navigator.of(context).push<Movie>(
       MaterialPageRoute(builder: (context) => const CustomMovieSearchPage()),
     );
+
+    if (selectedMovie != null && context.mounted) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => AddReviewPage(movie: selectedMovie),
+        ),
+      );
+    }
   }
 }
