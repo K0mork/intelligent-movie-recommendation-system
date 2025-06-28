@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import * as functions from 'firebase-functions';
 import { getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions/v2';
 import { ReviewAnalysisResult } from './reviewAnalysis';
@@ -70,7 +71,7 @@ export class RecommendationEngine {
   }
 
   constructor() {
-    const apiKey = process.env.GEMINI_API_KEY || '';
+    const apiKey = functions.config().gemini?.api_key || '';
     if (apiKey) {
       this.genAI = new GoogleGenerativeAI(apiKey);
     } else {
@@ -568,7 +569,7 @@ export class RecommendationEngine {
   ): Promise<RecommendationResult[]> {
     try {
       if (!this.genAI) {
-        throw new Error('AI service is not available. Please configure GEMINI_API_KEY.');
+        throw new Error('AI service is not available. Please configure gemini.api_key in Firebase Functions config.');
       }
       const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
 

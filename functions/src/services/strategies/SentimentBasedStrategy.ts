@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import * as functions from 'firebase-functions';
 import { logger } from 'firebase-functions/v2';
 import { BaseRecommendationStrategy } from './RecommendationStrategy';
 import { MovieData, UserProfile, RecommendationResult } from '../recommendationEngine';
@@ -13,7 +14,7 @@ export class SentimentBasedStrategy extends BaseRecommendationStrategy {
 
   constructor(weight: number = 0.2) {
     super(weight, 'sentiment_based');
-    const apiKey = process.env.GEMINI_API_KEY || '';
+    const apiKey = functions.config().gemini?.api_key || '';
     this.genAI = new GoogleGenerativeAI(apiKey);
   }
 

@@ -13,7 +13,7 @@ import * as recommendationHandlers from './recommendations/recommendationHandler
 admin.initializeApp();
 
 // Gemini API の初期化
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const genAI = new GoogleGenerativeAI(functions.config().gemini?.api_key || '');
 
 const recommendationEngine = new RecommendationEngine();
 
@@ -184,7 +184,7 @@ export const healthCheck = functions.https.onRequest((req, res) => {
       reviewAnalysis: 'Available',
       recommendationEngine: 'Available',
       movieDataUtils: 'Available',
-      geminiAPI: process.env.GEMINI_API_KEY ? 'Configured' : 'Not configured'
+      geminiAPI: functions.config().gemini?.api_key ? 'Configured' : 'Not configured'
     },
     endpoints: {
       auth: [

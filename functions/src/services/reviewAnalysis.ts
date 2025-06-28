@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import * as functions from 'firebase-functions';
 import { getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions/v2';
 
@@ -37,7 +38,7 @@ export class ReviewAnalysisService {
   }
 
   constructor() {
-    const apiKey = process.env.GEMINI_API_KEY || '';
+    const apiKey = functions.config().gemini?.api_key || '';
     if (apiKey) {
       this.genAI = new GoogleGenerativeAI(apiKey);
     } else {
@@ -52,7 +53,7 @@ export class ReviewAnalysisService {
   async analyzeSentiment(reviewText: string): Promise<SentimentAnalysis> {
     try {
       if (!this.genAI) {
-        throw new Error('AI service is not available. Please configure GEMINI_API_KEY.');
+        throw new Error('AI service is not available. Please configure gemini.api_key in Firebase Functions config.');
       }
       const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
 
@@ -106,7 +107,7 @@ export class ReviewAnalysisService {
   async extractPreferences(reviewText: string, movieTitle: string): Promise<PreferenceAnalysis> {
     try {
       if (!this.genAI) {
-        throw new Error('AI service is not available. Please configure GEMINI_API_KEY.');
+        throw new Error('AI service is not available. Please configure gemini.api_key in Firebase Functions config.');
       }
       const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
 
