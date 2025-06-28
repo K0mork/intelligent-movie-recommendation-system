@@ -48,7 +48,7 @@ class _MoviesPageState extends ConsumerState<MoviesPage>
       Navigator.of(context).push(
         PageRouteBuilder<void>(
           pageBuilder: (context, animation, secondaryAnimation) =>
-            MovieDetailPage(movieId: movie.id),
+            MovieDetailPage(movieId: movie.id, showReviewButton: true),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
               opacity: animation,

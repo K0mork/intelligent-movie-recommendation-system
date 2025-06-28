@@ -278,7 +278,7 @@ class ReviewHistoryTabView extends ConsumerWidget {
   void _navigateToMovieDetail(BuildContext context, dynamic review) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => MovieDetailPage(movieId: review.movieId),
+        builder: (context) => MovieDetailPage(movieId: review.movieId, showReviewButton: true),
       ),
     );
   }

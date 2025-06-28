@@ -129,7 +129,7 @@ class _RelatedMoviesList extends ConsumerWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder:
-                              (context) => MovieDetailPage(movieId: movie.id),
+                              (context) => MovieDetailPage(movieId: movie.id, showReviewButton: true),
                         ),
                       );
                     },

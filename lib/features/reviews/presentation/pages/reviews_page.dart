@@ -101,7 +101,7 @@ class _MyReviewsTab extends ConsumerWidget {
                   MaterialPageRoute(
                     builder:
                         (context) =>
-                            MovieDetailPage(movieId: int.parse(review.movieId)),
+                            MovieDetailPage(movieId: int.parse(review.movieId), showReviewButton: true),
                   ),
                 );
               },
