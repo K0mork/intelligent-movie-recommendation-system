@@ -110,6 +110,122 @@ export const getSavedRecommendations = functions.https.onCall(async (data: any, 
 });
 
 /**
+ * 推薦結果を保存する機能
+ */
+export const saveRecommendation = functions.https.onCall(async (data: any, context: any) => {
+  try {
+    // 認証確認
+    if (!context.auth) {
+      throw new functions.https.HttpsError('unauthenticated', 'ユーザーの認証が必要です。');
+    }
+
+    const userId = context.auth.uid;
+    const { recommendationId } = data;
+
+    if (!recommendationId) {
+      throw new functions.https.HttpsError('invalid-argument', 'recommendationIdが必要です。');
+    }
+
+    logger.info('Saving recommendation', { userId, recommendationId });
+
+    // 推薦結果が存在するか確認
+    const recommendationDoc = await admin.firestore()
+      .collection('recommendations')
+      .doc(recommendationId)
+      .get();
+
+    if (!recommendationDoc.exists) {
+      throw new functions.https.HttpsError('not-found', '推薦結果が見つかりません。');
+    }
+
+    const recommendationData = recommendationDoc.data();
+    if (recommendationData?.userId !== userId) {
+      throw new functions.https.HttpsError('permission-denied', 'この推薦結果にアクセスする権限がありません。');
+    }
+
+    // 保存済みリストに追加
+    await admin.firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('savedRecommendations')
+      .doc(recommendationId)
+      .set({
+        recommendationId: recommendationId,
+        savedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+    logger.info('Recommendation saved successfully', { userId, recommendationId });
+
+    return {
+      success: true,
+      message: '推薦結果が保存されました。'
+    };
+
+  } catch (error: any) {
+    logger.error('Failed to save recommendation', {
+      userId: context.auth?.uid,
+      recommendationId: data?.recommendationId,
+      error: error?.message
+    });
+
+    if (error instanceof functions.https.HttpsError) {
+      throw error;
+    }
+
+    throw new functions.https.HttpsError('internal', `推薦結果保存中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
+  }
+});
+
+/**
+ * 保存された推薦結果を削除する機能
+ */
+export const deleteSavedRecommendation = functions.https.onCall(async (data: any, context: any) => {
+  try {
+    // 認証確認
+    if (!context.auth) {
+      throw new functions.https.HttpsError('unauthenticated', 'ユーザーの認証が必要です。');
+    }
+
+    const userId = context.auth.uid;
+    const { recommendationId } = data;
+
+    if (!recommendationId) {
+      throw new functions.https.HttpsError('invalid-argument', 'recommendationIdが必要です。');
+    }
+
+    logger.info('Deleting saved recommendation', { userId, recommendationId });
+
+    // 保存済みリストから削除
+    await admin.firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('savedRecommendations')
+      .doc(recommendationId)
+      .delete();
+
+    logger.info('Saved recommendation deleted successfully', { userId, recommendationId });
+
+    return {
+      success: true,
+      message: '保存された推薦結果が削除されました。'
+    };
+
+  } catch (error: any) {
+    logger.error('Failed to delete saved recommendation', {
+      userId: context.auth?.uid,
+      recommendationId: data?.recommendationId,
+      error: error?.message
+    });
+
+    if (error instanceof functions.https.HttpsError) {
+      throw error;
+    }
+
+    throw new functions.https.HttpsError('internal', `保存推薦削除中にエラーが発生しました: ${error?.message || 'Unknown error'}`);
+  }
+});
+
+/**
  * 推薦結果に対するフィードバックを記録する機能
  */
 export const recordRecommendationFeedback = functions.https.onCall(async (data: any, context: any) => {

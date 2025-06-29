@@ -62,7 +62,7 @@ class RecommendationRemoteDataSourceImpl
     try {
       // Cloud Functions経由で実際のAI推薦を取得
       final result = await functions
-          .httpsCallable('generateRecommendations')
+          .httpsCallable('generatePersonalizedRecommendations')
           .call({'userId': userId});
 
       final recommendationsData = result.data as Map<String, dynamic>;
@@ -169,17 +169,31 @@ class RecommendationRemoteDataSourceImpl
     String recommendationId,
   ) async {
     try {
-      await firestore
-          .collection('users')
-          .doc(userId)
-          .collection('savedRecommendations')
-          .doc(recommendationId)
-          .set({
-            'recommendationId': recommendationId,
-            'savedAt': FieldValue.serverTimestamp(),
-          });
+      // Cloud Functions経由で保存処理を実行
+      final result = await functions
+          .httpsCallable('saveRecommendation')
+          .call({'recommendationId': recommendationId});
+
+      if (!result.data['success']) {
+        throw Exception(result.data['message'] ?? '保存に失敗しました');
+      }
     } catch (e) {
-      throw Exception('推薦結果の保存に失敗しました: $e');
+      // Cloud Functions呼び出しエラーの場合、フォールバックとして直接Firestoreに保存
+      debugPrint('Cloud Functions保存エラー、Firestoreに直接保存: $e');
+
+      try {
+        await firestore
+            .collection('users')
+            .doc(userId)
+            .collection('savedRecommendations')
+            .doc(recommendationId)
+            .set({
+              'recommendationId': recommendationId,
+              'savedAt': FieldValue.serverTimestamp(),
+            });
+      } catch (firestoreError) {
+        throw Exception('推薦結果の保存に失敗しました: $firestoreError');
+      }
     }
   }
 
@@ -227,15 +241,28 @@ class RecommendationRemoteDataSourceImpl
     String recommendationId,
   ) async {
     try {
-      // 保存済みリストから削除
-      await firestore
-          .collection('users')
-          .doc(userId)
-          .collection('savedRecommendations')
-          .doc(recommendationId)
-          .delete();
+      // Cloud Functions経由で削除処理を実行
+      final result = await functions
+          .httpsCallable('deleteSavedRecommendation')
+          .call({'recommendationId': recommendationId});
+
+      if (!result.data['success']) {
+        throw Exception(result.data['message'] ?? '削除に失敗しました');
+      }
     } catch (e) {
-      throw Exception('推薦結果の削除に失敗しました: $e');
+      // Cloud Functions呼び出しエラーの場合、フォールバックとして直接Firestoreから削除
+      debugPrint('Cloud Functions削除エラー、Firestoreから直接削除: $e');
+
+      try {
+        await firestore
+            .collection('users')
+            .doc(userId)
+            .collection('savedRecommendations')
+            .doc(recommendationId)
+            .delete();
+      } catch (firestoreError) {
+        throw Exception('推薦結果の削除に失敗しました: $firestoreError');
+      }
     }
   }
 

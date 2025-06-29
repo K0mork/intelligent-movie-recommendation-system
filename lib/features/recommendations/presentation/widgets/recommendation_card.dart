@@ -3,7 +3,7 @@ import '../../domain/entities/recommendation.dart';
 import 'recommendation_reason_dialog.dart';
 import 'feedback_dialog.dart';
 
-class RecommendationCard extends StatelessWidget {
+class RecommendationCard extends StatefulWidget {
   final Recommendation recommendation;
   final bool isSaved;
   final VoidCallback? onSave;
@@ -20,6 +20,14 @@ class RecommendationCard extends StatelessWidget {
   });
 
   @override
+  State<RecommendationCard> createState() => _RecommendationCardState();
+}
+
+class _RecommendationCardState extends State<RecommendationCard> {
+  bool _isProcessing = false;
+  String? _errorMessage;
+
+  @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
@@ -32,6 +40,9 @@ class RecommendationCard extends StatelessWidget {
 
           // 推薦理由
           _buildReasonSection(context),
+
+          // エラーメッセージ表示
+          if (_errorMessage != null) _buildErrorMessage(context),
 
           // アクションボタン
           _buildActionSection(context),
@@ -57,7 +68,7 @@ class RecommendationCard extends StatelessWidget {
                 children: [
                   // 映画タイトル
                   Text(
-                    recommendation.movieTitle,
+                    widget.recommendation.movieTitle,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -97,7 +108,7 @@ class RecommendationCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey[300],
         image:
-            recommendation.posterPath != null
+            widget.recommendation.posterPath != null
                 ? DecorationImage(
                   image: NetworkImage(_getFullPosterUrl()),
                   fit: BoxFit.cover,
@@ -108,14 +119,14 @@ class RecommendationCard extends StatelessWidget {
                 : null,
       ),
       child:
-          recommendation.posterPath == null
+          widget.recommendation.posterPath == null
               ? const Icon(Icons.movie, size: 40, color: Colors.grey)
               : null,
     );
   }
 
   Widget _buildConfidenceScore(BuildContext context) {
-    final score = recommendation.confidenceScore;
+    final score = widget.recommendation.confidenceScore;
     final color =
         score >= 0.8
             ? Colors.green
@@ -140,7 +151,7 @@ class RecommendationCard extends StatelessWidget {
       spacing: 4,
       runSpacing: 4,
       children:
-          recommendation.reasonCategories.take(3).map((category) {
+          widget.recommendation.reasonCategories.take(3).map((category) {
             return Chip(
               label: Text(category, style: const TextStyle(fontSize: 12)),
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -164,10 +175,41 @@ class RecommendationCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            recommendation.reason,
+            widget.recommendation.reason,
             style: Theme.of(context).textTheme.bodyMedium,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorMessage(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.red.shade50,
+        border: Border.all(color: Colors.red.shade200),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.error_outline, color: Colors.red.shade700, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              _errorMessage!,
+              style: TextStyle(color: Colors.red.shade700, fontSize: 14),
+            ),
+          ),
+          IconButton(
+            onPressed: () => setState(() => _errorMessage = null),
+            icon: Icon(Icons.close, color: Colors.red.shade700, size: 20),
+            constraints: const BoxConstraints(),
+            padding: EdgeInsets.zero,
           ),
         ],
       ),
@@ -181,17 +223,29 @@ class RecommendationCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           // 保存/削除ボタン
-          if (!isSaved && onSave != null)
+          if (!widget.isSaved && widget.onSave != null)
             ElevatedButton.icon(
-              onPressed: onSave,
-              icon: const Icon(Icons.bookmark_add),
-              label: const Text('保存'),
+              onPressed: _isProcessing ? null : _handleSave,
+              icon: _isProcessing
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.bookmark_add),
+              label: Text(_isProcessing ? '保存中...' : '保存'),
             ),
-          if (isSaved && onDelete != null)
+          if (widget.isSaved && widget.onDelete != null)
             ElevatedButton.icon(
-              onPressed: onDelete,
-              icon: const Icon(Icons.bookmark_remove),
-              label: const Text('削除'),
+              onPressed: _isProcessing ? null : _handleDelete,
+              icon: _isProcessing
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.bookmark_remove),
+              label: Text(_isProcessing ? '削除中...' : '削除'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
@@ -199,9 +253,9 @@ class RecommendationCard extends StatelessWidget {
             ),
 
           // フィードバックボタン
-          if (onFeedback != null)
+          if (widget.onFeedback != null)
             OutlinedButton.icon(
-              onPressed: () => _showFeedbackDialog(context),
+              onPressed: _isProcessing ? null : () => _showFeedbackDialog(context),
               icon: const Icon(Icons.feedback_outlined),
               label: const Text('評価'),
             ),
@@ -210,35 +264,103 @@ class RecommendationCard extends StatelessWidget {
     );
   }
 
+  Future<void> _handleSave() async {
+    if (_isProcessing) return;
+
+    setState(() {
+      _isProcessing = true;
+      _errorMessage = null;
+    });
+
+    try {
+      widget.onSave?.call();
+
+      // 成功時のフィードバック
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('推薦結果を保存しました'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = '保存に失敗しました: ${e.toString()}';
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isProcessing = false);
+      }
+    }
+  }
+
+  Future<void> _handleDelete() async {
+    if (_isProcessing) return;
+
+    setState(() {
+      _isProcessing = true;
+      _errorMessage = null;
+    });
+
+    try {
+      widget.onDelete?.call();
+
+      // 成功時のフィードバック
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('保存済み推薦結果を削除しました'),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = '削除に失敗しました: ${e.toString()}';
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isProcessing = false);
+      }
+    }
+  }
+
   void _showReasonDialog(BuildContext context) {
     showDialog(
       context: context,
       builder:
           (context) =>
-              RecommendationReasonDialog(recommendation: recommendation),
+              RecommendationReasonDialog(recommendation: widget.recommendation),
     );
   }
 
   void _showFeedbackDialog(BuildContext context) {
-    if (onFeedback == null) return;
+    if (widget.onFeedback == null) return;
 
     showDialog(
       context: context,
       builder:
           (context) => FeedbackDialog(
-            movieTitle: recommendation.movieTitle,
-            onSubmit: onFeedback!,
+            movieTitle: widget.recommendation.movieTitle,
+            onSubmit: widget.onFeedback!,
           ),
     );
   }
 
   String _getFullPosterUrl() {
-    if (recommendation.posterPath == null) return '';
+    if (widget.recommendation.posterPath == null) return '';
 
-    if (recommendation.posterPath!.startsWith('http')) {
-      return recommendation.posterPath!;
+    if (widget.recommendation.posterPath!.startsWith('http')) {
+      return widget.recommendation.posterPath!;
     }
 
-    return 'https://image.tmdb.org/t/p/w500${recommendation.posterPath}';
+    return 'https://image.tmdb.org/t/p/w500${widget.recommendation.posterPath}';
   }
 }
